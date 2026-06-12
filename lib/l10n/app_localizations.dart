@@ -404,6 +404,84 @@ abstract class AppLocalizations {
   /// **'On-Time'**
   String get statOnTime;
 
+  /// No description provided for @liveStatusLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'LIVE'**
+  String get liveStatusLabel;
+
+  /// No description provided for @liveDataUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No data'**
+  String get liveDataUnavailable;
+
+  /// No description provided for @liveUpdatedJustNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated just now'**
+  String get liveUpdatedJustNow;
+
+  /// No description provided for @liveUpdatedAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated {minutes}m ago'**
+  String liveUpdatedAgo(int minutes);
+
+  /// No description provided for @statTodayTrips.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Trips'**
+  String get statTodayTrips;
+
+  /// No description provided for @statCongestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Congestion'**
+  String get statCongestion;
+
+  /// No description provided for @statBikesShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Bikes'**
+  String get statBikesShort;
+
+  /// No description provided for @statParkingShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Parking'**
+  String get statParkingShort;
+
+  /// No description provided for @congestionRelaxed.
+  ///
+  /// In en, this message translates to:
+  /// **'Relaxed'**
+  String get congestionRelaxed;
+
+  /// No description provided for @congestionNormal.
+  ///
+  /// In en, this message translates to:
+  /// **'Normal'**
+  String get congestionNormal;
+
+  /// No description provided for @congestionSlightlyBusy.
+  ///
+  /// In en, this message translates to:
+  /// **'Slightly Busy'**
+  String get congestionSlightlyBusy;
+
+  /// No description provided for @congestionBusy.
+  ///
+  /// In en, this message translates to:
+  /// **'Busy'**
+  String get congestionBusy;
+
+  /// No description provided for @congestionUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get congestionUnknown;
+
   /// No description provided for @statusNormal.
   ///
   /// In en, this message translates to:

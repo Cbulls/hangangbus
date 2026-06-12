@@ -180,6 +180,47 @@ class AppLocalizationsKo extends AppLocalizations {
   String get statOnTime => '정시율';
 
   @override
+  String get liveStatusLabel => '실시간';
+
+  @override
+  String get liveDataUnavailable => '정보 없음';
+
+  @override
+  String get liveUpdatedJustNow => '방금 업데이트';
+
+  @override
+  String liveUpdatedAgo(int minutes) {
+    return '$minutes분 전 업데이트';
+  }
+
+  @override
+  String get statTodayTrips => '오늘 운항';
+
+  @override
+  String get statCongestion => '혼잡도';
+
+  @override
+  String get statBikesShort => '따릉이';
+
+  @override
+  String get statParkingShort => '주차';
+
+  @override
+  String get congestionRelaxed => '여유';
+
+  @override
+  String get congestionNormal => '보통';
+
+  @override
+  String get congestionSlightlyBusy => '약간 붐빔';
+
+  @override
+  String get congestionBusy => '붐빔';
+
+  @override
+  String get congestionUnknown => '정보 없음';
+
+  @override
   String get statusNormal => '정상 운행';
 
   @override

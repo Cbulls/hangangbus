@@ -117,6 +117,26 @@
   "statTrips": "운항",
   "statPassengers": "탑승객",
   "statOnTime": "정시율",
+  "liveStatusLabel": "실시간",
+  "liveDataUnavailable": "정보 없음",
+  "liveUpdatedJustNow": "방금 업데이트",
+  "liveUpdatedAgo": "{minutes}분 전 업데이트",
+  "@liveUpdatedAgo": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "statTodayTrips": "오늘 운항",
+  "statCongestion": "혼잡도",
+  "statBikesShort": "따릉이",
+  "statParkingShort": "주차",
+  "congestionRelaxed": "여유",
+  "congestionNormal": "보통",
+  "congestionSlightlyBusy": "약간 붐빔",
+  "congestionBusy": "붐빔",
+  "congestionUnknown": "정보 없음",
   "statusNormal": "정상 운행",
   "statusPartial": "일부 중단",
   "statusStopped": "전면 중단",

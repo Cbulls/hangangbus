@@ -202,6 +202,26 @@
     }
   },
   "statOnTime": "On-Time",
+  "liveStatusLabel": "LIVE",
+  "liveDataUnavailable": "No data",
+  "liveUpdatedJustNow": "Updated just now",
+  "liveUpdatedAgo": "Updated {minutes}m ago",
+  "@liveUpdatedAgo": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "statTodayTrips": "Today's Trips",
+  "statCongestion": "Congestion",
+  "statBikesShort": "Bikes",
+  "statParkingShort": "Parking",
+  "congestionRelaxed": "Relaxed",
+  "congestionNormal": "Normal",
+  "congestionSlightlyBusy": "Slightly Busy",
+  "congestionBusy": "Busy",
+  "congestionUnknown": "Unknown",
   "navHome": "Home",
   "navSchedule": "Schedule",
   "navGuide": "Guide",

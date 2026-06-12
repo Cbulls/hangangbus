@@ -1,12 +1,24 @@
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hangangbus/blocs/clock/clock_bloc.dart';
+import 'package:hangangbus/blocs/faq/faq_bloc.dart';
+import 'package:hangangbus/blocs/navigation/navigation_bloc.dart';
+import 'package:hangangbus/blocs/realtime/realtime_bloc.dart';
+import 'package:hangangbus/blocs/schedule/schedule_bloc.dart';
+import 'package:hangangbus/blocs/story/story_bloc.dart';
+import 'package:hangangbus/blocs/weather/weather_bloc.dart';
+import 'package:hangangbus/repositories/content_repository.dart';
+import 'package:hangangbus/repositories/realtime_repository.dart';
+import 'package:hangangbus/repositories/schedule_repository.dart';
+import 'package:hangangbus/repositories/weather_repository.dart';
 import 'package:hangangbus/l10n/app_localizations.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
-import 'tab1_home.dart' as home;
-import 'tab2_schedule.dart' as schedule;
-import 'tab3_story.dart';
-import 'tab4_faq.dart';
+import 'screens/tab1_home.dart' as home;
+import 'screens/tab2_schedule.dart' as schedule;
+import 'screens/tab3_story.dart';
+import 'screens/tab4_faq.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,69 +43,96 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: '한강버스 가이드',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        useMaterial3: true,
-        primaryColor: const Color(0xFF0052A4), // 한강 블루
-        scaffoldBackgroundColor: Colors.grey[50],
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          titleTextStyle: TextStyle(
-            color: Colors.black,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider(create: (_) => const WeatherRepository()),
+        RepositoryProvider(create: (_) => const RealtimeRepository()),
+        RepositoryProvider(create: (_) => const ScheduleRepository()),
+        RepositoryProvider(create: (_) => const ContentRepository()),
+      ],
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (_) => NavigationBloc()),
+          BlocProvider(create: (_) => ClockBloc()..add(const ClockStarted())),
+          BlocProvider(
+            create: (ctx) =>
+                WeatherBloc(ctx.read<WeatherRepository>())
+                  ..add(const WeatherSubscriptionRequested()),
           ),
-          iconTheme: IconThemeData(color: Colors.black),
+          BlocProvider(
+            create: (ctx) =>
+                RealtimeBloc(ctx.read<RealtimeRepository>())
+                  ..add(const RealtimeSubscriptionRequested()),
+          ),
+          BlocProvider(
+            create: (ctx) => ScheduleBloc(ctx.read<ScheduleRepository>()),
+          ),
+          BlocProvider(create: (_) => StoryBloc()),
+          BlocProvider(create: (_) => FaqBloc()),
+        ],
+        child: MaterialApp(
+          title: '한강버스 가이드',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            useMaterial3: true,
+            primaryColor: const Color(0xFF0052A4), // 한강 블루
+            scaffoldBackgroundColor: Colors.grey[50],
+            appBarTheme: const AppBarTheme(
+              backgroundColor: Colors.white,
+              elevation: 0,
+              titleTextStyle: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+              iconTheme: IconThemeData(color: Colors.black),
+            ),
+          ),
+          home: const MainBase(),
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [Locale('ko'), Locale('en')],
+          localeResolutionCallback: (locale, supportedLocales) {
+            if (locale == null) return const Locale('ko');
+            for (final supported in supportedLocales) {
+              if (supported.languageCode == locale.languageCode) {
+                return supported;
+              }
+            }
+            return const Locale('ko'); // fallback: 한국어
+          },
         ),
       ),
-      home: const MainBase(),
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [Locale('ko'), Locale('en')],
-      localeResolutionCallback: (locale, supportedLocales) {
-        if (locale == null) return const Locale('ko');
-        for (final supported in supportedLocales) {
-          if (supported.languageCode == locale.languageCode) return supported;
-        }
-        return const Locale('ko'); // fallback: 한국어
-      },
     );
   }
 }
 
-class MainBase extends StatefulWidget {
+class MainBase extends StatelessWidget {
   const MainBase({super.key});
-
-  @override
-  State<MainBase> createState() => _MainBaseState();
-}
-
-class _MainBaseState extends State<MainBase> {
-  int _currentIndex = 0;
-
-  void _selectTab(int index) {
-    setState(() => _currentIndex = index);
-  }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final screens = [
-      home.Tab1Home(onNavigateTab: _selectTab),
-      const schedule.Tab2Schedule(),
-      const Tab3Story(),
-      const Tab4Faq(),
+    const screens = [
+      home.Tab1Home(),
+      schedule.Tab2Schedule(),
+      Tab3Story(),
+      Tab4Faq(),
     ];
 
+    final currentIndex = context.select(
+      (NavigationBloc bloc) => bloc.state.currentIndex,
+    );
+
+    void selectTab(int index) =>
+        context.read<NavigationBloc>().add(NavTabSelected(index));
+
     return Scaffold(
-      body: SafeArea(child: screens[_currentIndex]),
+      body: SafeArea(child: screens[currentIndex]),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.9),
@@ -132,8 +171,8 @@ class _MainBaseState extends State<MainBase> {
                 height: 65,
                 elevation: 0,
                 backgroundColor: Colors.transparent,
-                selectedIndex: _currentIndex,
-                onDestinationSelected: _selectTab,
+                selectedIndex: currentIndex,
+                onDestinationSelected: selectTab,
                 animationDuration: const Duration(
                   milliseconds: 500,
                 ), // 애니메이션 속도 조절

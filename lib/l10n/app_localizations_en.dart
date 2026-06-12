@@ -180,6 +180,47 @@ class AppLocalizationsEn extends AppLocalizations {
   String get statOnTime => 'On-Time';
 
   @override
+  String get liveStatusLabel => 'LIVE';
+
+  @override
+  String get liveDataUnavailable => 'No data';
+
+  @override
+  String get liveUpdatedJustNow => 'Updated just now';
+
+  @override
+  String liveUpdatedAgo(int minutes) {
+    return 'Updated ${minutes}m ago';
+  }
+
+  @override
+  String get statTodayTrips => 'Today\'s Trips';
+
+  @override
+  String get statCongestion => 'Congestion';
+
+  @override
+  String get statBikesShort => 'Bikes';
+
+  @override
+  String get statParkingShort => 'Parking';
+
+  @override
+  String get congestionRelaxed => 'Relaxed';
+
+  @override
+  String get congestionNormal => 'Normal';
+
+  @override
+  String get congestionSlightlyBusy => 'Slightly Busy';
+
+  @override
+  String get congestionBusy => 'Busy';
+
+  @override
+  String get congestionUnknown => 'Unknown';
+
+  @override
   String get statusNormal => 'Normal';
 
   @override
