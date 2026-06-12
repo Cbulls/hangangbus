@@ -11,6 +11,7 @@ class ScheduleUtils {
     DockType.yeouido,
     DockType.apgujeong,
     DockType.oksu,
+    DockType.seoulforest,
     DockType.ttukseom,
     DockType.jamsil,
   ];
@@ -47,6 +48,17 @@ class ScheduleUtils {
         '15:30',
         '16:30',
         '17:30',
+      ],
+      // 서울숲 → 여의도행 (2026.6.8~10.30, 선착장 출발 기준)
+      DockType.seoulforest: [
+        '11:35',
+        '12:35',
+        '13:35',
+        '14:35',
+        '16:05',
+        '17:05',
+        '18:05',
+        '19:05',
       ],
       DockType.ttukseom: [
         '10:18',
@@ -131,6 +143,17 @@ class ScheduleUtils {
         '17:49',
         '18:49',
         '19:49',
+      ],
+      // 서울숲 → 잠실행 (2026.6.8~10.30, 선착장 출발 기준)
+      DockType.seoulforest: [
+        '13:27',
+        '14:27',
+        '15:27',
+        '16:27',
+        '17:57',
+        '18:57',
+        '19:57',
+        '20:57',
       ],
       DockType.ttukseom: [
         '12:42',
@@ -298,6 +321,10 @@ class ScheduleUtils {
       case '잠실':
       case 'Jamsil':
         return DockType.jamsil;
+      case '서울숲':
+      case 'Seoul Forest':
+      case 'SeoulForest':
+        return DockType.seoulforest;
       default:
         return null;
     }
@@ -319,6 +346,8 @@ class ScheduleUtils {
         return 'Ttukseom';
       case DockType.jamsil:
         return 'Jamsil';
+      case DockType.seoulforest:
+        return 'SeoulForest';
     }
   }
 

@@ -8,7 +8,9 @@ import 'package:hangangbus/blocs/navigation/navigation_bloc.dart';
 import 'package:hangangbus/blocs/realtime/realtime_bloc.dart';
 import 'package:hangangbus/blocs/weather/weather_bloc.dart';
 import 'package:hangangbus/models/dock_type.dart';
+import 'package:hangangbus/models/dock_location.dart';
 import 'package:hangangbus/models/hangang_realtime_data.dart';
+import 'package:hangangbus/screens/widgets/dock_amenity_card.dart';
 import 'package:hangangbus/screens/dock_map_screen.dart';
 import 'package:hangangbus/utils/schedule_utils.dart';
 import 'package:hangangbus/models/weather_data.dart';
@@ -201,6 +203,20 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
           hasShuttle: false,
           facilities: defaultFacilities,
           busRoutes: ['302', '333', '341'],
+        );
+      case DockType.seoulforest:
+        return _DockMeta(
+          gradientLight: const [Color(0xFF66BB6A), Color(0xFFAED581)],
+          gradientDark: const [Color(0xFF134E5E), Color(0xFF71B280)],
+          address: '서울특별시 성동구 성수동1가 (서울숲 한강)',
+          parkAreaName: null, // 전용 실시간 API 장소 없음(임시 선착장)
+          parkingSpaces: 0,
+          parkingName: '서울숲 공영주차장',
+          nearestSubway: '서울숲역(수인분당선)',
+          subwayWalkTime: 15,
+          hasShuttle: false,
+          facilities: defaultFacilities,
+          busRoutes: ['2014', '2224', '141'],
         );
     }
   }
@@ -1197,6 +1213,23 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
                         ),
                       ),
                       const SizedBox(height: 12),
+                      // 4-1. 가까운 따릉이 / 주차장 (실시간 최근접)
+                      Builder(
+                        builder: (context) {
+                          final dockType =
+                              ScheduleUtils.dockTypeFromName(dock.nameEn);
+                          if (dockType == null) {
+                            return const SizedBox.shrink();
+                          }
+                          return DockAmenityCard(
+                            dockType: dockType,
+                            data: realtimeData,
+                            gradient: gradient,
+                            isDarkMode: isDarkMode,
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 12),
                       // 5. 버스
                       Container(
                         padding: const EdgeInsets.symmetric(
@@ -1727,10 +1760,13 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
               icon: Icons.local_parking_rounded,
               label: l10n.parking,
               value: l10n.parkingSpacesAvailable(
-                data.parkingLots.fold<int>(0, (s, p) => s + p.available),
+                data.parkingLots.fold<int>(
+                  0,
+                  (s, p) => s + (p.availableCount ?? 0),
+                ),
               ),
               subValue: l10n.parkingSpacesTotal(
-                data.parkingLots.fold<int>(0, (s, p) => s + p.total),
+                data.parkingLots.fold<int>(0, (s, p) => s + p.capacity),
               ),
               gradient: gradient,
               isDarkMode: isDarkMode,
@@ -2388,7 +2424,7 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
         : null;
     final hasParking = hasData && data.parkingLots.isNotEmpty;
     final parkingAvailable = hasParking
-        ? data.parkingLots.fold<int>(0, (s, p) => s + p.available)
+        ? data.parkingLots.fold<int>(0, (s, p) => s + (p.availableCount ?? 0))
         : null;
 
     // 마지막 업데이트 표기

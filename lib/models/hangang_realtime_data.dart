@@ -5,6 +5,8 @@
 //   - 따릉이 : SBIKE_STTS[*]  (SBIKE_SPOT_NM, SBIKE_PARKING_CNT, SBIKE_RACK_CNT, SBIKE_SHARED ...)
 //   - 주차장 : PRK_STTS[*]    (PRK_NM, CPCTY, CUR_PRK_CNT, CUR_PRK_YN, RATES ...)
 
+import 'dart:math' as math;
+
 class HangangRealtimeData {
   final String areaName;
   final PopulationData? population;
@@ -67,7 +69,68 @@ class HangangRealtimeData {
     }
     return null;
   }
+
+  /// 기준 좌표에서 가장 가까운 따릉이 대여소. 좌표가 유효한 것만 후보로 삼는다.
+  BikeStation? nearestBikeStation(double lat, double lng) {
+    BikeStation? best;
+    double bestDist = double.infinity;
+    for (final s in bikeStations) {
+      if (s.lat == 0 || s.lng == 0) continue;
+      final d = _haversine(lat, lng, s.lat, s.lng);
+      if (d < bestDist) {
+        bestDist = d;
+        best = s;
+      }
+    }
+    return best;
+  }
+
+  /// 기준 좌표에서 가장 가까운 주차장.
+  ///
+  /// 서울시 API 는 같은 주차장을 정적(CUR_PRK_YN='N')·실시간(CUR_PRK_YN='Y')
+  /// 두 레코드로 중복 제공한다. 거의 같은 위치(30m 이내)면 동일 주차장으로 보고
+  /// 실시간 레코드를 우선 선택한다.
+  ParkingLot? nearestParkingLot(double lat, double lng) {
+    ParkingLot? best;
+    double bestDist = double.infinity;
+    for (final p in parkingLots) {
+      if (p.lat == 0 || p.lng == 0) continue;
+      final d = _haversine(lat, lng, p.lat, p.lng);
+      final nearlySame = (d - bestDist).abs() < 30;
+      final preferRealtime =
+          nearlySame && p.realtimeAvailable && !(best?.realtimeAvailable ?? false);
+      if (d < bestDist - 1 || preferRealtime) {
+        if (d < bestDist) bestDist = d;
+        best = p;
+      }
+    }
+    return best;
+  }
+
+  /// 거리(미터) 헬퍼 — 위젯에서 "120m" 표기에 사용.
+  static double distanceMeters(
+    double lat1,
+    double lng1,
+    double lat2,
+    double lng2,
+  ) =>
+      _haversine(lat1, lng1, lat2, lng2);
 }
+
+/// 두 좌표 사이 거리(미터) — Haversine.
+double _haversine(double lat1, double lng1, double lat2, double lng2) {
+  const earthRadius = 6371000.0; // m
+  final dLat = _deg2rad(lat2 - lat1);
+  final dLng = _deg2rad(lng2 - lng1);
+  final a = (math.sin(dLat / 2) * math.sin(dLat / 2)) +
+      math.cos(_deg2rad(lat1)) *
+          math.cos(_deg2rad(lat2)) *
+          (math.sin(dLng / 2) * math.sin(dLng / 2));
+  final c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a));
+  return earthRadius * c;
+}
+
+double _deg2rad(double deg) => deg * (math.pi / 180.0);
 
 class PopulationData {
   final String currentMin;
