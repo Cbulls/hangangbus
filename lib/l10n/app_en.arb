@@ -1,0 +1,240 @@
+{
+  "@@locale": "en",
+  "timetableTitle": "Timetable",
+  "directionMagokToYeouido": "Magok → Yeouido",
+  "directionYeouidoToMagok": "Yeouido → Magok",
+  "dockMagok": "Magok",
+  "dockMangwon": "Mangwon",
+  "dockYeouido": "Yeouido",
+  "dockApgujeong": "Apgujeong",
+  "dockOksu": "Oksu",
+  "dockTtukseom": "Ttukseom",
+  "dockJamsil": "Jamsil",
+  "directionToYeouido": "To Yeouido",
+  "directionToMagok": "To Magok",
+  "directionToJamsil": "To Jamsil",
+  "nextBoat": "Next Boat",
+  "firstBoat": "First Boat",
+  "lastBoat": "Last Boat",
+  "departIn": "Departs {time}",
+  "@departIn": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "serviceClosedToday": "Service Ended for Today",
+  "tomorrowFirstBoat": "First boat tomorrow {time}",
+  "@tomorrowFirstBoat": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "transferHub": "Transfer",
+  "yeouidoTransferTitle": "Yeouido Transfer",
+  "routeOverview": "Route",
+  "boundFor": "To {dock}",
+  "@boundFor": {
+    "placeholders": {
+      "dock": {
+        "type": "String"
+      }
+    }
+  },
+  "minutesLeft": "{minutes} min",
+  "@minutesLeft": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "hoursMinutesLeft": "{hours}h {minutes}m",
+  "@hoursMinutesLeft": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "departed": "Departed",
+  "storyPageTitle": "Han River Stories",
+  "storyPageSubtitle": "History & Food near each dock",
+  "categoryHistory": "History",
+  "categoryFood": "Food",
+  "comingSoon": "Coming soon",
+  "infoLabelLocation": "Location",
+  "infoLabelAccess": "Access",
+  "infoLabelPeriod": "Period",
+  "infoLabelHours": "Hours",
+  "infoLabelPrice": "Price",
+  "dockSuffix": "{dockName} Dock",
+  "@dockSuffix": {
+    "placeholders": {
+      "dockName": {
+        "type": "String"
+      }
+    }
+  },
+  "homeTitle": "Han River Bus",
+  "homeSubtitle": "Live Operation Status",
+  "nextArrival": "Next Departure",
+  "freeShuttle": "Free Shuttle",
+  "parking": "Parking",
+  "parkingSpacesAvailable": "{count} spaces available",
+  "@parkingSpacesAvailable": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "parkingSpacesSuffix": "{count} spaces",
+  "@parkingSpacesSuffix": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "parkingSpacesTotal": "Available out of {count} total",
+  "@parkingSpacesTotal": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "fullTimetable": "Full Timetable",
+  "nearbyAttractions": "Nearby Attractions",
+  "todayLabel": "TODAY",
+  "statusNormal": "Normal",
+  "statusPartial": "Partial",
+  "statusStopped": "Suspended",
+  "facilityConvenienceStore": "Convenience Store",
+  "facilityRamen": "Ramen Zone",
+  "facilityFastFood": "Fast Food",
+  "facilityCafe": "Café",
+  "dockSheetTitle": "{name} Dock",
+  "@dockSheetTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "realtimeStatus": "Live Status",
+  "weatherInfo": "Weather",
+  "hourlyForecast": "Hourly Forecast",
+  "fullForecast": "View 24h Forecast",
+  "weatherForecast24h": "24-Hour Forecast",
+  "accessInfo": "Access",
+  "walkingMinutes": "{minutes} min walk",
+  "@walkingMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "facilities": "Facilities",
+  "scheduleAndMap": "Map",
+  "feelsLike": "Feels like {temp}°",
+  "@feelsLike": {
+    "placeholders": {
+      "temp": {
+        "type": "String"
+      }
+    }
+  },
+  "humidity": "Humidity",
+  "windSpeed": "Wind",
+  "fineDust": "Dust Level",
+  "updatedMinutesAgo": "Updated 5m ago",
+  "currentPopulation": "Population",
+  "bikeShare": "Bike Share",
+  "bikeStationsCount": "{count} Stations",
+  "@bikeStationsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bikesAvailable": "{count} Available",
+  "@bikesAvailable": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "weeklyForecast": "View Weekly Forecast",
+  "dustGood": "Good",
+  "dustNormal": "Moderate",
+  "dustBad": "Bad",
+  "dustVeryBad": "Very Bad",
+  "statusClosed": "Service Ended",
+  "endOfService": "Service Ended",
+  "boardingDeclaration": "Passenger Check-in",
+  "statTrips": "Trips",
+  "statTripsValue": "{count}",
+  "@statTripsValue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statPassengers": "Passengers",
+  "statPassengersValue": "{count}",
+  "@statPassengersValue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statOnTime": "On-Time",
+  "navHome": "Home",
+  "navSchedule": "Schedule",
+  "navGuide": "Guide",
+  "navFaq": "FAQ",
+  "tabFaq": "FAQ",
+  "tabSafety": "Safety Rules",
+  "safetyTitleLifeVest": "Life Vest Location",
+  "safetyLifeVestAdult": "One adult life vest is provided in the storage compartment under each seat.",
+  "safetyLifeVestChild": "Life vests for infants and children are stored in a separate cabin cabinet. Please ask a crew member.",
+  "safetyLifeVestAccess": "Life vest compartments remain unlocked at all times for immediate access during emergencies.",
+  "safetyTitleHowToWear": "How to Wear a Life Vest",
+  "safetyWearStep1": "Open the storage compartment under your seat and take out the life vest.",
+  "safetyWearStep2": "Place the life vest over your head.",
+  "safetyWearStep3": "Fasten the front buckles until you hear a 'click'.",
+  "safetyWearStep4": "Pull the waist straps tight so the vest fits snugly to your body.",
+  "safetyWearStep5": "After entering the water, pull the red handle (CO2 inflator) firmly to inflate the vest.",
+  "safetyWearTip": "If it fails to inflate automatically, blow into the yellow oral inflation tube.",
+  "safetyTitleEvacuation": "Emergency Evacuation",
+  "safetyEvacExit": "Emergency exits are located at both the front (bow) and rear (stern). Please locate them upon boarding.",
+  "safetyEvacCalm": "In case of emergency, stay calm and evacuate through designated exits following crew instructions.",
+  "safetyEvacStay": "Never leave your seat until the vessel has come to a complete stop.",
+  "safetyEvacRescue": "After evacuation, move to the dock or rescue boat. Emergency teams are on standby for immediate dispatch.",
+  "safetyTitleReporting": "How to Report an Emergency",
+  "safetyReportCall": "Notify a crew member immediately, or call the Hangang Bus Center or 119.",
+  "safetyReportTube": "Lifebuoys (ring buoys) on board can be thrown to rescue someone in the water.",
+  "safetyReportQR": "You must complete the boarding report via QR code before departure for rapid rescue in an emergency.",
+  "safetyTitleAttention": "Boarding Precautions",
+  "safetyAttentionWave": "The vessel may shake due to waves, especially when other boats pass. Please hold onto the handrails.",
+  "safetyAttentionDeck": "To access the outdoor deck, you must first complete the boarding report via the onboard QR code.",
+  "safetyAttentionDanger": "Never enter restricted areas such as the electrical equipment room.",
+  "safetyAttentionBike": "Personal bicycles are allowed, but 'Ttareungyi' and electric scooters (including e-bikes) are prohibited.",
+  "safetyAttentionChild": "When traveling with children, you may request assistance from the crew to prevent missing children.",
+  "emergencyBannerTitle": "In Case of Emergency",
+  "emergencyBannerContact": "Report to Crew  |  119",
+  "emergencyBannerRescue": "Real-time connection with River Police & Fire Rescue"
+}

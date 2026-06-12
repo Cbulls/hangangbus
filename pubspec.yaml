@@ -1,0 +1,51 @@
+name: hangangbus
+description: 'A new Flutter project.'
+publish_to: 'none'
+
+version: 1.0.0+10
+
+environment:
+  sdk: ^3.10.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  kakao_map_plugin: ^0.4.0 # 카카오맵 Flutter 플러그인
+  kakao_flutter_sdk: ^1.10.0 # 카카오 SDK
+  webview_flutter: ^4.13.1
+
+  flutter_localizations:
+    sdk: flutter
+
+  # 위치 서비스
+  # geolocator: ^14.0.2 # GPS 위치 추적
+  # permission_handler: ^12.0.1 # 위치 권한
+
+  # 실시간 데이터
+  web_socket_channel: ^3.0.3 # WebSocket (실시간 배 위치)
+  http: ^1.6.0 # REST API
+
+  # 상태 관리
+  provider: ^6.1.5 # 또는 riverpod
+
+  # 애니메이션
+  flutter_animate: ^4.5.2 # 부드러운 마커 이동
+
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^1.0.8
+  flutter_dotenv: ^5.1.0 # .env 파일 사용
+  intl: ^0.20.2
+  url_launcher: ^6.3.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  generate: true
+  uses-material-design: true
+  assets:
+    - .env
+    - assets/images/

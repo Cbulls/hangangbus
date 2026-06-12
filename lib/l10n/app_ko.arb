@@ -1,0 +1,244 @@
+{
+  "@@locale": "ko",
+  "timetableTitle": "운항 시간표",
+  "directionMagokToYeouido": "마곡 → 여의도",
+  "directionYeouidoToMagok": "여의도 → 마곡",
+  "dockMagok": "마곡",
+  "dockMangwon": "망원",
+  "dockYeouido": "여의도",
+  "dockApgujeong": "압구정",
+  "dockOksu": "옥수",
+  "dockTtukseom": "뚝섬",
+  "dockJamsil": "잠실",
+  "directionToYeouido": "여의도행",
+  "directionToMagok": "마곡행",
+  "directionToJamsil": "잠실행",
+  "nextBoat": "다음 배",
+  "firstBoat": "첫차",
+  "lastBoat": "막차",
+  "departIn": "{time} 출발",
+  "@departIn": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "serviceClosedToday": "오늘 운행 종료",
+  "tomorrowFirstBoat": "내일 첫차 {time}",
+  "@tomorrowFirstBoat": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "transferHub": "환승",
+  "yeouidoTransferTitle": "여의도 환승 안내",
+  "routeOverview": "노선도",
+  "boundFor": "{dock}행",
+  "@boundFor": {
+    "placeholders": {
+      "dock": {
+        "type": "String"
+      }
+    }
+  },
+  "minutesLeft": "{minutes}분 후",
+  "@minutesLeft": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "hoursMinutesLeft": "{hours}시간 {minutes}분",
+  "@hoursMinutesLeft": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "departed": "출발 완료",
+  "storyPageTitle": "한강 역사/맛집",
+  "storyPageSubtitle": "한강버스 선착장 별 역사/맛집 정보",
+  "categoryHistory": "역사",
+  "categoryFood": "맛집",
+  "comingSoon": "준비 중입니다",
+  "infoLabelLocation": "위치",
+  "infoLabelAccess": "이동",
+  "infoLabelPeriod": "시대",
+  "infoLabelHours": "영업",
+  "infoLabelPrice": "가격",
+  "dockSuffix": "{dockName} 선착장",
+  "@dockSuffix": {
+    "placeholders": {
+      "dockName": {
+        "type": "String"
+      }
+    }
+  },
+  "homeTitle": "한강버스",
+  "homeSubtitle": "실시간 운항 현황",
+  "nextArrival": "다음 도착 예정",
+  "freeShuttle": "무료 셔틀버스",
+  "parking": "주차",
+  "parkingSpacesAvailable": "{count}면 가능",
+  "@parkingSpacesAvailable": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "parkingSpacesSuffix": "{count}면",
+  "@parkingSpacesSuffix": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "parkingSpacesTotal": "총 {count}면 중 가능",
+  "@parkingSpacesTotal": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "fullTimetable": "전체 시간표",
+  "nearbyAttractions": "주변 명소",
+  "todayLabel": "TODAY",
+  "statTrips": "운항",
+  "statPassengers": "탑승객",
+  "statOnTime": "정시율",
+  "statusNormal": "정상 운행",
+  "statusPartial": "일부 중단",
+  "statusStopped": "전면 중단",
+  "facilityConvenienceStore": "편의점",
+  "facilityRamen": "라면체험존",
+  "facilityFastFood": "패스트푸드",
+  "facilityCafe": "카페",
+  "dockSheetTitle": "{name} 선착장",
+  "@dockSheetTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "realtimeStatus": "실시간 현황",
+  "weatherInfo": "날씨 정보",
+  "hourlyForecast": "시간별 예보",
+  "fullForecast": "24시간 예보 전체보기",
+  "weatherForecast24h": "24시간 날씨 예보",
+  "accessInfo": "접근 수단",
+  "walkingMinutes": "도보 {minutes}분",
+  "@walkingMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "facilities": "부대시설",
+  "scheduleAndMap": "지도",
+  "feelsLike": "체감 {temp}°",
+  "@feelsLike": {
+    "placeholders": {
+      "temp": {
+        "type": "String"
+      }
+    }
+  },
+  "humidity": "습도",
+  "windSpeed": "풍속",
+  "fineDust": "미세먼지",
+  "updatedMinutesAgo": "5분 전 업데이트",
+  "currentPopulation": "현재 인구",
+  "bikeShare": "따릉이",
+  "bikeStationsCount": "{count}개소",
+  "@bikeStationsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bikesAvailable": "{count}대 이용 가능",
+  "@bikesAvailable": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "weeklyForecast": "주간 예보 보기",
+  "dustGood": "좋음",
+  "dustNormal": "보통",
+  "dustBad": "나쁨",
+  "dustVeryBad": "매우 나쁨",
+  "statusClosed": "운행 종료",
+  "endOfService": "운행 종료",
+  "boardingDeclaration": "한강버스 승선신고",
+  "statTrips": "운항",
+  "statTripsValue": "{count}회",
+  "@statTripsValue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statPassengers": "탑승객",
+  "statPassengersValue": "{count}명",
+  "@statPassengersValue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statOnTime": "정시율",
+  "navHome": "홈",
+  "navSchedule": "시간표",
+  "navGuide": "가이드",
+  "navFaq": "FAQ",
+  "timetableTitle": "시간표",
+  "tabFaq": "자주 묻는 질문",
+  "tabSafety": "안전 수칙",
+  "safetyTitleLifeVest": "구명조끼 위치",
+  "safetyLifeVestAdult": "각 좌석 하단 보관함에 성인용 구명조끼가 1개씩 비치되어 있습니다.",
+  "safetyLifeVestChild": "유아·어린이용 구명조끼는 선내 전용 캐비닛(보관함)에 별도 보관되어 있습니다. 승무원에게 문의하세요.",
+  "safetyLifeVestAccess": "구명조끼 보관함은 비상 시 즉시 꺼낼 수 있도록 항상 개방 상태를 유지합니다.",
+  "safetyTitleHowToWear": "구명조끼 착용법",
+  "safetyWearStep1": "좌석 하단 보관함을 열어 구명조끼를 꺼냅니다.",
+  "safetyWearStep2": "구명조끼를 머리 위에서 아래로 내려 입습니다.",
+  "safetyWearStep3": "앞쪽 버클을 \"딸깍\" 소리가 날 때까지 채웁니다.",
+  "safetyWearStep4": "허리 끈을 몸에 밀착되도록 당겨 조입니다.",
+  "safetyWearStep5": "입수 후에는 구명조끼 앞쪽의 빨간 손잡이(이산화탄소 팽창장치)를 힘껏 당겨 팽창시킵니다.",
+  "safetyWearTip": "자동 팽창이 안 될 경우 구명조끼의 구강 팽창 튜브(노란색)를 입으로 불어 팽창시킵니다.",
+  "safetyTitleEvacuation": "비상 탈출 안내",
+  "safetyEvacExit": "비상 출구는 선실 전방(선수)과 후방(선미) 양쪽에 위치합니다. 탑승 후 위치를 미리 확인해 두세요.",
+  "safetyEvacCalm": "비상 상황 발생 시 승무원의 안내 방송에 따라 침착하게 지정된 출구로 대피합니다.",
+  "safetyEvacStay": "배가 완전히 멈추기 전에는 절대 자리에서 일어나지 마세요.",
+  "safetyEvacRescue": "대피 후 선착장 또는 구조선으로 이동하며, 한강경찰대·소방구조대와 실시간 연결된 구조 시스템이 즉시 출동합니다.",
+  "safetyTitleReporting": "비상 신고 방법",
+  "safetyReportCall": "선내 승무원에게 즉시 알리거나, 한강버스 고객센터 또는 119에 신고하세요.",
+  "safetyReportTube": "선내에 비치된 구명튜브(링 부표)는 물에 빠진 사람을 향해 던져 구조할 수 있습니다.",
+  "safetyReportQR": "탑승 전 반드시 QR코드로 승선 신고를 완료해 주세요. 사고 발생 시 신속한 구조에 필수적입니다.",
+  "safetyTitleAttention": "탑승 주의사항",
+  "safetyAttentionWave": "선박 특성상 물결에 따라 흔들림이 있을 수 있습니다. 특히 다른 선박이 지나갈 때 흔들림이 심해질 수 있으니 손잡이를 잡으세요.",
+  "safetyAttentionDeck": "갑판(야외 데크)에 나가려면 반드시 선내 QR코드로 승선 신고를 먼저 완료해야 합니다.",
+  "safetyAttentionDanger": "전기장비실 등 위험 구역에는 절대 출입하지 마세요.",
+  "safetyAttentionBike": "개인 자전거는 탑승 가능하나, 따릉이 및 전동 킥보드(전기자전거 포함)는 탑승이 불가합니다.",
+  "safetyAttentionChild": "어린이 동반 시 승무원에게 미아 발생 방지를 위한 안내를 요청할 수 있습니다.",
+  "emergencyBannerTitle": "긴급 상황 발생 시",
+  "emergencyBannerContact": "승무원 즉시 신고  |  119",
+  "emergencyBannerRescue": "한강경찰대·소방구조대 실시간 연결"
+}
