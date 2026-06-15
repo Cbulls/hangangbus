@@ -1,14 +1,15 @@
 // screens/widgets/dock_amenity_card.dart
 //
-// 선착장 1곳 기준으로 "가장 가까운 따릉이 1곳 + 가장 가까운 주차장 1곳"을
+// 선착장 1곳 기준 "가장 가까운 따릉이 1곳 + 가장 가까운 주차장 1곳"을
 // 거리와 함께 보여주는 카드 위젯.
 //
-// - 데이터 소스: RealtimeBloc.state.dataFor(apiAreaName)
-// - 최근접 탐색 기준점: DockLocation.of(dockType) 의 좌표
-// - apiAreaName 이 없는 선착장(압구정·옥수)은 "실시간 정보 없음" 표시
+// - 최근접 탐색 기준점: DockGeo.of(dockType) 의 좌표
+// - apiAreaName 이 없는 선착장(압구정·옥수·서울숲)은 "정보 없음" 표시
+// - 영어/한글은 AppLocalizations.localeName 으로 분기
 
 import 'package:flutter/material.dart';
-import 'package:hangangbus/models/dock_location.dart';
+import 'package:hangangbus/l10n/app_localizations.dart';
+import 'package:hangangbus/models/dock_geo.dart';
 import 'package:hangangbus/models/dock_type.dart';
 import 'package:hangangbus/models/hangang_realtime_data.dart';
 
@@ -28,9 +29,18 @@ class DockAmenityCard extends StatelessWidget {
 
   static const _seoulBlue = Color(0xFF0064B0);
 
+  bool _isEn(BuildContext context) {
+    final name = AppLocalizations.of(context)?.localeName ?? 'ko';
+    return !name.toLowerCase().startsWith('ko');
+  }
+
   @override
   Widget build(BuildContext context) {
-    final loc = DockLocation.of(dockType);
+    final en = _isEn(context);
+    final loc = DockGeo.of(dockType);
+
+    final bikeTitle = en ? 'Nearby Bike' : '가까운 따릉이';
+    final parkTitle = en ? 'Nearby Parking' : '가까운 주차장';
 
     // 실시간 미지원 선착장 → 안내만
     if (!loc.hasRealtime || data == null) {
@@ -38,15 +48,15 @@ class DockAmenityCard extends StatelessWidget {
         children: [
           _amenityTile(
             icon: Icons.pedal_bike_rounded,
-            title: '가까운 따릉이',
-            valueWidget: _unavailableText(),
+            title: bikeTitle,
+            valueWidget: _unavailableText(en),
             distanceText: null,
           ),
           const SizedBox(height: 10),
           _amenityTile(
             icon: Icons.local_parking_rounded,
-            title: '가까운 주차장',
-            valueWidget: _unavailableText(),
+            title: parkTitle,
+            valueWidget: _unavailableText(en),
             distanceText: null,
           ),
         ],
@@ -58,20 +68,20 @@ class DockAmenityCard extends StatelessWidget {
 
     return Column(
       children: [
-        _buildBikeTile(loc, bike),
+        _buildBikeTile(en, loc, bike, bikeTitle),
         const SizedBox(height: 10),
-        _buildParkingTile(loc, parking),
+        _buildParkingTile(en, loc, parking, parkTitle),
       ],
     );
   }
 
   // ── 따릉이 타일 ──────────────────────────────────────────────
-  Widget _buildBikeTile(DockLocation loc, BikeStation? bike) {
+  Widget _buildBikeTile(bool en, DockGeo loc, BikeStation? bike, String title) {
     if (bike == null) {
       return _amenityTile(
         icon: Icons.pedal_bike_rounded,
-        title: '가까운 따릉이',
-        valueWidget: _unavailableText(),
+        title: title,
+        valueWidget: _unavailableText(en),
         distanceText: null,
       );
     }
@@ -81,45 +91,32 @@ class DockAmenityCard extends StatelessWidget {
       bike.lat,
       bike.lng,
     );
+    final countText = en ? '${bike.available}' : '${bike.available}대';
+    final rateText = en
+        ? 'Avail ${bike.availabilityRate.toStringAsFixed(0)}%'
+        : '거치율 ${bike.availabilityRate.toStringAsFixed(0)}%';
+
     return _amenityTile(
       icon: Icons.pedal_bike_rounded,
-      title: '가까운 따릉이',
+      title: title,
       subtitle: _cleanBikeName(bike.name),
-      valueWidget: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            '${bike.available}대',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w900,
-              color: isDarkMode ? Colors.white : gradient[0],
-            ),
-          ),
-          Text(
-            '거치율 ${bike.availabilityRate.toStringAsFixed(0)}%',
-            style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
-              color: isDarkMode
-                  ? Colors.white.withValues(alpha: 0.6)
-                  : _seoulBlue.withValues(alpha: 0.6),
-            ),
-          ),
-        ],
-      ),
+      valueWidget: _valueColumn(primary: countText, secondary: rateText),
       distanceText: _distanceLabel(dist),
     );
   }
 
   // ── 주차장 타일 ──────────────────────────────────────────────
-  Widget _buildParkingTile(DockLocation loc, ParkingLot? parking) {
+  Widget _buildParkingTile(
+    bool en,
+    DockGeo loc,
+    ParkingLot? parking,
+    String title,
+  ) {
     if (parking == null) {
       return _amenityTile(
         icon: Icons.local_parking_rounded,
-        title: '가까운 주차장',
-        valueWidget: _unavailableText(),
+        title: title,
+        valueWidget: _unavailableText(en),
         distanceText: null,
       );
     }
@@ -130,37 +127,21 @@ class DockAmenityCard extends StatelessWidget {
       parking.lng,
     );
 
-    final available = parking.availableCount; // null = 실시간 미제공
+    final available = parking.availableCount;
     final occ = parking.occupancyRate;
 
     Widget valueWidget;
     if (available == null) {
-      // 실시간 잔여대수 없음 → 총 면수와 요금만
-      valueWidget = Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            '총 ${parking.capacity}면',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w800,
-              color: isDarkMode ? Colors.white : gradient[0],
-            ),
-          ),
-          Text(
-            '실시간 정보 없음',
-            style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
-              color: isDarkMode
-                  ? Colors.white.withValues(alpha: 0.4)
-                  : _seoulBlue.withValues(alpha: 0.45),
-            ),
-          ),
-        ],
+      valueWidget = _valueColumn(
+        primary: en ? '${parking.capacity} total' : '총 ${parking.capacity}면',
+        secondary: en ? 'No live data' : '실시간 정보 없음',
+        primaryFontSize: 14,
       );
     } else {
+      final primary = en ? 'Open $available' : '가능 $available';
+      final secondary = en
+          ? '/ ${parking.capacity} · ${parking.baseRateText}'
+          : '/ ${parking.capacity}면 · ${parking.baseRateText}';
       valueWidget = Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisSize: MainAxisSize.min,
@@ -169,28 +150,31 @@ class DockAmenityCard extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: 8,
-                height: 8,
-                margin: const EdgeInsets.only(right: 6),
+                width: 7,
+                height: 7,
+                margin: const EdgeInsets.only(right: 5),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: _occupancyColor(occ),
                 ),
               ),
               Text(
-                '가능 $available',
+                primary,
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 15,
                   fontWeight: FontWeight.w900,
                   color: isDarkMode ? Colors.white : gradient[0],
                 ),
               ),
             ],
           ),
+          const SizedBox(height: 1),
           Text(
-            '/ ${parking.capacity}면 · ${parking.baseRateText}',
+            secondary,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(
-              fontSize: 11,
+              fontSize: 10,
               fontWeight: FontWeight.w600,
               color: isDarkMode
                   ? Colors.white.withValues(alpha: 0.6)
@@ -203,10 +187,45 @@ class DockAmenityCard extends StatelessWidget {
 
     return _amenityTile(
       icon: Icons.local_parking_rounded,
-      title: '가까운 주차장',
-      subtitle: _cleanParkingName(parking.name),
+      title: title,
+      subtitle: parking.name,
       valueWidget: valueWidget,
       distanceText: _distanceLabel(dist),
+    );
+  }
+
+  // ── 값 컬럼(따릉이/주차 공통) ────────────────────────────────
+  Widget _valueColumn({
+    required String primary,
+    required String secondary,
+    double primaryFontSize = 16,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          primary,
+          style: TextStyle(
+            fontSize: primaryFontSize,
+            fontWeight: FontWeight.w900,
+            color: isDarkMode ? Colors.white : gradient[0],
+          ),
+        ),
+        const SizedBox(height: 1),
+        Text(
+          secondary,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            fontSize: 10,
+            fontWeight: FontWeight.w600,
+            color: isDarkMode
+                ? Colors.white.withValues(alpha: 0.6)
+                : _seoulBlue.withValues(alpha: 0.6),
+          ),
+        ),
+      ],
     );
   }
 
@@ -219,7 +238,7 @@ class DockAmenityCard extends StatelessWidget {
     required String? distanceText,
   }) {
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: isDarkMode
             ? Colors.black.withValues(alpha: 0.3)
@@ -234,36 +253,40 @@ class DockAmenityCard extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(9),
+            padding: const EdgeInsets.all(7),
             decoration: BoxDecoration(
               color: gradient[0].withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(11),
             ),
-            child: Icon(icon, size: 20, color: gradient[0]),
+            child: Icon(icon, size: 18, color: gradient[0]),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
-                    Text(
-                      title,
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                        color: isDarkMode
-                            ? Colors.white.withValues(alpha: 0.85)
-                            : _seoulBlue.withValues(alpha: 0.8),
+                    Flexible(
+                      child: Text(
+                        title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                          color: isDarkMode
+                              ? Colors.white.withValues(alpha: 0.85)
+                              : _seoulBlue.withValues(alpha: 0.8),
+                        ),
                       ),
                     ),
                     if (distanceText != null) ...[
-                      const SizedBox(width: 6),
+                      const SizedBox(width: 5),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 2,
+                          horizontal: 5,
+                          vertical: 1,
                         ),
                         decoration: BoxDecoration(
                           color: gradient[0].withValues(alpha: 0.12),
@@ -272,7 +295,7 @@ class DockAmenityCard extends StatelessWidget {
                         child: Text(
                           distanceText,
                           style: TextStyle(
-                            fontSize: 10,
+                            fontSize: 9,
                             fontWeight: FontWeight.w800,
                             color: gradient[0],
                           ),
@@ -288,7 +311,7 @@ class DockAmenityCard extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      fontSize: 11,
+                      fontSize: 10,
                       color: isDarkMode
                           ? Colors.white.withValues(alpha: 0.55)
                           : _seoulBlue.withValues(alpha: 0.6),
@@ -298,23 +321,23 @@ class DockAmenityCard extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 8),
           valueWidget,
         ],
       ),
     );
   }
 
-  Widget _unavailableText() => Text(
-        '정보 없음',
-        style: TextStyle(
-          fontSize: 13,
-          fontWeight: FontWeight.w700,
-          color: isDarkMode
-              ? Colors.white.withValues(alpha: 0.4)
-              : _seoulBlue.withValues(alpha: 0.45),
-        ),
-      );
+  Widget _unavailableText(bool en) => Text(
+    en ? 'No data' : '정보 없음',
+    style: TextStyle(
+      fontSize: 12,
+      fontWeight: FontWeight.w700,
+      color: isDarkMode
+          ? Colors.white.withValues(alpha: 0.4)
+          : _seoulBlue.withValues(alpha: 0.45),
+    ),
+  );
 
   // ── 헬퍼 ─────────────────────────────────────────────────────
   String _distanceLabel(double meters) {
@@ -324,17 +347,15 @@ class DockAmenityCard extends StatelessWidget {
 
   Color _occupancyColor(double? occ) {
     if (occ == null) return Colors.grey;
-    if (occ >= 95) return const Color(0xFFE53935); // 만차
-    if (occ >= 70) return const Color(0xFFFFC107); // 혼잡
-    return const Color(0xFF00C853); // 여유
+    if (occ >= 95) return const Color(0xFFE53935);
+    if (occ >= 70) return const Color(0xFFFFC107);
+    return const Color(0xFF00C853);
   }
 
-  /// "260. 여의도 마리나선착장 앞" → "여의도 마리나선착장 앞" (앞 번호 제거)
+  /// "260. 여의도 마리나선착장 앞" → "여의도 마리나선착장 앞"
   String _cleanBikeName(String raw) {
     final idx = raw.indexOf('. ');
     if (idx > 0 && idx <= 5) return raw.substring(idx + 2);
     return raw;
   }
-
-  String _cleanParkingName(String raw) => raw;
 }

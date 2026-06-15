@@ -8,7 +8,6 @@ import 'package:hangangbus/blocs/navigation/navigation_bloc.dart';
 import 'package:hangangbus/blocs/realtime/realtime_bloc.dart';
 import 'package:hangangbus/blocs/weather/weather_bloc.dart';
 import 'package:hangangbus/models/dock_type.dart';
-import 'package:hangangbus/models/dock_location.dart';
 import 'package:hangangbus/models/hangang_realtime_data.dart';
 import 'package:hangangbus/screens/widgets/dock_amenity_card.dart';
 import 'package:hangangbus/screens/dock_map_screen.dart';
@@ -395,7 +394,69 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
                   ),
                 ),
               ),
-              const SliverToBoxAdapter(child: SizedBox(height: 40)),
+              const SliverToBoxAdapter(child: SizedBox(height: 16)),
+              // 선착장 빠른 이동 칩 리스트 (탭하면 해당 카드로 스크롤)
+              SliverToBoxAdapter(
+                child: SizedBox(
+                  height: 40,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    itemCount: docks.length,
+                    separatorBuilder: (_, __) => const SizedBox(width: 8),
+                    itemBuilder: (context, index) {
+                      final d = docks[index];
+                      final isActive = _currentDockIndex == index;
+                      final activeColor = isDarkMode
+                          ? d.gradientDark[0]
+                          : d.gradientLight[0];
+                      return GestureDetector(
+                        onTap: () {
+                          _dockController.animateToPage(
+                            index,
+                            duration: const Duration(milliseconds: 400),
+                            curve: Curves.easeOutCubic,
+                          );
+                        },
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 250),
+                          alignment: Alignment.center,
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          decoration: BoxDecoration(
+                            color: isActive
+                                ? activeColor
+                                : (isDarkMode
+                                      ? Colors.white.withValues(alpha: 0.08)
+                                      : Colors.white.withValues(alpha: 0.7)),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: isActive
+                                  ? activeColor
+                                  : activeColor.withValues(alpha: 0.3),
+                              width: 1.2,
+                            ),
+                          ),
+                          child: Text(
+                            d.name,
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: isActive
+                                  ? FontWeight.w800
+                                  : FontWeight.w600,
+                              color: isActive
+                                  ? Colors.white
+                                  : (isDarkMode
+                                        ? Colors.white.withValues(alpha: 0.8)
+                                        : activeColor),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              const SliverToBoxAdapter(child: SizedBox(height: 24)),
               SliverToBoxAdapter(
                 child: SizedBox(
                   height: MediaQuery.of(context).size.height * 0.85,
@@ -1216,8 +1277,9 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
                       // 4-1. 가까운 따릉이 / 주차장 (실시간 최근접)
                       Builder(
                         builder: (context) {
-                          final dockType =
-                              ScheduleUtils.dockTypeFromName(dock.nameEn);
+                          final dockType = ScheduleUtils.dockTypeFromName(
+                            dock.nameEn,
+                          );
                           if (dockType == null) {
                             return const SizedBox.shrink();
                           }
