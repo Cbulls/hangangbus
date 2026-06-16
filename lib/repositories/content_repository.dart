@@ -1,17 +1,15 @@
 import 'package:hangangbus/models/data.dart';
-import 'package:hangangbus/data/faq_data_en.dart' as faq_en;
-import 'package:hangangbus/data/faq_data_ko.dart' as faq_ko;
-import 'package:hangangbus/data/story_data_en.dart';
-import 'package:hangangbus/data/story_data_ko.dart';
+import 'package:hangangbus/data/data_provider.dart';
 
 /// 스토리/FAQ 정적 콘텐츠 접근 저장소.
-/// 로케일(언어 코드)에 따라 한국어/영어 데이터를 반환한다.
+///
+/// 실제 로케일 분기는 [DataProvider] 한 곳에서만 수행하고,
+/// 이 클래스는 언어 코드를 받아 위임만 한다(분기 중복 제거).
 class ContentRepository {
   const ContentRepository();
 
   List<StoryItem> stories(String languageCode) =>
-      languageCode == 'ko' ? storyDataKo : storyDataEn;
+      DataProvider.storiesFor(languageCode);
 
-  List<FaqItem> faqs(String languageCode) =>
-      languageCode == 'ko' ? faq_ko.faqDataKo : faq_en.faqDataEn;
+  List<FaqItem> faqs(String languageCode) => DataProvider.faqsFor(languageCode);
 }

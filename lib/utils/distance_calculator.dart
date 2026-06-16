@@ -1,3 +1,4 @@
+import 'package:hangangbus/l10n/app_localizations.dart';
 import 'dart:math';
 
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
@@ -50,13 +51,15 @@ class DistanceCalculator {
     return '${km.toStringAsFixed(1)}km';
   }
 
-  // 시간을 읽기 쉬운 형식으로 변환
-  static String formatDuration(int minutes) {
+  // 시간을 읽기 쉬운 형식으로 변환 (현지화)
+  static String formatDuration(int minutes, AppLocalizations l10n) {
     if (minutes < 60) {
-      return '약 $minutes분';
+      return l10n.approxMinutes(minutes);
     }
     final hours = minutes ~/ 60;
     final mins = minutes % 60;
-    return mins > 0 ? '약 ${hours}시간 ${mins}분' : '약 ${hours}시간';
+    return mins > 0
+        ? l10n.approxHoursMinutes(hours, mins)
+        : l10n.approxHours(hours);
   }
 }

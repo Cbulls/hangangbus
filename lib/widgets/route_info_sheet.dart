@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hangangbus/utils/distance_calculator.dart';
 import 'package:hangangbus/models/dock_location.dart';
+import 'package:hangangbus/l10n/app_localizations.dart';
 import 'dart:ui';
 
 class RouteInfoSheet extends StatefulWidget {
@@ -68,6 +69,7 @@ class _RouteInfoSheetState extends State<RouteInfoSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return ClipRRect(
@@ -104,7 +106,7 @@ class _RouteInfoSheetState extends State<RouteInfoSheet> {
               children: [
                 // 타이틀
                 Text(
-                  "경로 정보",
+                  l10n.routeInfo,
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
@@ -118,7 +120,7 @@ class _RouteInfoSheetState extends State<RouteInfoSheet> {
 
                 // 출발 선착장
                 _buildDockSelector(
-                  label: "출발 선착장",
+                  label: l10n.departureDock,
                   value: _selectedFrom,
                   onChanged: (value) {
                     setState(() => _selectedFrom = value);
@@ -131,7 +133,7 @@ class _RouteInfoSheetState extends State<RouteInfoSheet> {
 
                 // 도착 선착장
                 _buildDockSelector(
-                  label: "도착 선착장",
+                  label: l10n.arrivalDock,
                   value: _selectedTo,
                   onChanged: (value) {
                     setState(() => _selectedTo = value);
@@ -159,7 +161,7 @@ class _RouteInfoSheetState extends State<RouteInfoSheet> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "예상 정보",
+                          l10n.estimatedInfo,
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -173,7 +175,7 @@ class _RouteInfoSheetState extends State<RouteInfoSheet> {
 
                         _buildInfoRow(
                           icon: Icons.straighten,
-                          label: "거리",
+                          label: l10n.distanceLabel,
                           value: DistanceCalculator.formatDistance(_distance!),
                           isDarkMode: isDarkMode,
                         ),
@@ -182,8 +184,11 @@ class _RouteInfoSheetState extends State<RouteInfoSheet> {
 
                         _buildInfoRow(
                           icon: Icons.schedule,
-                          label: "소요 시간",
-                          value: DistanceCalculator.formatDuration(_duration!),
+                          label: l10n.durationLabel,
+                          value: DistanceCalculator.formatDuration(
+                            _duration!,
+                            l10n,
+                          ),
                           isDarkMode: isDarkMode,
                         ),
 
@@ -191,7 +196,7 @@ class _RouteInfoSheetState extends State<RouteInfoSheet> {
 
                         _buildInfoRow(
                           icon: Icons.access_time,
-                          label: "도착 예정",
+                          label: l10n.etaLabel,
                           value:
                               "${_eta!.hour.toString().padLeft(2, '0')}:${_eta!.minute.toString().padLeft(2, '0')}",
                           isDarkMode: isDarkMode,
@@ -200,7 +205,7 @@ class _RouteInfoSheetState extends State<RouteInfoSheet> {
                         const SizedBox(height: 16),
 
                         Text(
-                          "※ 평균 속도 11 km/h 기준\n※ 실제 운항 시간은 상황에 따라 달라질 수 있습니다",
+                          l10n.routeSpeedNote,
                           style: TextStyle(
                             fontSize: 11,
                             color: isDarkMode
@@ -229,6 +234,7 @@ class _RouteInfoSheetState extends State<RouteInfoSheet> {
     required Function(String?) onChanged,
     required bool isDarkMode,
   }) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -261,7 +267,7 @@ class _RouteInfoSheetState extends State<RouteInfoSheet> {
             isExpanded: true,
             underline: const SizedBox(),
             hint: Text(
-              "선택하세요",
+              l10n.selectPrompt,
               style: TextStyle(
                 color: isDarkMode
                     ? Colors.white.withValues(alpha: 0.3)

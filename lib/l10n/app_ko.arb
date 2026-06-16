@@ -1,6 +1,6 @@
 {
   "@@locale": "ko",
-  "timetableTitle": "운항 시간표",
+  "timetableTitle": "시간표",
   "directionMagokToYeouido": "마곡 → 여의도",
   "directionYeouidoToMagok": "여의도 → 마곡",
   "dockMagok": "마곡",
@@ -206,7 +206,6 @@
   "statusClosed": "운행 종료",
   "endOfService": "운행 종료",
   "boardingDeclaration": "한강버스 승선신고",
-  "statTrips": "운항",
   "statTripsValue": "{count}회",
   "@statTripsValue": {
     "placeholders": {
@@ -215,7 +214,6 @@
       }
     }
   },
-  "statPassengers": "탑승객",
   "statPassengersValue": "{count}명",
   "@statPassengersValue": {
     "placeholders": {
@@ -224,12 +222,10 @@
       }
     }
   },
-  "statOnTime": "정시율",
   "navHome": "홈",
   "navSchedule": "시간표",
   "navGuide": "가이드",
   "navFaq": "FAQ",
-  "timetableTitle": "시간표",
   "tabFaq": "자주 묻는 질문",
   "tabSafety": "안전 수칙",
   "safetyTitleLifeVest": "구명조끼 위치",
@@ -260,5 +256,44 @@
   "safetyAttentionChild": "어린이 동반 시 승무원에게 미아 발생 방지를 위한 안내를 요청할 수 있습니다.",
   "emergencyBannerTitle": "긴급 상황 발생 시",
   "emergencyBannerContact": "승무원 즉시 신고  |  119",
-  "emergencyBannerRescue": "한강경찰대·소방구조대 실시간 연결"
+  "emergencyBannerRescue": "한강경찰대·소방구조대 실시간 연결",
+  "routeInfo": "경로 정보",
+  "departureDock": "출발 선착장",
+  "arrivalDock": "도착 선착장",
+  "estimatedInfo": "예상 정보",
+  "distanceLabel": "거리",
+  "durationLabel": "소요 시간",
+  "etaLabel": "도착 예정",
+  "routeSpeedNote": "※ 평균 속도 11 km/h 기준\\n※ 실제 운항 시간은 상황에 따라 달라질 수 있습니다",
+  "selectPrompt": "선택하세요",
+  "departureTimetable": "출발 시간표",
+  "nextDeparture": "다음 출발",
+  "weatherChangeNotice": "기상 상황에 따라 운항이 변경될 수 있습니다",
+  "approxMinutes": "약 {minutes}분",
+  "@approxMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "approxHoursMinutes": "약 {hours}시간 {minutes}분",
+  "@approxHoursMinutes": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "approxHours": "약 {hours}시간",
+  "@approxHours": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  }
 }

@@ -95,7 +95,7 @@ class MyApp extends StatelessWidget {
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
-          supportedLocales: const [Locale('ko'), Locale('en')],
+          supportedLocales: const [Locale('ko'), Locale('en'), Locale('ja')],
           localeResolutionCallback: (locale, supportedLocales) {
             if (locale == null) return const Locale('ko');
             for (final supported in supportedLocales) {

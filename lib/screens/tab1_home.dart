@@ -48,7 +48,30 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
   int _currentDockIndex = 0;
 
+  /// 각 선착장 카드의 실측 높이(index → height). 내용량에 따라 카드마다 다르다.
+  final Map<int, double> _cardHeights = {};
+
+  /// PageView 컨테이너에 적용할 현재 페이지 높이. 측정 전 기본값(넉넉히).
+  double _currentPageHeight = 720;
+
   late AnimationController _pulseController;
+
+  /// 측정 위젯이 보고한 카드 높이를 저장하고, 현재 페이지면 컨테이너 높이를 갱신한다.
+  void _reportCardHeight(int index, double height) {
+    if ((_cardHeights[index] ?? 0) == height) return;
+    _cardHeights[index] = height;
+    if (index == _currentDockIndex) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && _currentPageHeight != height) {
+          setState(() => _currentPageHeight = height);
+        }
+      });
+    }
+  }
+
+  /// 현재 페이지 인덱스에 맞는 카드 높이(측정값 없으면 직전 값 유지).
+  double _heightForIndex(int index) =>
+      _cardHeights[index] ?? _currentPageHeight;
 
   List<DockInfo> _getDocks(AppLocalizations l10n) {
     return ScheduleUtils.docks
@@ -230,7 +253,10 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
     _dockController.addListener(() {
       final page = _dockController.page ?? 0;
       if (page.round() != _currentDockIndex) {
-        setState(() => _currentDockIndex = page.round());
+        setState(() {
+          _currentDockIndex = page.round();
+          _currentPageHeight = _heightForIndex(_currentDockIndex);
+        });
         HapticFeedback.lightImpact();
       }
     });
@@ -458,8 +484,10 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
               ),
               const SliverToBoxAdapter(child: SizedBox(height: 24)),
               SliverToBoxAdapter(
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.85,
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 350),
+                  curve: Curves.easeOutCubic,
+                  height: _heightForIndex(_currentDockIndex),
                   child: PageView.builder(
                     controller: _dockController,
                     itemCount: docks.length,
@@ -478,11 +506,15 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
                             tag: dock.heroTag,
                             child: Material(
                               color: Colors.transparent,
-                              child: _buildDockCard(
-                                dock,
-                                isActive,
-                                isDarkMode,
-                                l10n,
+                              child: _MeasureSize(
+                                onChange: (size) =>
+                                    _reportCardHeight(index, size.height),
+                                child: _buildDockCard(
+                                  dock,
+                                  isActive,
+                                  isDarkMode,
+                                  l10n,
+                                ),
                               ),
                             ),
                           ),
@@ -910,312 +942,437 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
                   ),
                 ],
               ),
-              child: SingleChildScrollView(
-                physics: const NeverScrollableScrollPhysics(),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(28, 28, 28, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // 1. 선착장 이름 + 상태
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              alignment: Alignment.centerLeft,
-                              child: Stack(
-                                children: [
-                                  Text(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(28, 28, 28, 28),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // 1. 선착장 이름 + 상태
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerLeft,
+                            child: Stack(
+                              children: [
+                                Text(
+                                  dock.name,
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                    fontSize: 40,
+                                    fontWeight: FontWeight.w900,
+                                    letterSpacing: -1.5,
+                                    foreground: Paint()
+                                      ..style = PaintingStyle.stroke
+                                      ..strokeWidth = 3
+                                      ..color = isDarkMode
+                                          ? Colors.black.withValues(alpha: 0.5)
+                                          : Colors.white.withValues(alpha: 0.7),
+                                  ),
+                                ),
+                                ShaderMask(
+                                  shaderCallback: (b) => LinearGradient(
+                                    colors: isDarkMode
+                                        ? [
+                                            Colors.white,
+                                            Colors.white.withValues(alpha: 0.7),
+                                          ]
+                                        : gradient,
+                                  ).createShader(b),
+                                  child: Text(
                                     dock.name,
                                     maxLines: 1,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 40,
                                       fontWeight: FontWeight.w900,
+                                      color: Colors.white,
                                       letterSpacing: -1.5,
-                                      foreground: Paint()
-                                        ..style = PaintingStyle.stroke
-                                        ..strokeWidth = 3
-                                        ..color = isDarkMode
-                                            ? Colors.black.withValues(
-                                                alpha: 0.5,
-                                              )
-                                            : Colors.white.withValues(
-                                                alpha: 0.7,
-                                              ),
-                                    ),
-                                  ),
-                                  ShaderMask(
-                                    shaderCallback: (b) => LinearGradient(
-                                      colors: isDarkMode
-                                          ? [
-                                              Colors.white,
-                                              Colors.white.withValues(
-                                                alpha: 0.7,
-                                              ),
-                                            ]
-                                          : gradient,
-                                    ).createShader(b),
-                                    child: Text(
-                                      dock.name,
-                                      maxLines: 1,
-                                      style: const TextStyle(
-                                        fontSize: 40,
-                                        fontWeight: FontWeight.w900,
-                                        color: Colors.white,
-                                        letterSpacing: -1.5,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          AnimatedBuilder(
-                            animation: _pulseController,
-                            builder: (ctx, _) => Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 5,
-                              ),
-                              decoration: BoxDecoration(
-                                color: isDarkMode
-                                    ? Colors.grey[900]
-                                    : Colors.white,
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                  color: statusColor.withValues(
-                                    alpha: isDarkMode ? 0.6 : 0.4,
-                                  ),
-                                  width: 1.2,
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: isDarkMode
-                                        ? Colors.black.withValues(alpha: 0.3)
-                                        : Colors.black.withValues(alpha: 0.05),
-                                    blurRadius: 4,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Container(
-                                    width: 10,
-                                    height: 10,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: statusColor,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 6),
-                                  ConstrainedBox(
-                                    constraints: const BoxConstraints(
-                                      maxWidth: 74,
-                                    ),
-                                    child: FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      child: Text(
-                                        _getStatusText(
-                                          dock.operationStatus,
-                                          l10n,
-                                        ),
-                                        maxLines: 1,
-                                        style: TextStyle(
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.w800,
-                                          color: statusColor,
-                                          letterSpacing: 0.5,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 24),
-                      // 2. 다음 출발
-                      Container(
-                        padding: const EdgeInsets.all(24),
-                        decoration: BoxDecoration(
-                          color: isDarkMode
-                              ? Colors.black.withValues(alpha: 0.3)
-                              : Colors.white.withValues(alpha: 0.7),
-                          borderRadius: BorderRadius.circular(24),
-                          border: Border.all(
-                            color: isDarkMode
-                                ? Colors.white.withValues(alpha: 0.1)
-                                : gradient[0].withValues(alpha: 0.2),
-                          ),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              l10n.nextArrival,
-                              style: TextStyle(
-                                fontSize: 11,
-                                letterSpacing: 2,
-                                fontWeight: FontWeight.w600,
-                                color: isDarkMode
-                                    ? Colors.white.withValues(alpha: 0.5)
-                                    : SeoulColors.seoulBlue.withValues(
-                                        alpha: 0.6,
-                                      ),
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Flexible(
-                                  child: ShaderMask(
-                                    shaderCallback: (b) => LinearGradient(
-                                      colors: isServiceClosed
-                                          ? [Colors.grey, Colors.grey]
-                                          : gradient,
-                                    ).createShader(b),
-                                    child: FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        isServiceClosed
-                                            ? l10n.endOfService
-                                            : dock.nextDeparture,
-                                        style: TextStyle(
-                                          fontSize:
-                                              Localizations.localeOf(
-                                                    context,
-                                                  ).languageCode ==
-                                                  'en'
-                                              ? 46
-                                              : 54,
-                                          fontWeight: FontWeight.w900,
-                                          color: Colors.white,
-                                          height: 1,
-                                          letterSpacing: -2,
-                                        ),
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
                                     ),
                                   ),
                                 ),
-                                const SizedBox(width: 12),
-                                if (!isServiceClosed)
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: 8),
-                                    child: AnimatedBuilder(
-                                      animation: _pulseController,
-                                      builder: (ctx, _) => Opacity(
-                                        opacity:
-                                            0.6 + _pulseController.value * 0.4,
-                                        child: Text(
-                                          l10n.minutesLeft(
-                                            dock.minutesLeft + 1,
-                                          ),
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w700,
-                                            color: isDarkMode
-                                                ? Colors.white
-                                                : gradient[0],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
                               ],
                             ),
-                          ],
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 16),
-                      // 3. 셔틀버스
-                      if (dock.hasShuttle && dock.shuttleInfo != null) ...[
-                        GestureDetector(
-                          onTap: () => HapticFeedback.mediumImpact(),
-                          child: Container(
-                            padding: const EdgeInsets.all(16),
+                        const SizedBox(width: 12),
+                        AnimatedBuilder(
+                          animation: _pulseController,
+                          builder: (ctx, _) => Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 5,
+                            ),
                             decoration: BoxDecoration(
                               color: isDarkMode
-                                  ? Colors.white.withValues(alpha: 0.95)
-                                  : Colors.white.withValues(alpha: 0.7),
-                              borderRadius: BorderRadius.circular(16),
+                                  ? Colors.grey[900]
+                                  : Colors.white,
+                              borderRadius: BorderRadius.circular(12),
                               border: Border.all(
-                                color: gradient[0].withValues(alpha: 0.3),
-                                width: 1.5,
+                                color: statusColor.withValues(
+                                  alpha: isDarkMode ? 0.6 : 0.4,
+                                ),
+                                width: 1.2,
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: gradient[0].withValues(alpha: 0.15),
-                                  blurRadius: 12,
-                                  offset: const Offset(0, 4),
+                                  color: isDarkMode
+                                      ? Colors.black.withValues(alpha: 0.3)
+                                      : Colors.black.withValues(alpha: 0.05),
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 2),
                                 ),
                               ],
                             ),
                             child: Row(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 Container(
-                                  padding: const EdgeInsets.all(10),
+                                  width: 10,
+                                  height: 10,
                                   decoration: BoxDecoration(
-                                    gradient: LinearGradient(colors: gradient),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: const Icon(
-                                    Icons.airport_shuttle_rounded,
-                                    size: 22,
-                                    color: Colors.white,
+                                    shape: BoxShape.circle,
+                                    color: statusColor,
                                   ),
                                 ),
-                                const SizedBox(width: 14),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        l10n.freeShuttle,
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w700,
-                                          color: gradient[0],
-                                        ),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        dock.shuttleInfo!.split('\n')[0],
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                          color: SeoulColors.seoulBlue
-                                              .withValues(alpha: 0.7),
-                                        ),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ],
+                                const SizedBox(width: 6),
+                                ConstrainedBox(
+                                  constraints: const BoxConstraints(
+                                    maxWidth: 74,
                                   ),
-                                ),
-                                Icon(
-                                  Icons.arrow_forward_ios_rounded,
-                                  size: 16,
-                                  color: gradient[0].withValues(alpha: 0.5),
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      _getStatusText(
+                                        dock.operationStatus,
+                                        l10n,
+                                      ),
+                                      maxLines: 1,
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w800,
+                                        color: statusColor,
+                                        letterSpacing: 0.5,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
                           ),
                         ),
-                        const SizedBox(height: 12),
                       ],
+                    ),
+                    const SizedBox(height: 24),
+                    // 2. 다음 출발
+                    Container(
+                      padding: const EdgeInsets.all(24),
+                      decoration: BoxDecoration(
+                        color: isDarkMode
+                            ? Colors.black.withValues(alpha: 0.3)
+                            : Colors.white.withValues(alpha: 0.7),
+                        borderRadius: BorderRadius.circular(24),
+                        border: Border.all(
+                          color: isDarkMode
+                              ? Colors.white.withValues(alpha: 0.1)
+                              : gradient[0].withValues(alpha: 0.2),
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10n.nextArrival,
+                            style: TextStyle(
+                              fontSize: 11,
+                              letterSpacing: 2,
+                              fontWeight: FontWeight.w600,
+                              color: isDarkMode
+                                  ? Colors.white.withValues(alpha: 0.5)
+                                  : SeoulColors.seoulBlue.withValues(
+                                      alpha: 0.6,
+                                    ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Flexible(
+                                child: ShaderMask(
+                                  shaderCallback: (b) => LinearGradient(
+                                    colors: isServiceClosed
+                                        ? [Colors.grey, Colors.grey]
+                                        : gradient,
+                                  ).createShader(b),
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      isServiceClosed
+                                          ? l10n.endOfService
+                                          : dock.nextDeparture,
+                                      style: TextStyle(
+                                        fontSize:
+                                            Localizations.localeOf(
+                                                  context,
+                                                ).languageCode ==
+                                                'en'
+                                            ? 46
+                                            : 54,
+                                        fontWeight: FontWeight.w900,
+                                        color: Colors.white,
+                                        height: 1,
+                                        letterSpacing: -2,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              if (!isServiceClosed)
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 8),
+                                  child: AnimatedBuilder(
+                                    animation: _pulseController,
+                                    builder: (ctx, _) => Opacity(
+                                      opacity:
+                                          0.6 + _pulseController.value * 0.4,
+                                      child: Text(
+                                        l10n.minutesLeft(dock.minutesLeft + 1),
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w700,
+                                          color: isDarkMode
+                                              ? Colors.white
+                                              : gradient[0],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    // 3. 셔틀버스
+                    if (dock.hasShuttle && dock.shuttleInfo != null) ...[
+                      GestureDetector(
+                        onTap: () => HapticFeedback.mediumImpact(),
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: isDarkMode
+                                ? Colors.white.withValues(alpha: 0.95)
+                                : Colors.white.withValues(alpha: 0.7),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: gradient[0].withValues(alpha: 0.3),
+                              width: 1.5,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: gradient[0].withValues(alpha: 0.15),
+                                blurRadius: 12,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(colors: gradient),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: const Icon(
+                                  Icons.airport_shuttle_rounded,
+                                  size: 22,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const SizedBox(width: 14),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      l10n.freeShuttle,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w700,
+                                        color: gradient[0],
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      dock.shuttleInfo!.split('\n')[0],
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        color: SeoulColors.seoulBlue.withValues(
+                                          alpha: 0.7,
+                                        ),
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                size: 16,
+                                color: gradient[0].withValues(alpha: 0.5),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                       const SizedBox(height: 12),
-                      // 4. 주차
+                    ],
+                    const SizedBox(height: 12),
+                    // 4. 주차
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: isDarkMode
+                            ? Colors.black.withValues(alpha: 0.3)
+                            : Colors.white.withValues(alpha: 0.7),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: isDarkMode
+                              ? Colors.white.withValues(alpha: 0.1)
+                              : gradient[0].withValues(alpha: 0.2),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.local_parking_rounded,
+                            size: 24,
+                            color: gradient[0],
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  l10n.parkingSpacesSuffix(dock.parkingSpaces),
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w900,
+                                    color: isDarkMode
+                                        ? Colors.white
+                                        : gradient[0],
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  dock.parkingName,
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: isDarkMode
+                                        ? Colors.white.withValues(alpha: 0.6)
+                                        : SeoulColors.seoulBlue.withValues(
+                                            alpha: 0.7,
+                                          ),
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    // 4-1. 가까운 따릉이 / 주차장 (실시간 최근접)
+                    Builder(
+                      builder: (context) {
+                        final dockType = ScheduleUtils.dockTypeFromName(
+                          dock.nameEn,
+                        );
+                        if (dockType == null) {
+                          return const SizedBox.shrink();
+                        }
+                        return DockAmenityCard(
+                          dockType: dockType,
+                          data: realtimeData,
+                          gradient: gradient,
+                          isDarkMode: isDarkMode,
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    // 5. 버스
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                      decoration: BoxDecoration(
+                        color: isDarkMode
+                            ? Colors.black.withValues(alpha: 0.3)
+                            : Colors.white.withValues(alpha: 0.7),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: isDarkMode
+                              ? Colors.white.withValues(alpha: 0.1)
+                              : gradient[0].withValues(alpha: 0.2),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.directions_bus_rounded,
+                            size: 20,
+                            color: gradient[0],
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Wrap(
+                              spacing: 6,
+                              runSpacing: 6,
+                              children: dock.busRoutes
+                                  .map(
+                                    (route) => Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 8,
+                                        vertical: 4,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: gradient[0].withValues(
+                                          alpha: 0.15,
+                                        ),
+                                        borderRadius: BorderRadius.circular(6),
+                                      ),
+                                      child: Text(
+                                        route,
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w700,
+                                          color: gradient[0],
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    // 6. 부대시설 — gradient 기반 칩 색상
+                    if (dock.facilities.isNotEmpty)
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
@@ -1229,291 +1386,149 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
                                 : gradient[0].withValues(alpha: 0.2),
                           ),
                         ),
-                        child: Row(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(
-                              Icons.local_parking_rounded,
-                              size: 24,
-                              color: gradient[0],
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    l10n.parkingSpacesSuffix(
-                                      dock.parkingSpaces,
-                                    ),
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w900,
-                                      color: isDarkMode
-                                          ? Colors.white
-                                          : gradient[0],
-                                    ),
-                                  ),
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    dock.parkingName,
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      color: isDarkMode
-                                          ? Colors.white.withValues(alpha: 0.6)
-                                          : SeoulColors.seoulBlue.withValues(
-                                              alpha: 0.7,
-                                            ),
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      // 4-1. 가까운 따릉이 / 주차장 (실시간 최근접)
-                      Builder(
-                        builder: (context) {
-                          final dockType = ScheduleUtils.dockTypeFromName(
-                            dock.nameEn,
-                          );
-                          if (dockType == null) {
-                            return const SizedBox.shrink();
-                          }
-                          return DockAmenityCard(
-                            dockType: dockType,
-                            data: realtimeData,
-                            gradient: gradient,
-                            isDarkMode: isDarkMode,
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 12),
-                      // 5. 버스
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 12,
-                        ),
-                        decoration: BoxDecoration(
-                          color: isDarkMode
-                              ? Colors.black.withValues(alpha: 0.3)
-                              : Colors.white.withValues(alpha: 0.7),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: isDarkMode
-                                ? Colors.white.withValues(alpha: 0.1)
-                                : gradient[0].withValues(alpha: 0.2),
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.directions_bus_rounded,
-                              size: 20,
-                              color: gradient[0],
-                            ),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: Wrap(
-                                spacing: 6,
-                                runSpacing: 6,
-                                children: dock.busRoutes
-                                    .map(
-                                      (route) => Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 8,
-                                          vertical: 4,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: gradient[0].withValues(
-                                            alpha: 0.15,
-                                          ),
-                                          borderRadius: BorderRadius.circular(
-                                            6,
-                                          ),
-                                        ),
-                                        child: Text(
-                                          route,
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                            fontWeight: FontWeight.w700,
-                                            color: gradient[0],
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                    .toList(),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      // 6. 부대시설 — gradient 기반 칩 색상
-                      if (dock.facilities.isNotEmpty)
-                        Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: isDarkMode
-                                ? Colors.black.withValues(alpha: 0.3)
-                                : Colors.white.withValues(alpha: 0.7),
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(
-                              color: isDarkMode
-                                  ? Colors.white.withValues(alpha: 0.1)
-                                  : gradient[0].withValues(alpha: 0.2),
-                            ),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.store_rounded,
-                                    size: 20,
-                                    color: gradient[0],
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    l10n.facilities,
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w700,
-                                      color: isDarkMode
-                                          ? Colors.white.withValues(alpha: 0.8)
-                                          : gradient[0],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 10),
-                              Wrap(
-                                spacing: 6,
-                                runSpacing: 6,
-                                children: dock.facilities
-                                    .map(
-                                      (facility) => Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 10,
-                                          vertical: 6,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          // ✅ 버스 번호와 동일한 스타일 (gradient 기반 파란색)
-                                          color: gradient[0].withValues(
-                                            alpha: 0.15,
-                                          ),
-                                          borderRadius: BorderRadius.circular(
-                                            8,
-                                          ),
-                                          border: Border.all(
-                                            color: gradient[0].withValues(
-                                              alpha: 0.3,
-                                            ),
-                                          ),
-                                        ),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Text(
-                                              _getFacilityIcon(facility),
-                                              style: const TextStyle(
-                                                fontSize: 12,
-                                              ),
-                                            ),
-                                            const SizedBox(width: 4),
-                                            Text(
-                                              facility,
-                                              style: TextStyle(
-                                                fontSize: 11,
-                                                fontWeight: FontWeight.w700,
-                                                color: gradient[0],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                    .toList(),
-                              ),
-                            ],
-                          ),
-                        ),
-                      const SizedBox(height: 20),
-                      // 7. 지도 버튼
-                      GestureDetector(
-                        onTap: () {
-                          HapticFeedback.mediumImpact();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => DockMapScreen(dockInfo: dock),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: gradient,
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
-                            borderRadius: BorderRadius.circular(18),
-                            boxShadow: [
-                              BoxShadow(
-                                color: gradient[0].withValues(alpha: 0.4),
-                                blurRadius: 16,
-                                offset: const Offset(0, 6),
-                              ),
-                              BoxShadow(
-                                color: gradient[0].withValues(alpha: 0.2),
-                                blurRadius: 8,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(6),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: 0.2),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: const Icon(
-                                  Icons.map_rounded,
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.store_rounded,
                                   size: 20,
-                                  color: Colors.white,
+                                  color: gradient[0],
                                 ),
-                              ),
-                              const SizedBox(width: 12),
-                              Text(
-                                l10n.scheduleAndMap,
-                                style: const TextStyle(
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w800,
-                                  color: Colors.white,
-                                  letterSpacing: 0.5,
+                                const SizedBox(width: 8),
+                                Text(
+                                  l10n.facilities,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w700,
+                                    color: isDarkMode
+                                        ? Colors.white.withValues(alpha: 0.8)
+                                        : gradient[0],
+                                  ),
                                 ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            Wrap(
+                              spacing: 6,
+                              runSpacing: 6,
+                              children: dock.facilities
+                                  .map(
+                                    (facility) => Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                        vertical: 6,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        // ✅ 버스 번호와 동일한 스타일 (gradient 기반 파란색)
+                                        color: gradient[0].withValues(
+                                          alpha: 0.15,
+                                        ),
+                                        borderRadius: BorderRadius.circular(8),
+                                        border: Border.all(
+                                          color: gradient[0].withValues(
+                                            alpha: 0.3,
+                                          ),
+                                        ),
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            _getFacilityIcon(facility),
+                                            style: const TextStyle(
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            facility,
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.w700,
+                                              color: gradient[0],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
+                          ],
+                        ),
+                      ),
+                    const SizedBox(height: 20),
+                    // 7. 지도 버튼
+                    GestureDetector(
+                      onTap: () {
+                        HapticFeedback.mediumImpact();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => DockMapScreen(dockInfo: dock),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: gradient,
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(18),
+                          boxShadow: [
+                            BoxShadow(
+                              color: gradient[0].withValues(alpha: 0.4),
+                              blurRadius: 16,
+                              offset: const Offset(0, 6),
+                            ),
+                            BoxShadow(
+                              color: gradient[0].withValues(alpha: 0.2),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.2),
+                                borderRadius: BorderRadius.circular(8),
                               ),
-                              const SizedBox(width: 8),
-                              const Icon(
-                                Icons.arrow_forward_rounded,
+                              child: const Icon(
+                                Icons.map_rounded,
                                 size: 20,
                                 color: Colors.white,
                               ),
-                            ],
-                          ),
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              l10n.scheduleAndMap,
+                              style: const TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.w800,
+                                color: Colors.white,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            const Icon(
+                              Icons.arrow_forward_rounded,
+                              size: 20,
+                              color: Colors.white,
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -2777,4 +2792,37 @@ class _DockMeta {
     required this.facilities,
     required this.busRoutes,
   });
+}
+
+/// 자식 위젯의 렌더 크기를 측정해 콜백으로 전달하는 위젯.
+/// PageView 안에서 각 카드의 실제 높이를 알아내 컨테이너 높이를 맞추는 데 사용한다.
+class _MeasureSize extends StatefulWidget {
+  final Widget child;
+  final ValueChanged<Size> onChange;
+
+  const _MeasureSize({required this.child, required this.onChange});
+
+  @override
+  State<_MeasureSize> createState() => _MeasureSizeState();
+}
+
+class _MeasureSizeState extends State<_MeasureSize> {
+  final GlobalKey _key = GlobalKey();
+  Size? _oldSize;
+
+  @override
+  Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback(_notify);
+    return Container(key: _key, child: widget.child);
+  }
+
+  void _notify(_) {
+    if (!mounted) return;
+    final ctx = _key.currentContext;
+    if (ctx == null) return;
+    final size = (ctx.findRenderObject() as RenderBox?)?.size;
+    if (size == null || size == _oldSize) return;
+    _oldSize = size;
+    widget.onChange(size);
+  }
 }

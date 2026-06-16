@@ -1,0 +1,299 @@
+{
+  "@@locale": "ja",
+  "timetableTitle": "時刻表",
+  "directionMagokToYeouido": "麻谷 → 汝矣島",
+  "directionYeouidoToMagok": "汝矣島 → 麻谷",
+  "dockMagok": "麻谷",
+  "dockMangwon": "望遠",
+  "dockYeouido": "汝矣島",
+  "dockApgujeong": "狎鴎亭",
+  "dockOksu": "玉水",
+  "dockTtukseom": "トゥクソム",
+  "dockJamsil": "蚕室",
+  "directionToYeouido": "汝矣島行き",
+  "directionToMagok": "麻谷行き",
+  "directionToJamsil": "蚕室行き",
+  "nextBoat": "次の便",
+  "firstBoat": "始発",
+  "lastBoat": "最終",
+  "departIn": "{time} 出発",
+  "@departIn": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "serviceClosedToday": "本日の運航は終了しました",
+  "tomorrowFirstBoat": "明日の始発 {time}",
+  "@tomorrowFirstBoat": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "transferHub": "乗換",
+  "yeouidoTransferTitle": "汝矣島 乗換案内",
+  "routeOverview": "路線図",
+  "boundFor": "{dock}行き",
+  "@boundFor": {
+    "placeholders": {
+      "dock": {
+        "type": "String"
+      }
+    }
+  },
+  "minutesLeft": "{minutes}分後",
+  "@minutesLeft": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "hoursMinutesLeft": "{hours}時間 {minutes}分",
+  "@hoursMinutesLeft": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "departed": "出発済み",
+  "storyPageTitle": "漢江の歴史/グルメ",
+  "storyPageSubtitle": "漢江バス乗り場ごとの歴史・グルメ情報",
+  "categoryHistory": "歴史",
+  "categoryFood": "グルメ",
+  "comingSoon": "準備中です",
+  "infoLabelLocation": "位置",
+  "infoLabelAccess": "アクセス",
+  "infoLabelPeriod": "時代",
+  "infoLabelHours": "営業",
+  "infoLabelPrice": "料金",
+  "dockSuffix": "{dockName} 乗り場",
+  "@dockSuffix": {
+    "placeholders": {
+      "dockName": {
+        "type": "String"
+      }
+    }
+  },
+  "homeTitle": "漢江バス",
+  "homeSubtitle": "リアルタイム運航状況",
+  "nextArrival": "次の到着予定",
+  "freeShuttle": "無料シャトルバス",
+  "parking": "駐車",
+  "parkingSpacesAvailable": "{count}台 空き",
+  "@parkingSpacesAvailable": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "parkingSpacesSuffix": "{count}台",
+  "@parkingSpacesSuffix": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "parkingSpacesTotal": "全{count}台中 空き",
+  "@parkingSpacesTotal": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "fullTimetable": "全時刻表",
+  "nearbyAttractions": "周辺の名所",
+  "todayLabel": "TODAY",
+  "statTrips": "運航",
+  "statPassengers": "乗客",
+  "statOnTime": "定時運行率",
+  "liveStatusLabel": "リアルタイム",
+  "liveDataUnavailable": "情報なし",
+  "liveUpdatedJustNow": "たった今更新",
+  "liveUpdatedAgo": "{minutes}分前に更新",
+  "@liveUpdatedAgo": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "statTodayTrips": "本日の運航",
+  "statCongestion": "混雑度",
+  "statBikesShort": "ソウル自転車",
+  "statParkingShort": "駐車",
+  "congestionRelaxed": "空いている",
+  "congestionNormal": "普通",
+  "congestionSlightlyBusy": "やや混雑",
+  "congestionBusy": "混雑",
+  "congestionUnknown": "情報なし",
+  "statusNormal": "通常運航",
+  "statusPartial": "一部運休",
+  "statusStopped": "全面運休",
+  "facilityConvenienceStore": "コンビニ",
+  "facilityRamen": "ラーメン体験ゾーン",
+  "facilityFastFood": "ファストフード",
+  "facilityCafe": "カフェ",
+  "dockSheetTitle": "{name} 乗り場",
+  "@dockSheetTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "realtimeStatus": "リアルタイム状況",
+  "weatherInfo": "天気情報",
+  "hourlyForecast": "時間別予報",
+  "fullForecast": "24時間予報をすべて見る",
+  "weatherForecast24h": "24時間天気予報",
+  "accessInfo": "アクセス手段",
+  "walkingMinutes": "徒歩{minutes}分",
+  "@walkingMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "facilities": "付帯施設",
+  "scheduleAndMap": "地図",
+  "feelsLike": "体感 {temp}°",
+  "@feelsLike": {
+    "placeholders": {
+      "temp": {
+        "type": "String"
+      }
+    }
+  },
+  "humidity": "湿度",
+  "windSpeed": "風速",
+  "fineDust": "微小粒子状物質",
+  "updatedMinutesAgo": "5分前に更新",
+  "currentPopulation": "現在の人口",
+  "bikeShare": "ソウル自転車",
+  "bikeStationsCount": "{count}カ所",
+  "@bikeStationsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bikesAvailable": "{count}台 利用可能",
+  "@bikesAvailable": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "weeklyForecast": "週間予報を見る",
+  "dustGood": "良い",
+  "dustNormal": "普通",
+  "dustBad": "悪い",
+  "dustVeryBad": "非常に悪い",
+  "statusClosed": "運航終了",
+  "endOfService": "運航終了",
+  "boardingDeclaration": "漢江バス乗船申告",
+  "statTripsValue": "{count}回",
+  "@statTripsValue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statPassengersValue": "{count}人",
+  "@statPassengersValue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "navHome": "ホーム",
+  "navSchedule": "時刻表",
+  "navGuide": "ガイド",
+  "navFaq": "FAQ",
+  "tabFaq": "よくある質問",
+  "tabSafety": "安全のしおり",
+  "safetyTitleLifeVest": "ライフジャケットの位置",
+  "safetyLifeVestAdult": "各座席下の収納ボックスに大人用ライフジャケットが1つずつ備え付けられています。",
+  "safetyLifeVestChild": "乳幼児・子供用ライフジャケットは船内専用キャビネット(収納ボックス)に別途保管されています。乗務員にお尋ねください。",
+  "safetyLifeVestAccess": "ライフジャケット収納ボックスは緊急時にすぐ取り出せるよう、常に開放状態を保っています。",
+  "safetyTitleHowToWear": "ライフジャケットの着用方法",
+  "safetyWearStep1": "座席下の収納ボックスを開けてライフジャケットを取り出します。",
+  "safetyWearStep2": "ライフジャケットを頭からかぶって着用します。",
+  "safetyWearStep3": "前側のバックルを「カチッ」と音がするまで留めます。",
+  "safetyWearStep4": "腰ひもを体に密着するよう引いて締めます。",
+  "safetyWearStep5": "入水後はライフジャケット前側の赤いハンドル(二酸化炭素膨張装置)を力強く引いて膨張させます。",
+  "safetyWearTip": "自動膨張しない場合は、ライフジャケットの口での膨張チューブ(黄色)を口で吹いて膨張させます。",
+  "safetyTitleEvacuation": "緊急脱出案内",
+  "safetyEvacExit": "非常口は船室の前方(船首)と後方(船尾)の両側にあります。乗船後、位置を事前に確認しておいてください。",
+  "safetyEvacCalm": "緊急時は乗務員の案内放送に従い、落ち着いて指定された出口へ避難します。",
+  "safetyEvacStay": "船が完全に停止するまでは、絶対に席を立たないでください。",
+  "safetyEvacRescue": "避難後は乗り場または救助船へ移動し、漢江警察隊・消防救助隊とリアルタイムで連携した救助システムが直ちに出動します。",
+  "safetyTitleReporting": "緊急通報の方法",
+  "safetyReportCall": "船内の乗務員に直ちに知らせるか、漢江バスお客様センターまたは119に通報してください。",
+  "safetyReportTube": "船内に備え付けられた救命浮環(リング型ブイ)は、水に落ちた人に向かって投げて救助できます。",
+  "safetyReportQR": "乗船前に必ずQRコードで乗船申告を完了してください。事故発生時の迅速な救助に不可欠です。",
+  "safetyTitleAttention": "乗船時の注意事項",
+  "safetyAttentionWave": "船の特性上、波によって揺れることがあります。特に他の船が通過する際は揺れが大きくなることがあるので、手すりにおつかまりください。",
+  "safetyAttentionDeck": "甲板(屋外デッキ)に出るには、必ず船内のQRコードで乗船申告を先に完了する必要があります。",
+  "safetyAttentionDanger": "電気設備室など危険区域には絶対に立ち入らないでください。",
+  "safetyAttentionBike": "個人の自転車は乗船可能ですが、ソウル自転車および電動キックボード(電動アシスト自転車を含む)は乗船できません。",
+  "safetyAttentionChild": "お子様連れの場合、迷子防止のための案内を乗務員にご依頼いただけます。",
+  "emergencyBannerTitle": "緊急事態発生時",
+  "emergencyBannerContact": "乗務員へ直ちに通報  |  119",
+  "emergencyBannerRescue": "漢江警察隊・消防救助隊とリアルタイム連携",
+  "routeInfo": "経路情報",
+  "departureDock": "出発乗り場",
+  "arrivalDock": "到着乗り場",
+  "estimatedInfo": "予想情報",
+  "distanceLabel": "距離",
+  "durationLabel": "所要時間",
+  "etaLabel": "到着予定",
+  "routeSpeedNote": "※ 平均速度11km/h基準\\n※ 実際の運航時間は状況により異なる場合があります",
+  "selectPrompt": "選択してください",
+  "departureTimetable": "出発時刻表",
+  "nextDeparture": "次の出発",
+  "weatherChangeNotice": "天候により運航が変更される場合があります",
+  "approxMinutes": "約{minutes}分",
+  "@approxMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "approxHoursMinutes": "約{hours}時間{minutes}分",
+  "@approxHoursMinutes": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "approxHours": "約{hours}時間",
+  "@approxHours": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  }
+}

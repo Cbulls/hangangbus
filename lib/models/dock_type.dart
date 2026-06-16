@@ -1,5 +1,4 @@
 // dock_type.dart
-import 'package:flutter/widgets.dart';
 import 'package:hangangbus/l10n/app_localizations.dart';
 
 enum DockType {
@@ -40,6 +39,8 @@ extension DockTypeL10n on DockType {
 /// 서울숲 라벨(현지화). app_localizations 자동생성 파일을 수정하지 않기 위해
 /// 여기서 직접 처리한다.
 String _seoulForestLabel(String localeName) {
-  final isKo = localeName.toLowerCase().startsWith('ko');
-  return isKo ? '서울숲' : 'Seoul Forest';
+  final code = localeName.toLowerCase();
+  if (code.startsWith('ko')) return '서울숲';
+  if (code.startsWith('ja')) return 'ソウルの森';
+  return 'Seoul Forest';
 }

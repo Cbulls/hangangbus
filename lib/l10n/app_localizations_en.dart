@@ -171,56 +171,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get todayLabel => 'TODAY';
 
   @override
-  String get statTrips => 'Trips';
-
-  @override
-  String get statPassengers => 'Passengers';
-
-  @override
-  String get statOnTime => 'On-Time';
-
-  @override
-  String get liveStatusLabel => 'LIVE';
-
-  @override
-  String get liveDataUnavailable => 'No data';
-
-  @override
-  String get liveUpdatedJustNow => 'Updated just now';
-
-  @override
-  String liveUpdatedAgo(int minutes) {
-    return 'Updated ${minutes}m ago';
-  }
-
-  @override
-  String get statTodayTrips => 'Today\'s Trips';
-
-  @override
-  String get statCongestion => 'Congestion';
-
-  @override
-  String get statBikesShort => 'Bikes';
-
-  @override
-  String get statParkingShort => 'Parking';
-
-  @override
-  String get congestionRelaxed => 'Relaxed';
-
-  @override
-  String get congestionNormal => 'Normal';
-
-  @override
-  String get congestionSlightlyBusy => 'Slightly Busy';
-
-  @override
-  String get congestionBusy => 'Busy';
-
-  @override
-  String get congestionUnknown => 'Unknown';
-
-  @override
   String get statusNormal => 'Normal';
 
   @override
@@ -333,14 +283,64 @@ class AppLocalizationsEn extends AppLocalizations {
   String get boardingDeclaration => 'Passenger Check-in';
 
   @override
+  String get statTrips => 'Trips';
+
+  @override
   String statTripsValue(int count) {
     return '$count';
   }
 
   @override
+  String get statPassengers => 'Passengers';
+
+  @override
   String statPassengersValue(int count) {
     return '$count';
   }
+
+  @override
+  String get statOnTime => 'On-Time';
+
+  @override
+  String get liveStatusLabel => 'LIVE';
+
+  @override
+  String get liveDataUnavailable => 'No data';
+
+  @override
+  String get liveUpdatedJustNow => 'Updated just now';
+
+  @override
+  String liveUpdatedAgo(int minutes) {
+    return 'Updated ${minutes}m ago';
+  }
+
+  @override
+  String get statTodayTrips => 'Today\'s Trips';
+
+  @override
+  String get statCongestion => 'Congestion';
+
+  @override
+  String get statBikesShort => 'Bikes';
+
+  @override
+  String get statParkingShort => 'Parking';
+
+  @override
+  String get congestionRelaxed => 'Relaxed';
+
+  @override
+  String get congestionNormal => 'Normal';
+
+  @override
+  String get congestionSlightlyBusy => 'Slightly Busy';
+
+  @override
+  String get congestionBusy => 'Busy';
+
+  @override
+  String get congestionUnknown => 'Unknown';
 
   @override
   String get navHome => 'Home';
@@ -364,99 +364,79 @@ class AppLocalizationsEn extends AppLocalizations {
   String get safetyTitleLifeVest => 'Life Vest Location';
 
   @override
-  String get safetyLifeVestAdult =>
-      'One adult life vest is provided in the storage compartment under each seat.';
+  String get safetyLifeVestAdult => 'One adult life vest is provided in the storage compartment under each seat.';
 
   @override
-  String get safetyLifeVestChild =>
-      'Life vests for infants and children are stored in a separate cabin cabinet. Please ask a crew member.';
+  String get safetyLifeVestChild => 'Life vests for infants and children are stored in a separate cabin cabinet. Please ask a crew member.';
 
   @override
-  String get safetyLifeVestAccess =>
-      'Life vest compartments remain unlocked at all times for immediate access during emergencies.';
+  String get safetyLifeVestAccess => 'Life vest compartments remain unlocked at all times for immediate access during emergencies.';
 
   @override
   String get safetyTitleHowToWear => 'How to Wear a Life Vest';
 
   @override
-  String get safetyWearStep1 =>
-      'Open the storage compartment under your seat and take out the life vest.';
+  String get safetyWearStep1 => 'Open the storage compartment under your seat and take out the life vest.';
 
   @override
   String get safetyWearStep2 => 'Place the life vest over your head.';
 
   @override
-  String get safetyWearStep3 =>
-      'Fasten the front buckles until you hear a \'click\'.';
+  String get safetyWearStep3 => 'Fasten the front buckles until you hear a \'click\'.';
 
   @override
-  String get safetyWearStep4 =>
-      'Pull the waist straps tight so the vest fits snugly to your body.';
+  String get safetyWearStep4 => 'Pull the waist straps tight so the vest fits snugly to your body.';
 
   @override
-  String get safetyWearStep5 =>
-      'After entering the water, pull the red handle (CO2 inflator) firmly to inflate the vest.';
+  String get safetyWearStep5 => 'After entering the water, pull the red handle (CO2 inflator) firmly to inflate the vest.';
 
   @override
-  String get safetyWearTip =>
-      'If it fails to inflate automatically, blow into the yellow oral inflation tube.';
+  String get safetyWearTip => 'If it fails to inflate automatically, blow into the yellow oral inflation tube.';
 
   @override
   String get safetyTitleEvacuation => 'Emergency Evacuation';
 
   @override
-  String get safetyEvacExit =>
-      'Emergency exits are located at both the front (bow) and rear (stern). Please locate them upon boarding.';
+  String get safetyEvacExit => 'Emergency exits are located at both the front (bow) and rear (stern). Please locate them upon boarding.';
 
   @override
-  String get safetyEvacCalm =>
-      'In case of emergency, stay calm and evacuate through designated exits following crew instructions.';
+  String get safetyEvacCalm => 'In case of emergency, stay calm and evacuate through designated exits following crew instructions.';
 
   @override
-  String get safetyEvacStay =>
-      'Never leave your seat until the vessel has come to a complete stop.';
+  String get safetyEvacStay => 'Never leave your seat until the vessel has come to a complete stop.';
 
   @override
-  String get safetyEvacRescue =>
-      'After evacuation, move to the dock or rescue boat. Emergency teams are on standby for immediate dispatch.';
+  String get safetyEvacRescue => 'After evacuation, move to the dock or rescue boat. Emergency teams are on standby for immediate dispatch.';
 
   @override
   String get safetyTitleReporting => 'How to Report an Emergency';
 
   @override
-  String get safetyReportCall =>
-      'Notify a crew member immediately, or call the Hangang Bus Center or 119.';
+  String get safetyReportCall => 'Notify a crew member immediately, or call the Hangang Bus Center or 119.';
 
   @override
-  String get safetyReportTube =>
-      'Lifebuoys (ring buoys) on board can be thrown to rescue someone in the water.';
+  String get safetyReportTube => 'Lifebuoys (ring buoys) on board can be thrown to rescue someone in the water.';
 
   @override
-  String get safetyReportQR =>
-      'You must complete the boarding report via QR code before departure for rapid rescue in an emergency.';
+  String get safetyReportQR => 'You must complete the boarding report via QR code before departure for rapid rescue in an emergency.';
 
   @override
   String get safetyTitleAttention => 'Boarding Precautions';
 
   @override
-  String get safetyAttentionWave =>
-      'The vessel may shake due to waves, especially when other boats pass. Please hold onto the handrails.';
+  String get safetyAttentionWave => 'The vessel may shake due to waves, especially when other boats pass. Please hold onto the handrails.';
 
   @override
-  String get safetyAttentionDeck =>
-      'To access the outdoor deck, you must first complete the boarding report via the onboard QR code.';
+  String get safetyAttentionDeck => 'To access the outdoor deck, you must first complete the boarding report via the onboard QR code.';
 
   @override
-  String get safetyAttentionDanger =>
-      'Never enter restricted areas such as the electrical equipment room.';
+  String get safetyAttentionDanger => 'Never enter restricted areas such as the electrical equipment room.';
 
   @override
-  String get safetyAttentionBike =>
-      'Personal bicycles are allowed, but \'Ttareungyi\' and electric scooters (including e-bikes) are prohibited.';
+  String get safetyAttentionBike => 'Personal bicycles are allowed, but \'Ttareungyi\' and electric scooters (including e-bikes) are prohibited.';
 
   @override
-  String get safetyAttentionChild =>
-      'When traveling with children, you may request assistance from the crew to prevent missing children.';
+  String get safetyAttentionChild => 'When traveling with children, you may request assistance from the crew to prevent missing children.';
 
   @override
   String get emergencyBannerTitle => 'In Case of Emergency';
@@ -465,6 +445,56 @@ class AppLocalizationsEn extends AppLocalizations {
   String get emergencyBannerContact => 'Report to Crew  |  119';
 
   @override
-  String get emergencyBannerRescue =>
-      'Real-time connection with River Police & Fire Rescue';
+  String get emergencyBannerRescue => 'Real-time connection with River Police & Fire Rescue';
+
+  @override
+  String get routeInfo => 'Route Info';
+
+  @override
+  String get departureDock => 'Departure Dock';
+
+  @override
+  String get arrivalDock => 'Arrival Dock';
+
+  @override
+  String get estimatedInfo => 'Estimated Info';
+
+  @override
+  String get distanceLabel => 'Distance';
+
+  @override
+  String get durationLabel => 'Duration';
+
+  @override
+  String get etaLabel => 'ETA';
+
+  @override
+  String get routeSpeedNote => '* Based on an average speed of 11 km/h\\n* Actual travel time may vary depending on conditions';
+
+  @override
+  String get selectPrompt => 'Please select';
+
+  @override
+  String get departureTimetable => 'Departure Timetable';
+
+  @override
+  String get nextDeparture => 'Next Departure';
+
+  @override
+  String get weatherChangeNotice => 'Service may change depending on weather conditions';
+
+  @override
+  String approxMinutes(int minutes) {
+    return 'About $minutes min';
+  }
+
+  @override
+  String approxHoursMinutes(int hours, int minutes) {
+    return 'About ${hours}h ${minutes}m';
+  }
+
+  @override
+  String approxHours(int hours) {
+    return 'About ${hours}h';
+  }
 }

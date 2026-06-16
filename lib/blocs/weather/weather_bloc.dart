@@ -1,32 +1,30 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:hangangbus/repositories/weather_repository.dart';
 import 'package:hangangbus/models/weather_data.dart';
-
 part 'weather_event.dart';
 part 'weather_state.dart';
 
-/// 한강공원별 날씨 데이터를 관리한다.
-/// 기존 _Tab1HomeState._fetchWeather / _weatherTimer / _weatherLoading 대체.
+/// 서울 전역 대표 날씨 1건을 관리한다.
+///
+/// 기존에는 선착장(공원)별로 날씨를 각각 호출해 기온이 관측소마다 1~2도씩
+/// 다르게 보였다(같은 서울인데 잠실만 30도 등). 모든 선착장은 같은 서울이므로
+/// 대표 날씨 1건만 조회해 전 선착장이 공유한다.
+///
+/// - API 호출: 대표 장소 1회 (+ 최초 표시용 fallback 1회)
+/// - 갱신 주기: 10분 (기온은 1초마다 받을 필요가 없음)
+/// - 마지막 성공값 캐시: 갱신 실패해도 직전 값을 유지
 class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
   WeatherBloc(this._repo) : super(const WeatherState()) {
     on<WeatherSubscriptionRequested>(_onSubscription);
     on<WeatherRefreshRequested>(_onRefresh);
   }
-
   final WeatherRepository _repo;
   Timer? _timer;
 
-  static const String _primaryPark = '마곡나루역';
-  static const List<String> _parks = [
-    _primaryPark,
-    '망원한강공원',
-    '여의도한강공원',
-    '뚝섬한강공원',
-    '잠실한강공원',
-  ];
+  /// 서울 대표 날씨를 가져올 기준 장소.
+  static const String _representativePark = '여의도한강공원';
 
   Future<void> _onSubscription(
     WeatherSubscriptionRequested event,
@@ -47,51 +45,30 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
   }
 
   Future<void> _load(Emitter<WeatherState> emit) async {
-    emit(state.copyWith(status: WeatherStatus.loading));
+    // 이미 성공 데이터가 있으면 로딩 표시로 깜빡이지 않게 둔다.
+    if (state.representative == null) {
+      emit(state.copyWith(status: WeatherStatus.loading));
 
-    // 1) 키 없는 fallback 으로 즉시 기온 표시
-    final quick = await _repo.fetchFallback();
-    if (quick != null) {
-      emit(
-        state.copyWith(
-          status: WeatherStatus.success,
-          weatherByPark: {
-            ...state.weatherByPark,
-            _primaryPark: quick,
-            '여의도한강공원': quick,
-          },
-        ),
-      );
-    }
-
-    // 2) 주 공원(마곡) 정식 데이터
-    final primary = await _repo.fetch(_primaryPark);
-    if (primary != null) {
-      emit(
-        state.copyWith(
-          status: WeatherStatus.success,
-          weatherByPark: {
-            ...state.weatherByPark,
-            _primaryPark: primary,
-            '여의도한강공원': primary,
-          },
-        ),
-      );
-    }
-
-    // 3) 나머지 공원 순차 갱신
-    for (final park in _parks.where((p) => p != _primaryPark)) {
-      final weather = await _repo.fetch(park);
-      if (weather != null) {
+      // 1) 키 없이 즉시 표시 가능한 fallback 기온 (빠른 첫 화면)
+      final quick = await _repo.fetchFallback();
+      if (quick != null) {
         emit(
-          state.copyWith(
-            weatherByPark: {...state.weatherByPark, park: weather},
-          ),
+          state.copyWith(status: WeatherStatus.success, representative: quick),
         );
       }
     }
 
-    if (state.status != WeatherStatus.success) {
+    // 2) 서울 대표 장소 정식 데이터로 갱신
+    final primary = await _repo.fetch(_representativePark);
+    if (primary != null) {
+      emit(
+        state.copyWith(status: WeatherStatus.success, representative: primary),
+      );
+      return;
+    }
+
+    // 3) 정식 데이터 실패 + 캐시도 없으면 실패 처리 (캐시 있으면 유지)
+    if (state.representative == null) {
       emit(state.copyWith(status: WeatherStatus.failure));
     }
   }

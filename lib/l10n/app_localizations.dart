@@ -6,6 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations_en.dart';
+import 'app_localizations_ja.dart';
 import 'app_localizations_ko.dart';
 
 // ignore_for_file: type=lint
@@ -62,8 +63,7 @@ import 'app_localizations_ko.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale)
-    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -71,8 +71,7 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate =
-      _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -84,18 +83,18 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
-      <LocalizationsDelegate<dynamic>>[
-        delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ];
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
+    delegate,
+    GlobalMaterialLocalizations.delegate,
+    GlobalCupertinoLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+  ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
-    Locale('ko'),
+    Locale('ja'),
+    Locale('ko')
   ];
 
   /// No description provided for @timetableTitle.
@@ -386,102 +385,6 @@ abstract class AppLocalizations {
   /// **'TODAY'**
   String get todayLabel;
 
-  /// No description provided for @statTrips.
-  ///
-  /// In en, this message translates to:
-  /// **'Trips'**
-  String get statTrips;
-
-  /// No description provided for @statPassengers.
-  ///
-  /// In en, this message translates to:
-  /// **'Passengers'**
-  String get statPassengers;
-
-  /// No description provided for @statOnTime.
-  ///
-  /// In en, this message translates to:
-  /// **'On-Time'**
-  String get statOnTime;
-
-  /// No description provided for @liveStatusLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'LIVE'**
-  String get liveStatusLabel;
-
-  /// No description provided for @liveDataUnavailable.
-  ///
-  /// In en, this message translates to:
-  /// **'No data'**
-  String get liveDataUnavailable;
-
-  /// No description provided for @liveUpdatedJustNow.
-  ///
-  /// In en, this message translates to:
-  /// **'Updated just now'**
-  String get liveUpdatedJustNow;
-
-  /// No description provided for @liveUpdatedAgo.
-  ///
-  /// In en, this message translates to:
-  /// **'Updated {minutes}m ago'**
-  String liveUpdatedAgo(int minutes);
-
-  /// No description provided for @statTodayTrips.
-  ///
-  /// In en, this message translates to:
-  /// **'Today\'s Trips'**
-  String get statTodayTrips;
-
-  /// No description provided for @statCongestion.
-  ///
-  /// In en, this message translates to:
-  /// **'Congestion'**
-  String get statCongestion;
-
-  /// No description provided for @statBikesShort.
-  ///
-  /// In en, this message translates to:
-  /// **'Bikes'**
-  String get statBikesShort;
-
-  /// No description provided for @statParkingShort.
-  ///
-  /// In en, this message translates to:
-  /// **'Parking'**
-  String get statParkingShort;
-
-  /// No description provided for @congestionRelaxed.
-  ///
-  /// In en, this message translates to:
-  /// **'Relaxed'**
-  String get congestionRelaxed;
-
-  /// No description provided for @congestionNormal.
-  ///
-  /// In en, this message translates to:
-  /// **'Normal'**
-  String get congestionNormal;
-
-  /// No description provided for @congestionSlightlyBusy.
-  ///
-  /// In en, this message translates to:
-  /// **'Slightly Busy'**
-  String get congestionSlightlyBusy;
-
-  /// No description provided for @congestionBusy.
-  ///
-  /// In en, this message translates to:
-  /// **'Busy'**
-  String get congestionBusy;
-
-  /// No description provided for @congestionUnknown.
-  ///
-  /// In en, this message translates to:
-  /// **'Unknown'**
-  String get congestionUnknown;
-
   /// No description provided for @statusNormal.
   ///
   /// In en, this message translates to:
@@ -686,17 +589,113 @@ abstract class AppLocalizations {
   /// **'Passenger Check-in'**
   String get boardingDeclaration;
 
+  /// No description provided for @statTrips.
+  ///
+  /// In en, this message translates to:
+  /// **'Trips'**
+  String get statTrips;
+
   /// No description provided for @statTripsValue.
   ///
   /// In en, this message translates to:
   /// **'{count}'**
   String statTripsValue(int count);
 
+  /// No description provided for @statPassengers.
+  ///
+  /// In en, this message translates to:
+  /// **'Passengers'**
+  String get statPassengers;
+
   /// No description provided for @statPassengersValue.
   ///
   /// In en, this message translates to:
   /// **'{count}'**
   String statPassengersValue(int count);
+
+  /// No description provided for @statOnTime.
+  ///
+  /// In en, this message translates to:
+  /// **'On-Time'**
+  String get statOnTime;
+
+  /// No description provided for @liveStatusLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'LIVE'**
+  String get liveStatusLabel;
+
+  /// No description provided for @liveDataUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No data'**
+  String get liveDataUnavailable;
+
+  /// No description provided for @liveUpdatedJustNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated just now'**
+  String get liveUpdatedJustNow;
+
+  /// No description provided for @liveUpdatedAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated {minutes}m ago'**
+  String liveUpdatedAgo(int minutes);
+
+  /// No description provided for @statTodayTrips.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Trips'**
+  String get statTodayTrips;
+
+  /// No description provided for @statCongestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Congestion'**
+  String get statCongestion;
+
+  /// No description provided for @statBikesShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Bikes'**
+  String get statBikesShort;
+
+  /// No description provided for @statParkingShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Parking'**
+  String get statParkingShort;
+
+  /// No description provided for @congestionRelaxed.
+  ///
+  /// In en, this message translates to:
+  /// **'Relaxed'**
+  String get congestionRelaxed;
+
+  /// No description provided for @congestionNormal.
+  ///
+  /// In en, this message translates to:
+  /// **'Normal'**
+  String get congestionNormal;
+
+  /// No description provided for @congestionSlightlyBusy.
+  ///
+  /// In en, this message translates to:
+  /// **'Slightly Busy'**
+  String get congestionSlightlyBusy;
+
+  /// No description provided for @congestionBusy.
+  ///
+  /// In en, this message translates to:
+  /// **'Busy'**
+  String get congestionBusy;
+
+  /// No description provided for @congestionUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get congestionUnknown;
 
   /// No description provided for @navHome.
   ///
@@ -907,10 +906,99 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Real-time connection with River Police & Fire Rescue'**
   String get emergencyBannerRescue;
+
+  /// No description provided for @routeInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Route Info'**
+  String get routeInfo;
+
+  /// No description provided for @departureDock.
+  ///
+  /// In en, this message translates to:
+  /// **'Departure Dock'**
+  String get departureDock;
+
+  /// No description provided for @arrivalDock.
+  ///
+  /// In en, this message translates to:
+  /// **'Arrival Dock'**
+  String get arrivalDock;
+
+  /// No description provided for @estimatedInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated Info'**
+  String get estimatedInfo;
+
+  /// No description provided for @distanceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Distance'**
+  String get distanceLabel;
+
+  /// No description provided for @durationLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get durationLabel;
+
+  /// No description provided for @etaLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'ETA'**
+  String get etaLabel;
+
+  /// No description provided for @routeSpeedNote.
+  ///
+  /// In en, this message translates to:
+  /// **'* Based on an average speed of 11 km/h\\n* Actual travel time may vary depending on conditions'**
+  String get routeSpeedNote;
+
+  /// No description provided for @selectPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select'**
+  String get selectPrompt;
+
+  /// No description provided for @departureTimetable.
+  ///
+  /// In en, this message translates to:
+  /// **'Departure Timetable'**
+  String get departureTimetable;
+
+  /// No description provided for @nextDeparture.
+  ///
+  /// In en, this message translates to:
+  /// **'Next Departure'**
+  String get nextDeparture;
+
+  /// No description provided for @weatherChangeNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Service may change depending on weather conditions'**
+  String get weatherChangeNotice;
+
+  /// No description provided for @approxMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'About {minutes} min'**
+  String approxMinutes(int minutes);
+
+  /// No description provided for @approxHoursMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'About {hours}h {minutes}m'**
+  String approxHoursMinutes(int hours, int minutes);
+
+  /// No description provided for @approxHours.
+  ///
+  /// In en, this message translates to:
+  /// **'About {hours}h'**
+  String approxHours(int hours);
 }
 
-class _AppLocalizationsDelegate
-    extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -919,26 +1007,26 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['en', 'ko'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['en', 'ja', 'ko'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
+
+
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'en':
-      return AppLocalizationsEn();
-    case 'ko':
-      return AppLocalizationsKo();
+    case 'en': return AppLocalizationsEn();
+    case 'ja': return AppLocalizationsJa();
+    case 'ko': return AppLocalizationsKo();
   }
 
   throw FlutterError(
     'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
     'an issue with the localizations generation tool. Please file an issue '
     'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.',
+    'that was used.'
   );
 }

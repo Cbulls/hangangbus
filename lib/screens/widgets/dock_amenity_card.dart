@@ -29,18 +29,30 @@ class DockAmenityCard extends StatelessWidget {
 
   static const _seoulBlue = Color(0xFF0064B0);
 
-  bool _isEn(BuildContext context) {
-    final name = AppLocalizations.of(context)?.localeName ?? 'ko';
-    return !name.toLowerCase().startsWith('ko');
+  /// 현재 언어 코드 ('ko' | 'en' | 'ja'). 미확정 시 'ko'.
+  String _lang(BuildContext context) {
+    final name = (AppLocalizations.of(context)?.localeName ?? 'ko')
+        .toLowerCase();
+    if (name.startsWith('ja')) return 'ja';
+    if (name.startsWith('en')) return 'en';
+    return 'ko';
   }
 
   @override
   Widget build(BuildContext context) {
-    final en = _isEn(context);
+    final lang = _lang(context);
     final loc = DockGeo.of(dockType);
 
-    final bikeTitle = en ? 'Nearby Bike' : '가까운 따릉이';
-    final parkTitle = en ? 'Nearby Parking' : '가까운 주차장';
+    final bikeTitle = lang == 'ko'
+        ? '가까운 따릉이'
+        : lang == 'ja'
+        ? '近くのソウル自転車'
+        : 'Nearby Bike';
+    final parkTitle = lang == 'ko'
+        ? '가까운 주차장'
+        : lang == 'ja'
+        ? '近くの駐車場'
+        : 'Nearby Parking';
 
     // 실시간 미지원 선착장 → 안내만
     if (!loc.hasRealtime || data == null) {
@@ -49,14 +61,14 @@ class DockAmenityCard extends StatelessWidget {
           _amenityTile(
             icon: Icons.pedal_bike_rounded,
             title: bikeTitle,
-            valueWidget: _unavailableText(en),
+            valueWidget: _unavailableText(lang),
             distanceText: null,
           ),
           const SizedBox(height: 10),
           _amenityTile(
             icon: Icons.local_parking_rounded,
             title: parkTitle,
-            valueWidget: _unavailableText(en),
+            valueWidget: _unavailableText(lang),
             distanceText: null,
           ),
         ],
@@ -68,20 +80,25 @@ class DockAmenityCard extends StatelessWidget {
 
     return Column(
       children: [
-        _buildBikeTile(en, loc, bike, bikeTitle),
+        _buildBikeTile(lang, loc, bike, bikeTitle),
         const SizedBox(height: 10),
-        _buildParkingTile(en, loc, parking, parkTitle),
+        _buildParkingTile(lang, loc, parking, parkTitle),
       ],
     );
   }
 
   // ── 따릉이 타일 ──────────────────────────────────────────────
-  Widget _buildBikeTile(bool en, DockGeo loc, BikeStation? bike, String title) {
+  Widget _buildBikeTile(
+    String lang,
+    DockGeo loc,
+    BikeStation? bike,
+    String title,
+  ) {
     if (bike == null) {
       return _amenityTile(
         icon: Icons.pedal_bike_rounded,
         title: title,
-        valueWidget: _unavailableText(en),
+        valueWidget: _unavailableText(lang),
         distanceText: null,
       );
     }
@@ -91,10 +108,13 @@ class DockAmenityCard extends StatelessWidget {
       bike.lat,
       bike.lng,
     );
-    final countText = en ? '${bike.available}' : '${bike.available}대';
-    final rateText = en
-        ? 'Avail ${bike.availabilityRate.toStringAsFixed(0)}%'
-        : '거치율 ${bike.availabilityRate.toStringAsFixed(0)}%';
+    final countText = lang == 'ko' ? '${bike.available}대' : '${bike.available}';
+    final ratePct = bike.availabilityRate.toStringAsFixed(0);
+    final rateText = lang == 'ko'
+        ? '거치율 $ratePct%'
+        : lang == 'ja'
+        ? '駐輪率 $ratePct%'
+        : 'Avail $ratePct%';
 
     return _amenityTile(
       icon: Icons.pedal_bike_rounded,
@@ -107,7 +127,7 @@ class DockAmenityCard extends StatelessWidget {
 
   // ── 주차장 타일 ──────────────────────────────────────────────
   Widget _buildParkingTile(
-    bool en,
+    String lang,
     DockGeo loc,
     ParkingLot? parking,
     String title,
@@ -116,7 +136,7 @@ class DockAmenityCard extends StatelessWidget {
       return _amenityTile(
         icon: Icons.local_parking_rounded,
         title: title,
-        valueWidget: _unavailableText(en),
+        valueWidget: _unavailableText(lang),
         distanceText: null,
       );
     }
@@ -133,15 +153,30 @@ class DockAmenityCard extends StatelessWidget {
     Widget valueWidget;
     if (available == null) {
       valueWidget = _valueColumn(
-        primary: en ? '${parking.capacity} total' : '총 ${parking.capacity}면',
-        secondary: en ? 'No live data' : '실시간 정보 없음',
+        primary: lang == 'ko'
+            ? '총 ${parking.capacity}면'
+            : lang == 'ja'
+            ? '全${parking.capacity}台'
+            : '${parking.capacity} total',
+        secondary: lang == 'ko'
+            ? '실시간 정보 없음'
+            : lang == 'ja'
+            ? 'リアルタイム情報なし'
+            : 'No live data',
         primaryFontSize: 14,
       );
     } else {
-      final primary = en ? 'Open $available' : '가능 $available';
-      final secondary = en
-          ? '/ ${parking.capacity} · ${parking.baseRateText}'
-          : '/ ${parking.capacity}면 · ${parking.baseRateText}';
+      final primary = lang == 'ko'
+          ? '가능 $available'
+          : lang == 'ja'
+          ? '空き $available'
+          : 'Open $available';
+      final unit = lang == 'ko'
+          ? '면'
+          : lang == 'ja'
+          ? '台'
+          : '';
+      final secondary = '/ ${parking.capacity}$unit · ${parking.baseRateText}';
       valueWidget = Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisSize: MainAxisSize.min,
@@ -328,8 +363,12 @@ class DockAmenityCard extends StatelessWidget {
     );
   }
 
-  Widget _unavailableText(bool en) => Text(
-    en ? 'No data' : '정보 없음',
+  Widget _unavailableText(String lang) => Text(
+    lang == 'ko'
+        ? '정보 없음'
+        : lang == 'ja'
+        ? '情報なし'
+        : 'No data',
     style: TextStyle(
       fontSize: 12,
       fontWeight: FontWeight.w700,

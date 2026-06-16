@@ -256,5 +256,44 @@
   "safetyAttentionChild": "When traveling with children, you may request assistance from the crew to prevent missing children.",
   "emergencyBannerTitle": "In Case of Emergency",
   "emergencyBannerContact": "Report to Crew  |  119",
-  "emergencyBannerRescue": "Real-time connection with River Police & Fire Rescue"
+  "emergencyBannerRescue": "Real-time connection with River Police & Fire Rescue",
+  "routeInfo": "Route Info",
+  "departureDock": "Departure Dock",
+  "arrivalDock": "Arrival Dock",
+  "estimatedInfo": "Estimated Info",
+  "distanceLabel": "Distance",
+  "durationLabel": "Duration",
+  "etaLabel": "ETA",
+  "routeSpeedNote": "* Based on an average speed of 11 km/h\\n* Actual travel time may vary depending on conditions",
+  "selectPrompt": "Please select",
+  "departureTimetable": "Departure Timetable",
+  "nextDeparture": "Next Departure",
+  "weatherChangeNotice": "Service may change depending on weather conditions",
+  "approxMinutes": "About {minutes} min",
+  "@approxMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "approxHoursMinutes": "About {hours}h {minutes}m",
+  "@approxHoursMinutes": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "approxHours": "About {hours}h",
+  "@approxHours": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  }
 }

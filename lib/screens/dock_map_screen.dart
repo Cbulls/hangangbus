@@ -292,6 +292,7 @@ class _DockMapScreenState extends State<DockMapScreen> {
     String? nextDeparture,
     int? minutesUntil,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
       child: BackdropFilter(
@@ -319,13 +320,13 @@ class _DockMapScreenState extends State<DockMapScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              _buildSimpleTitle("출발 시간표", isDarkMode),
+              _buildSimpleTitle(l10n.departureTimetable, isDarkMode),
               const SizedBox(height: 16),
               if (nextDeparture != null)
                 _buildNextDepartureBox(nextDeparture, minutesUntil),
               const SizedBox(height: 24),
               Text(
-                "전체 시간표",
+                l10n.fullTimetable,
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
@@ -357,6 +358,7 @@ class _DockMapScreenState extends State<DockMapScreen> {
   }
 
   Widget _buildNextDepartureBox(String time, int? minutes) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -378,8 +380,8 @@ class _DockMapScreenState extends State<DockMapScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "다음 출발",
+              Text(
+                l10n.nextDeparture,
                 style: TextStyle(
                   color: Colors.white70,
                   fontSize: 13,
@@ -406,7 +408,7 @@ class _DockMapScreenState extends State<DockMapScreen> {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
-                "$minutes분 후",
+                l10n.minutesLeft(minutes),
                 style: TextStyle(
                   color: _dockColor,
                   fontSize: 15,
@@ -475,6 +477,7 @@ class _DockMapScreenState extends State<DockMapScreen> {
   }
 
   Widget _buildAccessInfo(bool isDarkMode) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -508,7 +511,7 @@ class _DockMapScreenState extends State<DockMapScreen> {
               ),
               const Spacer(),
               Text(
-                "도보 ${widget.dockInfo.subwayWalkTime}분",
+                l10n.walkingMinutes(widget.dockInfo.subwayWalkTime),
                 style: TextStyle(
                   fontSize: 12,
                   color: isDarkMode
@@ -554,6 +557,7 @@ class _DockMapScreenState extends State<DockMapScreen> {
   }
 
   Widget _buildNoticeBox(bool isDarkMode) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
@@ -574,7 +578,7 @@ class _DockMapScreenState extends State<DockMapScreen> {
           const SizedBox(width: 10),
           Expanded(
             child: Text(
-              "기상 상황에 따라 운항이 변경될 수 있습니다",
+              l10n.weatherChangeNotice,
               style: TextStyle(
                 fontSize: 12,
                 color: isDarkMode

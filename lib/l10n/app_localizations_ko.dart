@@ -171,56 +171,6 @@ class AppLocalizationsKo extends AppLocalizations {
   String get todayLabel => 'TODAY';
 
   @override
-  String get statTrips => '운항';
-
-  @override
-  String get statPassengers => '탑승객';
-
-  @override
-  String get statOnTime => '정시율';
-
-  @override
-  String get liveStatusLabel => '실시간';
-
-  @override
-  String get liveDataUnavailable => '정보 없음';
-
-  @override
-  String get liveUpdatedJustNow => '방금 업데이트';
-
-  @override
-  String liveUpdatedAgo(int minutes) {
-    return '$minutes분 전 업데이트';
-  }
-
-  @override
-  String get statTodayTrips => '오늘 운항';
-
-  @override
-  String get statCongestion => '혼잡도';
-
-  @override
-  String get statBikesShort => '따릉이';
-
-  @override
-  String get statParkingShort => '주차';
-
-  @override
-  String get congestionRelaxed => '여유';
-
-  @override
-  String get congestionNormal => '보통';
-
-  @override
-  String get congestionSlightlyBusy => '약간 붐빔';
-
-  @override
-  String get congestionBusy => '붐빔';
-
-  @override
-  String get congestionUnknown => '정보 없음';
-
-  @override
   String get statusNormal => '정상 운행';
 
   @override
@@ -333,14 +283,64 @@ class AppLocalizationsKo extends AppLocalizations {
   String get boardingDeclaration => '한강버스 승선신고';
 
   @override
+  String get statTrips => '운항';
+
+  @override
   String statTripsValue(int count) {
     return '$count회';
   }
 
   @override
+  String get statPassengers => '탑승객';
+
+  @override
   String statPassengersValue(int count) {
     return '$count명';
   }
+
+  @override
+  String get statOnTime => '정시율';
+
+  @override
+  String get liveStatusLabel => '실시간';
+
+  @override
+  String get liveDataUnavailable => '정보 없음';
+
+  @override
+  String get liveUpdatedJustNow => '방금 업데이트';
+
+  @override
+  String liveUpdatedAgo(int minutes) {
+    return '$minutes분 전 업데이트';
+  }
+
+  @override
+  String get statTodayTrips => '오늘 운항';
+
+  @override
+  String get statCongestion => '혼잡도';
+
+  @override
+  String get statBikesShort => '따릉이';
+
+  @override
+  String get statParkingShort => '주차';
+
+  @override
+  String get congestionRelaxed => '여유';
+
+  @override
+  String get congestionNormal => '보통';
+
+  @override
+  String get congestionSlightlyBusy => '약간 붐빔';
+
+  @override
+  String get congestionBusy => '붐빔';
+
+  @override
+  String get congestionUnknown => '정보 없음';
 
   @override
   String get navHome => '홈';
@@ -367,12 +367,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get safetyLifeVestAdult => '각 좌석 하단 보관함에 성인용 구명조끼가 1개씩 비치되어 있습니다.';
 
   @override
-  String get safetyLifeVestChild =>
-      '유아·어린이용 구명조끼는 선내 전용 캐비닛(보관함)에 별도 보관되어 있습니다. 승무원에게 문의하세요.';
+  String get safetyLifeVestChild => '유아·어린이용 구명조끼는 선내 전용 캐비닛(보관함)에 별도 보관되어 있습니다. 승무원에게 문의하세요.';
 
   @override
-  String get safetyLifeVestAccess =>
-      '구명조끼 보관함은 비상 시 즉시 꺼낼 수 있도록 항상 개방 상태를 유지합니다.';
+  String get safetyLifeVestAccess => '구명조끼 보관함은 비상 시 즉시 꺼낼 수 있도록 항상 개방 상태를 유지합니다.';
 
   @override
   String get safetyTitleHowToWear => '구명조끼 착용법';
@@ -390,19 +388,16 @@ class AppLocalizationsKo extends AppLocalizations {
   String get safetyWearStep4 => '허리 끈을 몸에 밀착되도록 당겨 조입니다.';
 
   @override
-  String get safetyWearStep5 =>
-      '입수 후에는 구명조끼 앞쪽의 빨간 손잡이(이산화탄소 팽창장치)를 힘껏 당겨 팽창시킵니다.';
+  String get safetyWearStep5 => '입수 후에는 구명조끼 앞쪽의 빨간 손잡이(이산화탄소 팽창장치)를 힘껏 당겨 팽창시킵니다.';
 
   @override
-  String get safetyWearTip =>
-      '자동 팽창이 안 될 경우 구명조끼의 구강 팽창 튜브(노란색)를 입으로 불어 팽창시킵니다.';
+  String get safetyWearTip => '자동 팽창이 안 될 경우 구명조끼의 구강 팽창 튜브(노란색)를 입으로 불어 팽창시킵니다.';
 
   @override
   String get safetyTitleEvacuation => '비상 탈출 안내';
 
   @override
-  String get safetyEvacExit =>
-      '비상 출구는 선실 전방(선수)과 후방(선미) 양쪽에 위치합니다. 탑승 후 위치를 미리 확인해 두세요.';
+  String get safetyEvacExit => '비상 출구는 선실 전방(선수)과 후방(선미) 양쪽에 위치합니다. 탑승 후 위치를 미리 확인해 두세요.';
 
   @override
   String get safetyEvacCalm => '비상 상황 발생 시 승무원의 안내 방송에 따라 침착하게 지정된 출구로 대피합니다.';
@@ -411,8 +406,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get safetyEvacStay => '배가 완전히 멈추기 전에는 절대 자리에서 일어나지 마세요.';
 
   @override
-  String get safetyEvacRescue =>
-      '대피 후 선착장 또는 구조선으로 이동하며, 한강경찰대·소방구조대와 실시간 연결된 구조 시스템이 즉시 출동합니다.';
+  String get safetyEvacRescue => '대피 후 선착장 또는 구조선으로 이동하며, 한강경찰대·소방구조대와 실시간 연결된 구조 시스템이 즉시 출동합니다.';
 
   @override
   String get safetyTitleReporting => '비상 신고 방법';
@@ -421,34 +415,28 @@ class AppLocalizationsKo extends AppLocalizations {
   String get safetyReportCall => '선내 승무원에게 즉시 알리거나, 한강버스 고객센터 또는 119에 신고하세요.';
 
   @override
-  String get safetyReportTube =>
-      '선내에 비치된 구명튜브(링 부표)는 물에 빠진 사람을 향해 던져 구조할 수 있습니다.';
+  String get safetyReportTube => '선내에 비치된 구명튜브(링 부표)는 물에 빠진 사람을 향해 던져 구조할 수 있습니다.';
 
   @override
-  String get safetyReportQR =>
-      '탑승 전 반드시 QR코드로 승선 신고를 완료해 주세요. 사고 발생 시 신속한 구조에 필수적입니다.';
+  String get safetyReportQR => '탑승 전 반드시 QR코드로 승선 신고를 완료해 주세요. 사고 발생 시 신속한 구조에 필수적입니다.';
 
   @override
   String get safetyTitleAttention => '탑승 주의사항';
 
   @override
-  String get safetyAttentionWave =>
-      '선박 특성상 물결에 따라 흔들림이 있을 수 있습니다. 특히 다른 선박이 지나갈 때 흔들림이 심해질 수 있으니 손잡이를 잡으세요.';
+  String get safetyAttentionWave => '선박 특성상 물결에 따라 흔들림이 있을 수 있습니다. 특히 다른 선박이 지나갈 때 흔들림이 심해질 수 있으니 손잡이를 잡으세요.';
 
   @override
-  String get safetyAttentionDeck =>
-      '갑판(야외 데크)에 나가려면 반드시 선내 QR코드로 승선 신고를 먼저 완료해야 합니다.';
+  String get safetyAttentionDeck => '갑판(야외 데크)에 나가려면 반드시 선내 QR코드로 승선 신고를 먼저 완료해야 합니다.';
 
   @override
   String get safetyAttentionDanger => '전기장비실 등 위험 구역에는 절대 출입하지 마세요.';
 
   @override
-  String get safetyAttentionBike =>
-      '개인 자전거는 탑승 가능하나, 따릉이 및 전동 킥보드(전기자전거 포함)는 탑승이 불가합니다.';
+  String get safetyAttentionBike => '개인 자전거는 탑승 가능하나, 따릉이 및 전동 킥보드(전기자전거 포함)는 탑승이 불가합니다.';
 
   @override
-  String get safetyAttentionChild =>
-      '어린이 동반 시 승무원에게 미아 발생 방지를 위한 안내를 요청할 수 있습니다.';
+  String get safetyAttentionChild => '어린이 동반 시 승무원에게 미아 발생 방지를 위한 안내를 요청할 수 있습니다.';
 
   @override
   String get emergencyBannerTitle => '긴급 상황 발생 시';
@@ -458,4 +446,55 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get emergencyBannerRescue => '한강경찰대·소방구조대 실시간 연결';
+
+  @override
+  String get routeInfo => '경로 정보';
+
+  @override
+  String get departureDock => '출발 선착장';
+
+  @override
+  String get arrivalDock => '도착 선착장';
+
+  @override
+  String get estimatedInfo => '예상 정보';
+
+  @override
+  String get distanceLabel => '거리';
+
+  @override
+  String get durationLabel => '소요 시간';
+
+  @override
+  String get etaLabel => '도착 예정';
+
+  @override
+  String get routeSpeedNote => '※ 평균 속도 11 km/h 기준\\n※ 실제 운항 시간은 상황에 따라 달라질 수 있습니다';
+
+  @override
+  String get selectPrompt => '선택하세요';
+
+  @override
+  String get departureTimetable => '출발 시간표';
+
+  @override
+  String get nextDeparture => '다음 출발';
+
+  @override
+  String get weatherChangeNotice => '기상 상황에 따라 운항이 변경될 수 있습니다';
+
+  @override
+  String approxMinutes(int minutes) {
+    return '약 $minutes분';
+  }
+
+  @override
+  String approxHoursMinutes(int hours, int minutes) {
+    return '약 $hours시간 $minutes분';
+  }
+
+  @override
+  String approxHours(int hours) {
+    return '약 $hours시간';
+  }
 }
