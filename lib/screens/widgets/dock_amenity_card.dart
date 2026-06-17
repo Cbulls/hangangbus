@@ -29,11 +29,12 @@ class DockAmenityCard extends StatelessWidget {
 
   static const _seoulBlue = Color(0xFF0064B0);
 
-  /// 현재 언어 코드 ('ko' | 'en' | 'ja'). 미확정 시 'ko'.
+  /// 현재 언어 코드 ('ko' | 'en' | 'ja' | 'zh'). 미확정 시 'ko'.
   String _lang(BuildContext context) {
     final name = (AppLocalizations.of(context)?.localeName ?? 'ko')
         .toLowerCase();
     if (name.startsWith('ja')) return 'ja';
+    if (name.startsWith('zh')) return 'zh';
     if (name.startsWith('en')) return 'en';
     return 'ko';
   }
@@ -47,11 +48,15 @@ class DockAmenityCard extends StatelessWidget {
         ? '가까운 따릉이'
         : lang == 'ja'
         ? '近くのソウル自転車'
+        : lang == 'zh'
+        ? '附近的首尔单车'
         : 'Nearby Bike';
     final parkTitle = lang == 'ko'
         ? '가까운 주차장'
         : lang == 'ja'
         ? '近くの駐車場'
+        : lang == 'zh'
+        ? '附近的停车场'
         : 'Nearby Parking';
 
     // 실시간 미지원 선착장 → 안내만
@@ -108,12 +113,18 @@ class DockAmenityCard extends StatelessWidget {
       bike.lat,
       bike.lng,
     );
-    final countText = lang == 'ko' ? '${bike.available}대' : '${bike.available}';
+    final countText = lang == 'ko'
+        ? '${bike.available}대'
+        : lang == 'zh'
+        ? '${bike.available}辆'
+        : '${bike.available}';
     final ratePct = bike.availabilityRate.toStringAsFixed(0);
     final rateText = lang == 'ko'
         ? '거치율 $ratePct%'
         : lang == 'ja'
         ? '駐輪率 $ratePct%'
+        : lang == 'zh'
+        ? '停放率 $ratePct%'
         : 'Avail $ratePct%';
 
     return _amenityTile(
@@ -157,11 +168,15 @@ class DockAmenityCard extends StatelessWidget {
             ? '총 ${parking.capacity}면'
             : lang == 'ja'
             ? '全${parking.capacity}台'
+            : lang == 'zh'
+            ? '共${parking.capacity}个'
             : '${parking.capacity} total',
         secondary: lang == 'ko'
             ? '실시간 정보 없음'
             : lang == 'ja'
             ? 'リアルタイム情報なし'
+            : lang == 'zh'
+            ? '暂无实时信息'
             : 'No live data',
         primaryFontSize: 14,
       );
@@ -170,11 +185,15 @@ class DockAmenityCard extends StatelessWidget {
           ? '가능 $available'
           : lang == 'ja'
           ? '空き $available'
+          : lang == 'zh'
+          ? '空闲 $available'
           : 'Open $available';
       final unit = lang == 'ko'
           ? '면'
           : lang == 'ja'
           ? '台'
+          : lang == 'zh'
+          ? '个'
           : '';
       final secondary = '/ ${parking.capacity}$unit · ${parking.baseRateText}';
       valueWidget = Column(
@@ -368,6 +387,8 @@ class DockAmenityCard extends StatelessWidget {
         ? '정보 없음'
         : lang == 'ja'
         ? '情報なし'
+        : lang == 'zh'
+        ? '暂无信息'
         : 'No data',
     style: TextStyle(
       fontSize: 12,

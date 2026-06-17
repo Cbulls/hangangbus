@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:hangangbus/data/faq_data_en.dart' as faq_en;
 import 'package:hangangbus/data/faq_data_ko.dart' as faq_ko;
 import 'package:hangangbus/data/faq_data_ja.dart' as faq_ja;
+import 'package:hangangbus/data/faq_data_zh.dart' as faq_zh;
 import 'package:hangangbus/data/story_data_en.dart';
 import 'package:hangangbus/data/story_data_ko.dart';
 import 'package:hangangbus/data/story_data_ja.dart';
+import 'package:hangangbus/data/story_data_zh.dart';
 import 'package:hangangbus/models/data.dart';
 
 /// 로케일(언어 코드)에 따라 스토리/FAQ 정적 콘텐츠를 반환하는 단일 진입점.
@@ -23,6 +25,8 @@ class DataProvider {
     switch (languageCode) {
       case 'ja':
         return storyDataJa;
+      case 'zh':
+        return storyDataZh;
       case 'en':
         return storyDataEn;
       case 'ko':
@@ -35,6 +39,8 @@ class DataProvider {
     switch (languageCode) {
       case 'ja':
         return faq_ja.faqDataJa;
+      case 'zh':
+        return faq_zh.faqDataZh;
       case 'en':
         return faq_en.faqDataEn;
       case 'ko':

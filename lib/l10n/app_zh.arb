@@ -1,0 +1,299 @@
+{
+  "@@locale": "zh",
+  "timetableTitle": "时刻表",
+  "directionMagokToYeouido": "麻谷 → 汝矣岛",
+  "directionYeouidoToMagok": "汝矣岛 → 麻谷",
+  "dockMagok": "麻谷",
+  "dockMangwon": "望远",
+  "dockYeouido": "汝矣岛",
+  "dockApgujeong": "狎鸥亭",
+  "dockOksu": "玉水",
+  "dockTtukseom": "纛岛",
+  "dockJamsil": "蚕室",
+  "directionToYeouido": "开往汝矣岛",
+  "directionToMagok": "开往麻谷",
+  "directionToJamsil": "开往蚕室",
+  "nextBoat": "下一班",
+  "firstBoat": "首班",
+  "lastBoat": "末班",
+  "departIn": "{time} 出发",
+  "@departIn": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "serviceClosedToday": "今日运营已结束",
+  "tomorrowFirstBoat": "明日首班 {time}",
+  "@tomorrowFirstBoat": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "transferHub": "换乘",
+  "yeouidoTransferTitle": "汝矣岛换乘指南",
+  "routeOverview": "线路图",
+  "boundFor": "开往{dock}",
+  "@boundFor": {
+    "placeholders": {
+      "dock": {
+        "type": "String"
+      }
+    }
+  },
+  "minutesLeft": "{minutes}分钟后",
+  "@minutesLeft": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "hoursMinutesLeft": "{hours}小时 {minutes}分钟",
+  "@hoursMinutesLeft": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "departed": "已发船",
+  "storyPageTitle": "汉江历史/美食",
+  "storyPageSubtitle": "汉江巴士各码头的历史与美食信息",
+  "categoryHistory": "历史",
+  "categoryFood": "美食",
+  "comingSoon": "敬请期待",
+  "infoLabelLocation": "位置",
+  "infoLabelAccess": "交通",
+  "infoLabelPeriod": "年代",
+  "infoLabelHours": "营业",
+  "infoLabelPrice": "价格",
+  "dockSuffix": "{dockName} 码头",
+  "@dockSuffix": {
+    "placeholders": {
+      "dockName": {
+        "type": "String"
+      }
+    }
+  },
+  "homeTitle": "汉江巴士",
+  "homeSubtitle": "实时运营状况",
+  "nextArrival": "下次到达预计",
+  "freeShuttle": "免费接驳巴士",
+  "parking": "停车",
+  "parkingSpacesAvailable": "剩余{count}个车位",
+  "@parkingSpacesAvailable": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "parkingSpacesSuffix": "{count}个车位",
+  "@parkingSpacesSuffix": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "parkingSpacesTotal": "共{count}个车位中可用",
+  "@parkingSpacesTotal": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "fullTimetable": "完整时刻表",
+  "nearbyAttractions": "周边景点",
+  "todayLabel": "TODAY",
+  "statTrips": "航次",
+  "statPassengers": "乘客",
+  "statOnTime": "准点率",
+  "liveStatusLabel": "实时",
+  "liveDataUnavailable": "暂无信息",
+  "liveUpdatedJustNow": "刚刚更新",
+  "liveUpdatedAgo": "{minutes}分钟前更新",
+  "@liveUpdatedAgo": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "statTodayTrips": "今日航次",
+  "statCongestion": "拥挤度",
+  "statBikesShort": "首尔单车",
+  "statParkingShort": "停车",
+  "congestionRelaxed": "宽松",
+  "congestionNormal": "普通",
+  "congestionSlightlyBusy": "略拥挤",
+  "congestionBusy": "拥挤",
+  "congestionUnknown": "暂无信息",
+  "statusNormal": "正常运营",
+  "statusPartial": "部分停运",
+  "statusStopped": "全面停运",
+  "facilityConvenienceStore": "便利店",
+  "facilityRamen": "拉面体验区",
+  "facilityFastFood": "快餐",
+  "facilityCafe": "咖啡厅",
+  "dockSheetTitle": "{name} 码头",
+  "@dockSheetTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "realtimeStatus": "实时状况",
+  "weatherInfo": "天气信息",
+  "hourlyForecast": "逐小时预报",
+  "fullForecast": "查看24小时预报全部",
+  "weatherForecast24h": "24小时天气预报",
+  "accessInfo": "交通方式",
+  "walkingMinutes": "步行{minutes}分钟",
+  "@walkingMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "facilities": "配套设施",
+  "scheduleAndMap": "地图",
+  "feelsLike": "体感 {temp}°",
+  "@feelsLike": {
+    "placeholders": {
+      "temp": {
+        "type": "String"
+      }
+    }
+  },
+  "humidity": "湿度",
+  "windSpeed": "风速",
+  "fineDust": "细颗粒物",
+  "updatedMinutesAgo": "5分钟前更新",
+  "currentPopulation": "当前人流",
+  "bikeShare": "首尔单车",
+  "bikeStationsCount": "{count}处",
+  "@bikeStationsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bikesAvailable": "{count}辆可用",
+  "@bikesAvailable": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "weeklyForecast": "查看一周预报",
+  "dustGood": "优",
+  "dustNormal": "良",
+  "dustBad": "差",
+  "dustVeryBad": "很差",
+  "statusClosed": "运营结束",
+  "endOfService": "运营结束",
+  "boardingDeclaration": "汉江巴士乘船申报",
+  "statTripsValue": "{count}次",
+  "@statTripsValue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statPassengersValue": "{count}人",
+  "@statPassengersValue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "navHome": "首页",
+  "navSchedule": "时刻表",
+  "navGuide": "指南",
+  "navFaq": "FAQ",
+  "tabFaq": "常见问题",
+  "tabSafety": "安全须知",
+  "safetyTitleLifeVest": "救生衣位置",
+  "safetyLifeVestAdult": "每个座位下方的储物箱内各配备一件成人救生衣。",
+  "safetyLifeVestChild": "婴幼儿及儿童救生衣另存放于船内专用柜（储物箱）。请向乘务员咨询。",
+  "safetyLifeVestAccess": "救生衣储物箱始终保持开启状态，以便紧急时立即取用。",
+  "safetyTitleHowToWear": "救生衣穿戴方法",
+  "safetyWearStep1": "打开座位下方的储物箱，取出救生衣。",
+  "safetyWearStep2": "将救生衣从头部向下套穿。",
+  "safetyWearStep3": "扣紧前侧扣具，直到听到\"咔哒\"声。",
+  "safetyWearStep4": "拉紧腰带使其紧贴身体。",
+  "safetyWearStep5": "入水后用力拉动救生衣前侧的红色拉手（二氧化碳充气装置）使其充气。",
+  "safetyWearTip": "若无法自动充气，可用嘴吹救生衣的口吹充气管（黄色）使其充气。",
+  "safetyTitleEvacuation": "紧急疏散指南",
+  "safetyEvacExit": "紧急出口位于船舱前方（船头）和后方（船尾）两侧。登船后请提前确认位置。",
+  "safetyEvacCalm": "发生紧急情况时，请按照乘务员的广播指引，冷静地前往指定出口疏散。",
+  "safetyEvacStay": "船只完全停稳前，切勿离开座位。",
+  "safetyEvacRescue": "疏散后请前往码头或救援船，与汉江警察队·消防救援队实时联动的救援系统将立即出动。",
+  "safetyTitleReporting": "紧急报警方法",
+  "safetyReportCall": "请立即通知船内乘务员，或拨打汉江巴士客服中心或119报警。",
+  "safetyReportTube": "船内配备的救生圈（环形浮标）可投向落水者进行救援。",
+  "safetyReportQR": "登船前请务必通过二维码完成乘船申报。这对事故发生时的迅速救援至关重要。",
+  "safetyTitleAttention": "登船注意事项",
+  "safetyAttentionWave": "因船只特性，可能随波浪摇晃。尤其当其他船只经过时摇晃会加剧，请抓好扶手。",
+  "safetyAttentionDeck": "前往甲板（户外平台）须先通过船内二维码完成乘船申报。",
+  "safetyAttentionDanger": "切勿进入配电室等危险区域。",
+  "safetyAttentionBike": "个人自行车可携带登船，但首尔单车及电动滑板车（含电动自行车）不可登船。",
+  "safetyAttentionChild": "携带儿童时，可向乘务员申请防走失指引。",
+  "emergencyBannerTitle": "发生紧急情况时",
+  "emergencyBannerContact": "立即通知乘务员  |  119",
+  "emergencyBannerRescue": "与汉江警察队·消防救援队实时联动",
+  "routeInfo": "路线信息",
+  "departureDock": "出发码头",
+  "arrivalDock": "到达码头",
+  "estimatedInfo": "预计信息",
+  "distanceLabel": "距离",
+  "durationLabel": "所需时间",
+  "etaLabel": "预计到达",
+  "routeSpeedNote": "※ 以平均速度 11 km/h 为准\\n※ 实际运营时间可能因情况而异",
+  "selectPrompt": "请选择",
+  "departureTimetable": "出发时刻表",
+  "nextDeparture": "下次出发",
+  "weatherChangeNotice": "运营可能因天气状况而变更",
+  "approxMinutes": "约{minutes}分钟",
+  "@approxMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "approxHoursMinutes": "约{hours}小时{minutes}分钟",
+  "@approxHoursMinutes": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "approxHours": "约{hours}小时",
+  "@approxHours": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  }
+}

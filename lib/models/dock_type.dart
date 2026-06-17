@@ -42,5 +42,6 @@ String _seoulForestLabel(String localeName) {
   final code = localeName.toLowerCase();
   if (code.startsWith('ko')) return '서울숲';
   if (code.startsWith('ja')) return 'ソウルの森';
+  if (code.startsWith('zh')) return '首尔林';
   return 'Seoul Forest';
 }
