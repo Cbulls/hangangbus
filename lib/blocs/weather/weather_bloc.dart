@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hangangbus/repositories/weather_repository.dart';
 import 'package:hangangbus/models/weather_data.dart';
 part 'weather_event.dart';
@@ -30,6 +31,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
     WeatherSubscriptionRequested event,
     Emitter<WeatherState> emit,
   ) async {
+    debugPrint('🌦️ [WeatherBloc] 구독 시작됨 (WeatherSubscriptionRequested)');
     _timer ??= Timer.periodic(
       const Duration(minutes: 10),
       (_) => add(const WeatherRefreshRequested()),
@@ -45,12 +47,21 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
   }
 
   Future<void> _load(Emitter<WeatherState> emit) async {
+    debugPrint(
+      '🌦️ [WeatherBloc] _load 시작 (현재 representative='
+      '${state.representative != null ? "있음" : "없음"})',
+    );
     // 이미 성공 데이터가 있으면 로딩 표시로 깜빡이지 않게 둔다.
     if (state.representative == null) {
       emit(state.copyWith(status: WeatherStatus.loading));
 
       // 1) 키 없이 즉시 표시 가능한 fallback 기온 (빠른 첫 화면)
+      debugPrint('🌦️ [WeatherBloc] fallback 호출 시도');
       final quick = await _repo.fetchFallback();
+      debugPrint(
+        '🌦️ [WeatherBloc] fallback 결과: '
+        '${quick != null ? "성공 ${quick.current.temperature}°" : "null"}',
+      );
       if (quick != null) {
         emit(
           state.copyWith(status: WeatherStatus.success, representative: quick),
@@ -59,7 +70,12 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
     }
 
     // 2) 서울 대표 장소 정식 데이터로 갱신
+    debugPrint('🌦️ [WeatherBloc] 정식 fetch 시도: $_representativePark');
     final primary = await _repo.fetch(_representativePark);
+    debugPrint(
+      '🌦️ [WeatherBloc] 정식 fetch 결과: '
+      '${primary != null ? "성공 ${primary.current.temperature}°" : "null"}',
+    );
     if (primary != null) {
       emit(
         state.copyWith(status: WeatherStatus.success, representative: primary),
@@ -69,6 +85,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
 
     // 3) 정식 데이터 실패 + 캐시도 없으면 실패 처리 (캐시 있으면 유지)
     if (state.representative == null) {
+      debugPrint('🌦️ [WeatherBloc] 최종 실패 → status=failure');
       emit(state.copyWith(status: WeatherStatus.failure));
     }
   }

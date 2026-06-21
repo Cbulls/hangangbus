@@ -61,12 +61,29 @@ class WeatherData {
 
   const WeatherData({required this.current});
 
-  factory WeatherData.fromOpenMeteo(Map<String, dynamic> json) {
+  factory WeatherData.fromOpenMeteo(
+    Map<String, dynamic> json, {
+    Map<String, dynamic>? air,
+  }) {
     final current = json['current'] as Map<String, dynamic>? ?? {};
     final temp = _toDouble(current['temperature_2m'], 10.0);
     final humidity = _toDouble(current['relative_humidity_2m'], 60.0);
     final windSpeed = _toDouble(current['wind_speed_10m'], 1.5);
     final weatherCode = int.tryParse(current['weather_code']?.toString() ?? '');
+
+    // Open-Meteo 대기질 API (air-quality)에서 미세먼지 추출
+    int pm10 = 0;
+    int pm25 = 0;
+    String pm10Level = '정보 없음';
+    Color pm10Color = const Color(0xFF78909C);
+    if (air != null) {
+      final ac = air['current'] as Map<String, dynamic>? ?? {};
+      pm10 = _toDouble(ac['pm10'], 0).toInt();
+      pm25 = _toDouble(ac['pm2_5'], 0).toInt();
+      final info = _pm10Info(pm10);
+      pm10Level = info.$1;
+      pm10Color = info.$2;
+    }
 
     return WeatherData(
       current: CurrentWeather(
@@ -78,10 +95,10 @@ class WeatherData {
         skyStatus: _openMeteoSkyStatus(weatherCode),
         weatherIcon: _openMeteoIcon(weatherCode),
         precipitation: '-',
-        pm10: 0,
-        pm25: 0,
-        pm10Level: '정보 없음',
-        pm10Color: const Color(0xFF78909C),
+        pm10: pm10,
+        pm25: pm25,
+        pm10Level: pm10Level,
+        pm10Color: pm10Color,
         uvIndex: '-',
         weatherTime: current['time']?.toString() ?? '',
       ),

@@ -14,11 +14,11 @@ class DockLocation {
   });
 }
 
-// 선착장 데이터
+// 선착장 데이터 (좌표: 한강버스 공식 선착장 위치 실측 기준)
 final List<DockLocation> docks = [
   DockLocation(
     name: '마곡',
-    position: LatLng(37.575086622786905, 126.84405715556353),
+    position: LatLng(37.575048, 126.84399),
     color: const Color(0xFF4A7C59),
     address: '서울특별시 강서구 가양동 441',
   ),
@@ -36,25 +36,25 @@ final List<DockLocation> docks = [
   ),
   DockLocation(
     name: '압구정',
-    position: LatLng(37.5270, 127.0280),
+    position: LatLng(37.5265383, 127.0166979),
     color: const Color(0xFF8E54E9),
-    address: '서울특별시 강남구 압구정동 일대',
+    address: '서울특별시 강남구 압구정동 380-1',
   ),
   DockLocation(
     name: '옥수',
-    position: LatLng(37.5400, 127.0180),
+    position: LatLng(37.5389979, 127.0211590),
     color: const Color(0xFF26A69A),
-    address: '서울특별시 성동구 옥수동 일대',
+    address: '서울특별시 성동구 옥수동 86',
   ),
   DockLocation(
     name: '뚝섬',
-    position: LatLng(37.5304, 127.0661),
+    position: LatLng(37.5286586, 127.0666088),
     color: const Color(0xFF42A5F5),
-    address: '서울특별시 광진구 자양동 112',
+    address: '서울특별시 광진구 자양동 2216',
   ),
   DockLocation(
     name: '잠실',
-    position: LatLng(37.5145, 127.0820),
+    position: LatLng(37.5186011, 127.0846993),
     color: const Color(0xFF00ACC1),
     address: '서울특별시 송파구 잠실동 1-2',
   ),

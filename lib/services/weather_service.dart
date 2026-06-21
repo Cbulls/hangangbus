@@ -45,8 +45,12 @@ class WeatherService {
 
   /// 공원 이름으로 날씨 데이터 단독 조회
   static Future<WeatherData?> fetch(String parkAreaName) async {
+    debugPrint(
+      '🔑 SEOUL_API_KEY 길이: ${_apiKey.length} '
+      '(0이면 .env 미로드)',
+    );
     if (_apiKey.isEmpty) {
-      debugPrint('⚠️ SEOUL_API_KEY 가 .env 에 설정되지 않았습니다.');
+      debugPrint('⚠️ SEOUL_API_KEY 가 .env 에 설정되지 않았습니다. fallback 사용.');
       return fetchSeoulFallback();
     }
 
@@ -76,35 +80,70 @@ class WeatherService {
       }
 
       debugPrint('✅ 날씨 수신 성공: $areaName');
-      return WeatherData.fromJson(
+      final parsed = WeatherData.fromJson(
         body['CITYDATA'] as Map<String, dynamic>,
         areaName,
       );
+      debugPrint(
+        '🌡️ 파싱 결과: 기온 ${parsed.current.temperature}°, '
+        '습도 ${parsed.current.humidity}%',
+      );
+      return parsed;
     } catch (e) {
       debugPrint('❌ 날씨 fetch 에러 ($parkAreaName): $e');
       return fetchSeoulFallback();
     }
   }
 
-  /// 서울시 API 실패 시 사용하는 공개 기온 fallback.
-  /// API 키 없이 서울 중심 좌표의 현재 기온을 조회합니다.
+  /// 서울시 API 실패 시 사용하는 공개 날씨 fallback.
+  /// API 키 없이 서울 중심 좌표의 현재 기온 + 미세먼지(대기질)를 조회합니다.
   static Future<WeatherData?> fetchSeoulFallback() async {
     try {
-      final uri = Uri.parse(
+      final weatherUri = Uri.parse(
         'https://api.open-meteo.com/v1/forecast'
         '?latitude=37.5665&longitude=126.9780'
         '&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code'
         '&timezone=Asia%2FSeoul',
       );
-      final res = await http.get(uri).timeout(const Duration(seconds: 5));
-      if (res.statusCode != 200) {
-        debugPrint('❌ Open-Meteo HTTP 오류: ${res.statusCode}');
+      final airUri = Uri.parse(
+        'https://air-quality-api.open-meteo.com/v1/air-quality'
+        '?latitude=37.5665&longitude=126.9780'
+        '&current=pm10,pm2_5'
+        '&timezone=Asia%2FSeoul',
+      );
+
+      // 날씨 + 대기질 병렬 호출 (대기질 실패해도 날씨는 표시)
+      final results = await Future.wait([
+        http.get(weatherUri).timeout(const Duration(seconds: 5)),
+        http
+            .get(airUri)
+            .timeout(const Duration(seconds: 5))
+            .then<http.Response?>((r) => r)
+            .catchError((_) => null),
+      ]);
+
+      final weatherRes = results[0] as http.Response;
+      final airRes = results[1] as http.Response?;
+
+      if (weatherRes.statusCode != 200) {
+        debugPrint('❌ Open-Meteo HTTP 오류: ${weatherRes.statusCode}');
         return null;
       }
 
       final body =
-          jsonDecode(utf8.decode(res.bodyBytes)) as Map<String, dynamic>;
-      return WeatherData.fromOpenMeteo(body);
+          jsonDecode(utf8.decode(weatherRes.bodyBytes)) as Map<String, dynamic>;
+
+      Map<String, dynamic>? airBody;
+      if (airRes != null && airRes.statusCode == 200) {
+        airBody =
+            jsonDecode(utf8.decode(airRes.bodyBytes)) as Map<String, dynamic>;
+        debugPrint('🌫️ Open-Meteo 대기질 수신 성공');
+      } else {
+        debugPrint('⚠️ Open-Meteo 대기질 미수신 (미세먼지 정보없음 처리)');
+      }
+
+      debugPrint('🌡️ fallback 파싱(기온+미세먼지) 완료');
+      return WeatherData.fromOpenMeteo(body, air: airBody);
     } catch (e) {
       debugPrint('❌ Open-Meteo 날씨 fetch 에러: $e');
       return null;

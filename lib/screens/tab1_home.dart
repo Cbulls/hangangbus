@@ -7,10 +7,12 @@ import 'package:hangangbus/blocs/clock/clock_bloc.dart';
 import 'package:hangangbus/blocs/navigation/navigation_bloc.dart';
 import 'package:hangangbus/blocs/realtime/realtime_bloc.dart';
 import 'package:hangangbus/blocs/weather/weather_bloc.dart';
+import 'package:hangangbus/blocs/settings/settings_bloc.dart';
 import 'package:hangangbus/models/dock_type.dart';
 import 'package:hangangbus/models/hangang_realtime_data.dart';
 import 'package:hangangbus/screens/widgets/dock_amenity_card.dart';
 import 'package:hangangbus/screens/dock_map_screen.dart';
+import 'package:hangangbus/screens/hangang_map_screen.dart';
 import 'package:hangangbus/utils/schedule_utils.dart';
 import 'package:hangangbus/models/weather_data.dart';
 import 'package:hangangbus/l10n/app_localizations.dart';
@@ -57,13 +59,15 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
   late AnimationController _pulseController;
 
   /// 측정 위젯이 보고한 카드 높이를 저장하고, 현재 페이지면 컨테이너 높이를 갱신한다.
+  /// 측정 지연/오차로 인한 미세 overflow를 막기 위해 약간의 여유를 더한다.
   void _reportCardHeight(int index, double height) {
-    if ((_cardHeights[index] ?? 0) == height) return;
-    _cardHeights[index] = height;
+    final adjusted = height + 4;
+    if ((_cardHeights[index] ?? 0) == adjusted) return;
+    _cardHeights[index] = adjusted;
     if (index == _currentDockIndex) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted && _currentPageHeight != height) {
-          setState(() => _currentPageHeight = height);
+        if (mounted && _currentPageHeight != adjusted) {
+          setState(() => _currentPageHeight = adjusted);
         }
       });
     }
@@ -311,6 +315,13 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
 
     final currentDock = docks[_currentDockIndex];
     final headerWeather = weatherState.weatherFor(currentDock.parkAreaName);
+    debugPrint(
+      '🖥️ [tab1_home] weather 읽기: '
+      'status=${weatherState.status}, '
+      'representative=${weatherState.representative != null ? "있음" : "없음"}, '
+      'parkAreaName=${currentDock.parkAreaName}, '
+      'headerWeather=${headerWeather != null ? "있음 ${headerWeather.current.temperature}°" : "null"}',
+    );
 
     return Scaffold(
       backgroundColor: isDarkMode
@@ -413,6 +424,9 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
                               isDarkMode,
                               weatherState.isLoading,
                             ),
+                            const SizedBox(width: 10),
+                            // 큰글씨 토글 (고령층 접근성)
+                            _buildTextScaleButton(isDarkMode),
                           ],
                         ),
                       ],
@@ -506,14 +520,17 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
                             tag: dock.heroTag,
                             child: Material(
                               color: Colors.transparent,
-                              child: _MeasureSize(
-                                onChange: (size) =>
-                                    _reportCardHeight(index, size.height),
-                                child: _buildDockCard(
-                                  dock,
-                                  isActive,
-                                  isDarkMode,
-                                  l10n,
+                              child: SingleChildScrollView(
+                                physics: const NeverScrollableScrollPhysics(),
+                                child: _MeasureSize(
+                                  onChange: (size) =>
+                                      _reportCardHeight(index, size.height),
+                                  child: _buildDockCard(
+                                    dock,
+                                    isActive,
+                                    isDarkMode,
+                                    l10n,
+                                  ),
                                 ),
                               ),
                             ),
@@ -609,8 +626,13 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
                           isDarkMode: isDarkMode,
                           onTap: () {
                             HapticFeedback.mediumImpact();
-                            context.read<NavigationBloc>().add(
-                              const NavTabSelected(2),
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => HangangMapScreen(
+                                  initialDockNameEn: currentDock.nameEn,
+                                ),
+                              ),
                             );
                           },
                         ),
@@ -700,6 +722,71 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
           ],
         ),
       ),
+    );
+  }
+
+  /// 큰글씨 토글 버튼 (고령층 접근성).
+  /// 탭하면 보통→크게→아주크게 순환. 현재 단계를 '가/가+/가++'로 표시.
+  Widget _buildTextScaleButton(bool isDarkMode) {
+    return BlocBuilder<SettingsBloc, SettingsState>(
+      builder: (context, settings) {
+        final isLarge = settings.isLargeText;
+        final label = switch (settings.level) {
+          TextScaleLevel.normal => '가',
+          TextScaleLevel.large => '가+',
+          TextScaleLevel.extraLarge => '가++',
+        };
+        return GestureDetector(
+          onTap: () {
+            HapticFeedback.mediumImpact();
+            context.read<SettingsBloc>().add(
+              TextScaleChanged(settings.level.next),
+            );
+          },
+          behavior: HitTestBehavior.opaque,
+          child: Container(
+            width: 52,
+            height: 52,
+            decoration: BoxDecoration(
+              color: isLarge
+                  ? SeoulColors.seoulBlue
+                  : (isDarkMode
+                        ? Colors.white.withValues(alpha: 0.12)
+                        : SeoulColors.seoulBlue.withValues(alpha: 0.1)),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: SeoulColors.seoulBlue.withValues(alpha: 0.3),
+              ),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  label,
+                  // 이 버튼 라벨은 글씨 배율의 영향을 받지 않게 고정
+                  textScaler: TextScaler.noScaling,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w900,
+                    height: 1.0,
+                    color: isLarge
+                        ? Colors.white
+                        : (isDarkMode ? Colors.white : SeoulColors.seoulBlue),
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Icon(
+                  Icons.text_fields_rounded,
+                  size: 13,
+                  color: isLarge
+                      ? Colors.white
+                      : (isDarkMode ? Colors.white70 : SeoulColors.seoulBlue),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -885,9 +972,9 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
     final realtimeData = dock.parkAreaName != null
         ? context.read<RealtimeBloc>().state.dataByPark[dock.parkAreaName]
         : null;
-    final weatherData = dock.parkAreaName != null
-        ? context.read<WeatherBloc>().state.weatherByPark[dock.parkAreaName]
-        : null;
+    final weatherData = context.read<WeatherBloc>().state.weatherFor(
+      dock.parkAreaName,
+    );
 
     final isServiceClosed =
         dock.operationStatus == OperationStatus.stopped ||
@@ -1225,11 +1312,6 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
                                   ],
                                 ),
                               ),
-                              Icon(
-                                Icons.arrow_forward_ios_rounded,
-                                size: 16,
-                                color: gradient[0].withValues(alpha: 0.5),
-                              ),
                             ],
                           ),
                         ),
@@ -1462,6 +1544,7 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
                     const SizedBox(height: 20),
                     // 7. 지도 버튼
                     GestureDetector(
+                      behavior: HitTestBehavior.opaque,
                       onTap: () {
                         HapticFeedback.mediumImpact();
                         Navigator.push(

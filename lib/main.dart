@@ -9,6 +9,7 @@ import 'package:hangangbus/blocs/realtime/realtime_bloc.dart';
 import 'package:hangangbus/blocs/schedule/schedule_bloc.dart';
 import 'package:hangangbus/blocs/story/story_bloc.dart';
 import 'package:hangangbus/blocs/weather/weather_bloc.dart';
+import 'package:hangangbus/blocs/settings/settings_bloc.dart';
 import 'package:hangangbus/repositories/content_repository.dart';
 import 'package:hangangbus/repositories/realtime_repository.dart';
 import 'package:hangangbus/repositories/schedule_repository.dart';
@@ -53,6 +54,9 @@ class MyApp extends StatelessWidget {
       child: MultiBlocProvider(
         providers: [
           BlocProvider(create: (_) => NavigationBloc()),
+          BlocProvider(
+            create: (_) => SettingsBloc()..add(const SettingsLoaded()),
+          ),
           BlocProvider(create: (_) => ClockBloc()..add(const ClockStarted())),
           BlocProvider(
             create: (ctx) =>
@@ -70,45 +74,58 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (_) => StoryBloc()),
           BlocProvider(create: (_) => FaqBloc()),
         ],
-        child: MaterialApp(
-          title: '한강버스 가이드',
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            useMaterial3: true,
-            primaryColor: const Color(0xFF0052A4), // 한강 블루
-            scaffoldBackgroundColor: Colors.grey[50],
-            appBarTheme: const AppBarTheme(
-              backgroundColor: Colors.white,
-              elevation: 0,
-              titleTextStyle: TextStyle(
-                color: Colors.black,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+        child: BlocBuilder<SettingsBloc, SettingsState>(
+          builder: (context, settings) {
+            return MaterialApp(
+              title: '한강버스 가이드',
+              debugShowCheckedModeBanner: false,
+              builder: (context, child) {
+                // 앱 전역 글씨 배율 적용 (고령층 큰글씨 기능).
+                // 상한 1.6으로 클램프해 레이아웃 깨짐 방지.
+                final scaler = TextScaler.linear(settings.textScale);
+                return MediaQuery(
+                  data: MediaQuery.of(context).copyWith(textScaler: scaler),
+                  child: child!,
+                );
+              },
+              theme: ThemeData(
+                useMaterial3: true,
+                primaryColor: const Color(0xFF0052A4), // 한강 블루
+                scaffoldBackgroundColor: Colors.grey[50],
+                appBarTheme: const AppBarTheme(
+                  backgroundColor: Colors.white,
+                  elevation: 0,
+                  titleTextStyle: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  iconTheme: IconThemeData(color: Colors.black),
+                ),
               ),
-              iconTheme: IconThemeData(color: Colors.black),
-            ),
-          ),
-          home: const MainBase(),
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: const [
-            Locale('ko'),
-            Locale('en'),
-            Locale('ja'),
-            Locale('zh'),
-          ],
-          localeResolutionCallback: (locale, supportedLocales) {
-            if (locale == null) return const Locale('ko');
-            for (final supported in supportedLocales) {
-              if (supported.languageCode == locale.languageCode) {
-                return supported;
-              }
-            }
-            return const Locale('ko'); // fallback: 한국어
+              home: const MainBase(),
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: const [
+                Locale('ko'),
+                Locale('en'),
+                Locale('ja'),
+                Locale('zh'),
+              ],
+              localeResolutionCallback: (locale, supportedLocales) {
+                if (locale == null) return const Locale('ko');
+                for (final supported in supportedLocales) {
+                  if (supported.languageCode == locale.languageCode) {
+                    return supported;
+                  }
+                }
+                return const Locale('ko'); // fallback: 한국어
+              },
+            );
           },
         ),
       ),

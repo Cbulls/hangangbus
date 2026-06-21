@@ -8,6 +8,22 @@ class SeoulApiService {
   static final String _baseUrl = 'http://openapi.seoul.go.kr:8088';
   static final String _apiKey = dotenv.env['SEOUL_API_KEY'] ?? '';
 
+  /// 타임아웃/일시적 네트워크 오류 시 1회 재시도하는 HTTP GET.
+  /// 각 시도는 10초 타임아웃을 유지한다.
+  static Future<http.Response> _getWithRetry(Uri url, {int retries = 1}) async {
+    int attempt = 0;
+    while (true) {
+      try {
+        return await http.get(url).timeout(const Duration(seconds: 10));
+      } catch (e) {
+        if (attempt >= retries) rethrow;
+        attempt++;
+        print('⏳ 재시도 $attempt회 ($url): $e');
+        await Future.delayed(const Duration(milliseconds: 500));
+      }
+    }
+  }
+
   /// 통합 데이터 로드 (서울시 실시간 도시데이터 API 최적화 버전)
   static Future<Map<String, dynamic>> getCompleteData(String areaName) async {
     if (_apiKey.isEmpty) {
@@ -20,7 +36,7 @@ class SeoulApiService {
 
     try {
       print('🌐 API 호출 시작: $areaName');
-      final response = await http.get(url).timeout(const Duration(seconds: 10));
+      final response = await _getWithRetry(url);
 
       if (response.statusCode == 200) {
         // 한글 깨짐 방지를 위한 utf8 디코딩
