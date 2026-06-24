@@ -27,7 +27,7 @@ class _HangangMapScreenState extends State<HangangMapScreen> {
   KakaoMapController? _mapController;
 
   // 기본 한강 중심 (대략 한강대교 부근) — 선택 선착장이 없을 때만 사용
-  static LatLng _hanRiverCenter = LatLng(37.5283, 126.9950);
+  static final LatLng _hanRiverCenter = LatLng(37.5283, 126.9950);
 
   // 선착장 영문명 → 한국어명(docks의 name 키) 매핑
   static const Map<String, String> _enToKo = {
