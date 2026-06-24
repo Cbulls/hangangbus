@@ -123,7 +123,7 @@ class WeatherService {
       ]);
 
       final weatherRes = results[0] as http.Response;
-      final airRes = results[1] as http.Response?;
+      final airRes = results[1];
 
       if (weatherRes.statusCode != 200) {
         debugPrint('❌ Open-Meteo HTTP 오류: ${weatherRes.statusCode}');
