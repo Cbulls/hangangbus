@@ -262,6 +262,281 @@ final List<StoryItem> storyDataKo = [
     openingHours: '07:30 - 20:00 (재료 소진 시 마감 / 일요일 휴무)',
     priceRange: '4,000원 - 8,000원',
   ),
+  // ========== 옥수 ==========
+  StoryItem(
+    category: 'HISTORY',
+    title: '두모포와 조선의 얼',
+    subtitle: '조선 시대 군사 요충지이자 문인들의 쉼터',
+    imageUrl: 'assets/images/dumopo.jpg',
+    description:
+        '옥수동의 옛 이름인 \'두모포(豆毛浦)\'는 중랑천과 한강이 만나는 지점으로, 조선 시대 동해안과 강원도 지방으로 향하는 중요한 나루터이자 군사 요충지였습니다.\n\n'
+        '조선 세종 시절 대마도 정벌을 위해 이종무 장군이 이끄는 군대가 출정식을 가졌던 역사적인 장소이기도 하며, 빼어난 경치 덕분에 선비들이 시를 짓고 풍류를 즐기던 곳입니다.',
+    dockName: '옥수',
+    accessInfo: '선착장에서 도보 5분',
+    historicalPeriod: '조선시대',
+  ),
+  StoryItem(
+    category: 'HISTORY',
+    title: '독서당 신성터',
+    subtitle: '조선 엘리트 학자들의 독서 휴가제',
+    imageUrl: 'assets/images/dokseodang.jpeg',
+    description:
+        '조선 성종 시기, 젊고 유능한 학자들에게 휴가를 주어 학문에 전념하게 하던 \'사독서(賜讀書)\' 제도를 위해 옥수동 인근에 동호독서당(東湖讀書堂)이 세워졌습니다.\n\n'
+        '이황, 이이 등 당대 최고의 석학들이 이곳에서 한강을 바라보며 학문을 닦았으며, 오늘날 옥수동 일대의 \'독서당로\'라는 도로명에 그 역사의 흔적이 고스란히 남아있습니다.',
+    dockName: '옥수',
+    accessInfo: '선착장에서 도보 15분',
+    historicalPeriod: '조선 중기',
+  ),
+  StoryItem(
+    category: 'FOOD',
+    title: '고향냉면',
+    subtitle: '금호역 주변 금남시장 숨은 맛집이자 착한 가격 업소',
+    imageUrl: 'assets/images/gohyang.jpeg',
+    description:
+        '금호역 주변 금남시장 골목 안쪽에 위치한 고향냉면은 정겨운 전통시장의 정취를 그대로 간직한 숨은 로컬 맛집입니다. '
+        '정직하고 저렴한 가격을 고수하여 정부와 지자체가 지정한 \'착한 가격 업소\'로 선정된 곳입니다.\n\n'
+        '이곳의 대표 메뉴인 새콤달콤한 냉면(물/비빔)을 비롯해 열무와 콩나물이 듬뿍 올라간 보리비빔밥, 구수한 된장찌개 등 정갈한 한식을 선보입니다. '
+        '특히 찬 바람이 불 때 손님들이 즐겨 찾는 푸짐한 칼만두국은 진한 국물과 쫄깃한 면발이 어우러져 따끈한 칼만두국이 전하는 겨울의 행복을 그대로 느낄 수 있습니다.',
+    dockName: '옥수',
+    accessInfo: '서울 성동구 독서당로 301-93 고향냉면',
+    priceRange: '8,000원 - 9,000원',
+    openingHours: '11:00 - 20:00 (브레이크타임 15:00 - 16:00 / 일요일 휴무)',
+  ),
+
+  StoryItem(
+    category: 'FOOD',
+    title: '부부요리단',
+    subtitle: '옥수동 골목을 지켜온 명품 삼겹살과 쭈꾸미',
+    imageUrl: 'assets/images/bubucook.jpeg',
+    description:
+        '특급 호텔 출신 셰프 부부가 운영하는 옥수동의 대표 맛집으로, 매콤하고 쫄깃한 오삼불고기와 제주 흑돼지 요리가 일품입니다.\n\n'
+        '깔끔하고 정갈한 밑반찬과 깊은 감칠맛의 메인 요리 덕분에 지역 주민들은 물론 한강을 찾는 라이더들에게도 소문난 명소입니다.',
+    dockName: '옥수',
+    accessInfo: '서울특별시 성동구 독서당로40길 25-1',
+    openingHours: '11:30 - 22:00 (브레이크타임 15:00 - 17:00 / 월요일 휴무)',
+    priceRange: '15,000원 - 35,000원',
+  ),
+  StoryItem(
+    category: 'FOOD',
+    title: '항구도시 연구소',
+    subtitle: '옥수 언덕 위에서 즐기는 감각적인 커피와 디저트',
+    imageUrl: 'assets/images/harbor_lab.jpeg',
+    description:
+        '독특한 인테리어와 차분한 분위기가 매력적인 옥수동의 숨은 카페 공간입니다. 직접 로스팅한 스페셜티 커피와 시그니처 디저트가 훌륭한 조화를 이룹니다.\n\n'
+        '한강 산책을 마치고 언덕 위 조용한 골목에서 아늑하게 휴식을 취하며 사색을 즐기기에 가장 이상적인 장소입니다.',
+    dockName: '옥수',
+    accessInfo: '서울특별시 성동구 독서당로 269-1',
+    openingHours: '12:00 - 21:00 (월요일 휴무)',
+    priceRange: '5,000원 - 8,000원',
+  ),
+
+  // ========== 서울숲 ==========
+  StoryItem(
+    category: 'HISTORY',
+    title: '뚝섬 경마장과 뚝섬벌',
+    subtitle: '군사 훈련장에서 왕의 사냥터, 그리고 경마장으로',
+    imageUrl: 'assets/images/seoul_forest_history.jpeg',
+    description:
+        '현재 서울숲이 위치한 뚝섬 일대는 조선 시대 왕의 사냥터이자 군사 열무장이었습니다. 고종 시절에는 군대의 깃발인 \'독기(纛旗)\'를 세웠다 하여 \'뚝섬\'이라는 이름이 붙었습니다.\n\n'
+        '1954년에는 대한민국 최초의 정식 경마장이 개장하여 대중 스포츠의 중심지 역할을 하다가, 1989년 과천으로 이전하기 전까지 서울 시민들의 뜨거운 오락 공간이었습니다.',
+    dockName: '서울숲',
+    accessInfo: '선착장에서 도보 5분',
+    historicalPeriod: '조선시대 ~ 1980년대',
+  ),
+  StoryItem(
+    category: 'HISTORY',
+    title: '뚝도수원지 제1정수장',
+    subtitle: '대한민국 근대 상수도의 발상지',
+    imageUrl: 'assets/images/tukdo_waterworks.jpeg',
+    description:
+        '1908년 완공된 뚝도수원지 제1정수장은 서울에 최초로 근대적 수돗물을 공급하기 시작한 역사적인 시설입니다.\n\n'
+        '당시 붉은 벽돌로 지어진 서양식 건축 외관이 고스란히 보존되어 있으며, 현재는 \'수도박물관\'으로 운영되어 한강의 물 역사와 대한민국 근대화 과정을 한눈에 살펴볼 수 있습니다.',
+    dockName: '서울숲',
+    accessInfo: '선착장에서 도보 8분',
+    historicalPeriod: '1908년 건립',
+  ),
+  StoryItem(
+    category: 'FOOD',
+    title: '할머니의 레시피',
+    subtitle: '성수동 골목에서 만나는 따뜻한 가정식 한 상',
+    imageUrl: 'assets/images/grandma_recipe.jpeg',
+    description:
+        '서울숲 인근에서 가장 유명한 한식당 중 하나로, 자극적이지 않고 담백한 집밥 스타일의 반상을 선보입니다. 숨굴밥, 강경 젓갈 비빔밥 등이 대표 메뉴입니다.\n\n'
+        '모던하고 깔끔한 단독주택 건물에서 통창을 통해 정원을 바라보며 정갈한 식사를 즐길 수 있어 서울숲 나들이객에게 필수 코스입니다.',
+    dockName: '서울숲',
+    accessInfo: '서울특별시 성동구 서울숲2길 44-1',
+    openingHours: '11:30 - 21:30 (브레이크타임 15:40 - 17:00 / 화요일 휴무)',
+    priceRange: '11,000원 - 18,000원',
+  ),
+  StoryItem(
+    category: 'FOOD',
+    title: '센터커피',
+    subtitle: '서울숲의 초록빛 풍경을 품은 스페셜티 카페',
+    imageUrl: 'assets/images/center_coffee.jpeg',
+    description:
+        '영국 바리스타 챔피언 출신 박상호 바리스타가 이끄는 스페셜티 커피 전문점입니다. 최고급 원두의 풍미를 살린 브루잉 커피가 대표적입니다.\n\n'
+        '서울숲 입구와 맞닿아 있어 2층 창가 자리에 앉으면 울창한 숲의 뷰를 액자처럼 감상하며 여유로운 티타임을 가질 수 있습니다.',
+    dockName: '서울숲',
+    accessInfo: '서울특별시 성동구 서울숲2길 28-11',
+    openingHours: '10:00 - 21:00 (월요일 휴무)',
+    priceRange: '5,500원 - 9,000원',
+  ),
+
+  // ========== 뚝섬 ==========
+  StoryItem(
+    category: 'HISTORY',
+    title: '뚝섬나루와 살곶이다리',
+    subtitle: '송파와 광나루를 잇던 조선의 교통 대동맥',
+    imageUrl: 'assets/images/salgoji_bridge.jpeg',
+    description:
+        '뚝섬 선착장 인근의 중랑천 하류에는 조선 시대 가장 길었던 석조 다리인 \'살곶이다리(보물 제1738호)\'가 굳건히 자리를 지키고 있습니다.\n\n'
+        '태조 이성계와 태종 이방원의 이야기가 얽힌 역사의 현장이며, 경흥대로(서울과 함경도를 잇는 간선도로)의 시발점으로서 수많은 상인과 보부상들이 한강을 건너던 길목이었습니다.',
+    dockName: '뚝섬',
+    accessInfo: '선착장에서 도보 15분',
+    historicalPeriod: '조선 전기 (1483년 완공)',
+  ),
+  StoryItem(
+    category: 'HISTORY',
+    title: '뚝섬유원지의 시작',
+    subtitle: '서민들의 오랜 강변 휴양지',
+    imageUrl: 'assets/images/ttukseom_resort.jpeg',
+    description:
+        '뚝섬은 1930년대부터 뚝섬유원지로 개발되어 서울 시민들이 여름철 물놀이와 뱃놀이를 즐기던 유서 깊은 휴양 공간이었습니다.\n\n'
+        '1980년대 한강 종합개발사업을 거쳐 현재의 현대적인 한강공원의 틀을 갖추었으며, 윈드서핑 등 수상 레포츠의 메카로서 그 활기찬 명성을 이어가고 있습니다.',
+    dockName: '뚝섬',
+    accessInfo: '선착장에서 도보 1분',
+    historicalPeriod: '1930년대~현재',
+  ),
+  StoryItem(
+    category: 'FOOD',
+    title: '자양전통시장',
+    subtitle: '뚝섬 자양동 주민들의 활력 넘치는 먹거리 천국',
+    imageUrl: 'assets/images/jayang_market.jpeg',
+    description:
+        '오랜 역사를 자랑하는 자양동의 대표 전통시장으로, 줄 서서 먹는 마늘 떡볶이와 닭강정, 족발 등 가성비 훌륭한 로컬 먹거리가 가득합니다.\n\n'
+        '온누리상품권 사용이 가능하고 시장 내부가 깔끔하게 정비되어 있어, 뚝섬 한강공원 피크닉을 가기 전 주전부리를 포장하기에 최적의 장소입니다.',
+    dockName: '뚝섬',
+    accessInfo: '서울특별시 광진구 자양로13길 64',
+    openingHours: '09:00 - 22:00 (점포별 상이)',
+    priceRange: '3,000원 - 15,000원',
+  ),
+  StoryItem(
+    category: 'FOOD',
+    title: '송림식당',
+    subtitle: '택시 기사님들이 보증하는 대형 돼지불백 노포',
+    imageUrl: 'assets/images/songlim.jpeg',
+    description:
+        '기사식당으로 시작해 건물을 세울 정도로 엄청난 인기를 자랑하는 뚝섬·자양동 최고의 노포 맛집입니다. 달콤 짭조름한 돼지불고기 백반이 단일 메뉴나 다름없습니다.\n\n'
+        '고기와 밥, 반찬, 상추를 고추장과 함께 불판 위에서 가위로 잘게 잘라 볶아 먹는 \'기사식당식 볶음밥\'이 이 집의 시그니처입니다. 무한 리필 가능한 선지해장국도 매력적입니다.',
+    dockName: '뚝섬',
+    accessInfo: '서울특별시 광진구 자양번영로 79',
+    openingHours: '06:00 - 22:00',
+    priceRange: '10,000원',
+  ),
+
+  // ========== 압구정 ==========
+  StoryItem(
+    category: 'HISTORY',
+    title: '한명회와 압구정 터',
+    subtitle: '조선 최고 권력가의 야망이 머물던 정자',
+    imageUrl: 'assets/images/apgujeong_site.jpeg',
+    description:
+        '\'압구정(狎鷗亭)\'이라는 지명은 조선 전기 최고의 권력자였던 한명회가 한강 변에 세운 동명의 정자에서 유래했습니다. \'갈매기와 친하게 지낸다\'는 뜻으로 권력을 내려놓고 자연으로 돌아가겠다는 의미를 담았으나, 실제로는 수많은 정객들이 모이던 권력의 중심지였습니다.\n\n'
+        '현재 정자는 유실되었고 압구정 현대아파트 단지 내에 그 터를 알리는 표석만이 남아 화려했던 과거를 증언합니다.',
+    dockName: '압구정',
+    accessInfo: '선착장에서 도보 10분',
+    historicalPeriod: '조선 전기 (15세기)',
+  ),
+  StoryItem(
+    category: 'HISTORY',
+    title: '로데오거리와 청담동 패션',
+    subtitle: '대한민국 트렌드와 오렌지족의 고향',
+    imageUrl: 'assets/images/rodeo_street.jpeg',
+    description:
+        '1990년대 대중문화와 트렌드의 중심지였던 압구정 로데오거리는 대한민국 유행을 선도하는 패션과 문화의 메카였습니다.\n\n'
+        '수입 명품 브랜드와 디자이너 숍들이 밀집하며 부유층 청년 문화를 대변하는 공간이었고, 현재는 힙한 도산공원 상권과 연결되어 K-컬처와 다이닝 문화를 이끄는 핫플레이스로 진화했습니다.',
+    dockName: '압구정',
+    accessInfo: '선착장에서 도보 20분',
+    historicalPeriod: '1990년대~현재',
+  ),
+  StoryItem(
+    category: 'FOOD',
+    title: '뉴만두집',
+    subtitle: '미쉐린 가이드가 인정한 이북식 만두의 진수',
+    imageUrl: 'assets/images/mandoojip.jpeg',
+    description:
+        '압구정 로데오 골목에서 수십 년간 자리를 지켜온 평양식 만두 전문점입니다. 두부와 숙주, 고기로 속을 꽉 채운 큼직한 만두와 양념 고명을 얹은 맑고 깊은 국물이 일품입니다.\n\n'
+        '화려한 압구정 한복판에서 대물림되어 오는 소박하고 정직한 이북의 맛을 느낄 수 있어 미식가들의 발길이 끊이지 않습니다.',
+    dockName: '압구정',
+    accessInfo: '서울특별시 강남구 압구정로338',
+    openingHours: '12:00 - 21:30 (일요일 휴무)',
+    priceRange: '14,000원 - 16,000원',
+  ),
+  StoryItem(
+    category: 'FOOD',
+    title: '뱃고동',
+    subtitle: '압구정을 대표하는 매콤한 오징어·낙지불고기 노포',
+    imageUrl: 'assets/images/baetgodong.jpeg',
+    description:
+        '1990년대 압구정 전성기 시절부터 트렌드세터들의 입맛을 사로잡았던 낙지·오징어 요리 전문점입니다. 스트레스를 날려주는 매콤하고 중독성 있는 양념이 특징입니다.\n\n'
+        '통통한 낙지불고기를 먹은 후 남은 양념에 미나리와 김 가루를 넣어 볶아 먹는 볶음밥과 바삭한 오징어튀김은 이곳의 놓칠 수 없는 콤보입니다.',
+    dockName: '압구정',
+    accessInfo: '서울특별시 강남구 언주로172길 54',
+    openingHours: '11:30 - 22:00 (주말은 21:50까지)',
+    priceRange: '15,000원 - 30,000원',
+  ),
+
+  // ========== 잠실 ==========
+  StoryItem(
+    category: 'HISTORY',
+    title: '뽕나무밭과 잠실나루',
+    subtitle: '국가 양잠 산업의 중심지에서 초고층 도시로',
+    imageUrl: 'assets/images/jamsil_history.jpeg',
+    description:
+        '\'잠실(蠶室)\'이라는 이름은 조선 전기 누에를 치고 명주실을 뽑던 국가 기관인 \'동잠실\'이 이곳에 설치된 것에서 유래했습니다. 당시 이 일대는 온통 뽕나무밭이었습니다.\n\n'
+        '1970년대 한강 매립과 강남 개발을 통해 거대한 아파트 단지와 올림픽 주경기장이 들어서며 세계적인 스포츠·상업 도시로 대전환을 이루었습니다.',
+    dockName: '잠실',
+    accessInfo: '선착장에서 도보 10분',
+    historicalPeriod: '조선시대 ~ 1970년대 개발',
+  ),
+  StoryItem(
+    category: 'HISTORY',
+    title: '삼전도비와 병자호란의 아픔',
+    subtitle: '석촌호수 옆에 새겨진 뼈아픈 역사의 기록',
+    imageUrl: 'assets/images/samjeondobi.jpeg',
+    description:
+        '잠실 선착장 인근 석촌호수 변에는 병자호란 당시 인조가 청나라 태종에게 무릎을 꿇고 항복했던 부끄러운 역사의 기록인 \'삼전도비(국가 지정 인문문화재)\'가 세워져 있습니다.\n\n'
+        '화려한 롯데월드타워와 석촌호수의 아름다운 야경 뒤편에 숨겨진 역사의 이면을 돌아보며 평화의 소중함을 되새길 수 있는 장소입니다.',
+    dockName: '잠실',
+    accessInfo: '선착장에서 도보 20분',
+    historicalPeriod: '조선 인조 (1639년 건립)',
+  ),
+  StoryItem(
+    category: 'FOOD',
+    title: '미엔아이',
+    subtitle: '송리단길에서 만나는 대만식 우육미엔 전문점',
+    imageUrl: 'assets/images/mienai.jpeg',
+    description:
+        '잠실 석촌호수 뒤편 송리단길의 터줏대감으로, 진하게 우려낸 한우 사골 육수에 야들야들한 아롱사태 고기를 올린 대만식 우육면을 선보입니다.\n\n'
+        '수제 꿔바로우인 \'미엔아이 꿔바\'와 부드러운 마라 우육면의 조합이 일품이며, 이국적인 인테리어 덕분에 대만 야시장에 온 듯한 기분을 낼 수 있습니다.',
+    dockName: '잠실',
+    accessInfo: '서울특별시 송파구 오금로16길 5',
+    openingHours: '11:20 - 21:00 (브레이크타임 14:30 - 17:20)',
+    priceRange: '10,000원 - 15,000원',
+  ),
+  StoryItem(
+    category: 'FOOD',
+    title: '해주냉면',
+    subtitle: '서울 3대 매운 냉면, 중독성 강한 불맛의 정수',
+    imageUrl: 'assets/images/haejoo.jpeg',
+    description:
+        '1983년 잠실동에서 시작해 전국적인 매운맛 열풍을 이끌어온 명실상부한 노포 냉면집입니다. 알싸하고 강렬한 마늘 향과 고춧가루 베이스의 마법 양념이 특징입니다.\n\n'
+        '뇌를 자극하는 화끈한 매운 비빔냉면을 먹다가 셀프로 제공되는 뜨겁고 짭조름한 육수로 입안을 달래주는 것이 이곳을 즐기는 정석입니다.',
+    dockName: '잠실',
+    accessInfo: '서울특별시 송파구 올림픽로12길 5-5',
+    openingHours: '11:30 - 21:00 (일요일 휴무)',
+    priceRange: '8,000원 - 9,000원',
+  ),
 ];
 
 final List<FaqItem> faqDataKo = [

@@ -460,7 +460,7 @@ List<Attraction> hangangAttractions = [
     id: 'attr_sayuksin',
     position: LatLng(37.5135242, 126.9498529),
     category: AttractionCategory.culture,
-    name: {'ko': '사육신묘', 'en': 'Saryuksin Shrine', 'ja': '死六臣墓', 'zh': '死六臣墓'},
+    name: {'ko': '사육신묘', 'en': 'Sayuksin Shrine', 'ja': '死六臣墓', 'zh': '死六臣墓'},
     tagline: {
       'ko': '단종 복위를 꾀한 여섯 충신의 묘역',
       'en': 'Tomb of six loyal subjects of King Danjong',
@@ -484,7 +484,7 @@ List<Attraction> hangangAttractions = [
   // --- 마곡 주변 ---
   Attraction(
     id: 'attr_yangcheon',
-    position: LatLng(37.5729567, 126.8398344),
+    position: LatLng(37.5730911256815, 126.839835562738),
     category: AttractionCategory.culture,
     name: {
       'ko': '양천향교',
@@ -511,7 +511,7 @@ List<Attraction> hangangAttractions = [
   ),
   Attraction(
     id: 'attr_botanic',
-    position: LatLng(37.5694132, 126.8350252),
+    position: LatLng(37.5693958477101, 126.835037244018),
     category: AttractionCategory.park,
     name: {
       'ko': '서울식물원',
@@ -589,7 +589,7 @@ List<Attraction> hangangAttractions = [
   ),
   Attraction(
     id: 'attr_jeoldusan',
-    position: LatLng(37.544006, 126.9116079),
+    position: LatLng(37.5441295338349, 126.911846765697),
     category: AttractionCategory.culture,
     name: {
       'ko': '절두산순교성지',
