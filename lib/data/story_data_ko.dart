@@ -402,15 +402,15 @@ final List<StoryItem> storyDataKo = [
   // ========== 뚝섬 ==========
   StoryItem(
     category: 'HISTORY',
-    title: '뚝섬나루와 살곶이다리',
-    subtitle: '송파와 광나루를 잇던 조선의 교통 대동맥',
-    imageUrl: 'assets/images/salgoji_bridge.jpeg',
+    title: '뚝섬의 유래',
+    subtitle: '섬이 아닌 뚝섬에 깃든 왕의 깃발 이야기',
+    imageUrl: 'assets/images/ttukseom_origin.jpeg',
     description:
-        '뚝섬 선착장 인근의 중랑천 하류에는 조선 시대 가장 길었던 석조 다리인 \'살곶이다리(보물 제1738호)\'가 굳건히 자리를 지키고 있습니다.\n\n'
-        '태조 이성계와 태종 이방원의 이야기가 얽힌 역사의 현장이며, 경흥대로(서울과 함경도를 잇는 간선도로)의 시발점으로서 수많은 상인과 보부상들이 한강을 건너던 길목이었습니다.',
+        '뚝섬은 이름에 \'섬\'이 들어가지만 실제로는 섬이 아닙니다. 한강과 중랑천이 만나는 지점에 발달한 범람원 지형으로, 평소에는 육지였다가 큰 비가 내려 물이 범람하면 마치 섬처럼 고립되던 것에서 유래했습니다.\n\n'
+        '\'뚝섬\'이라는 지명은 왕의 수레 앞에 세우던 상징적인 깃발인 \'둑기\'에서 시작되었습니다. 조선 시대 왕들은 이곳에 나와 군대를 사열하거나 사냥을 즐겼고, 매년 둑기를 세우고 \'둑제\'라는 제사를 지냈습니다. 이 때문에 \'둑기를 꽂은 섬 같은 곳\'이라는 뜻으로 \'둑도\'라 불리던 것이 음이 변하여 오늘날의 \'뚝섬\'이 되었습니다.',
     dockName: '뚝섬',
-    accessInfo: '선착장에서 도보 15분',
-    historicalPeriod: '조선 전기 (1483년 완공)',
+    accessInfo: '선착장 주변 수변 일대',
+    historicalPeriod: '조선시대',
   ),
   StoryItem(
     category: 'HISTORY',
@@ -435,20 +435,21 @@ final List<StoryItem> storyDataKo = [
     dockName: '뚝섬',
     accessInfo: '서울특별시 광진구 자양로13길 64',
     openingHours: '09:00 - 22:00 (점포별 상이)',
-    priceRange: '3,000원 - 15,000원',
+    priceRange: '점포별 상이',
   ),
   StoryItem(
     category: 'FOOD',
-    title: '송림식당',
-    subtitle: '택시 기사님들이 보증하는 대형 돼지불백 노포',
-    imageUrl: 'assets/images/songlim.jpeg',
+    title: '청도양꼬치',
+    subtitle: '잡내 없이 육즙 가득한 건대 양꼬치 거리의 숨은 명소',
+    imageUrl: 'assets/images/tsingtao_lamb.jpeg',
     description:
-        '기사식당으로 시작해 건물을 세울 정도로 엄청난 인기를 자랑하는 뚝섬·자양동 최고의 노포 맛집입니다. 달콤 짭조름한 돼지불고기 백반이 단일 메뉴나 다름없습니다.\n\n'
-        '고기와 밥, 반찬, 상추를 고추장과 함께 불판 위에서 가위로 잘게 잘라 볶아 먹는 \'기사식당식 볶음밥\'이 이 집의 시그니처입니다. 무한 리필 가능한 선지해장국도 매력적입니다.',
+        '뚝섬 선착장 인근 자양동 건대 양꼬치 거리에 위치한 청도양꼬치는 엄선된 1년 미만의 양고기(램)만을 사용하여 특유의 누린내 없이 부드러운 육질과 촉촉한 육즙을 자랑하는 전문점입니다.\n\n'
+        '대표 메뉴인 고소한 양꼬치와 부드러운 양갈비를 비롯해 겉바속촉의 정석인 꿔바로우, 지삼선, 마라탕 등 다채로운 중화요리를 푸짐하게 맛볼 수 있습니다. '
+        '향신료 \'쯔란\' 소스와 최고의 궁합을 자랑하며, 인심 후한 사장님의 친절한 서비스 덕분에 만족도가 매우 높습니다. 뚝섬 한강공원 나들이나 한강버스 탑승 후 시원한 칭다오 맥주를 곁들이며 하루를 마무리하기에 최적의 공간입니다.',
     dockName: '뚝섬',
-    accessInfo: '서울특별시 광진구 자양번영로 79',
-    openingHours: '06:00 - 22:00',
-    priceRange: '10,000원',
+    accessInfo: '서울특별시 광진구 동일로18길 69 (자양역·뚝섬한강공원 인근)',
+    openingHours: '11:30 - 06:00 (연중무휴)',
+    priceRange: '18,000원 - 67,000원',
   ),
 
   // ========== 압구정 ==========
@@ -456,7 +457,7 @@ final List<StoryItem> storyDataKo = [
     category: 'HISTORY',
     title: '한명회와 압구정 터',
     subtitle: '조선 최고 권력가의 야망이 머물던 정자',
-    imageUrl: 'assets/images/apgujeong_site.jpeg',
+    imageUrl: 'assets/images/apgujeong_site.jpg',
     description:
         '\'압구정(狎鷗亭)\'이라는 지명은 조선 전기 최고의 권력자였던 한명회가 한강 변에 세운 동명의 정자에서 유래했습니다. \'갈매기와 친하게 지낸다\'는 뜻으로 권력을 내려놓고 자연으로 돌아가겠다는 의미를 담았으나, 실제로는 수많은 정객들이 모이던 권력의 중심지였습니다.\n\n'
         '현재 정자는 유실되었고 압구정 현대아파트 단지 내에 그 터를 알리는 표석만이 남아 화려했던 과거를 증언합니다.',
@@ -468,7 +469,7 @@ final List<StoryItem> storyDataKo = [
     category: 'HISTORY',
     title: '로데오거리와 청담동 패션',
     subtitle: '대한민국 트렌드와 오렌지족의 고향',
-    imageUrl: 'assets/images/rodeo_street.jpeg',
+    imageUrl: 'assets/images/apgujeong_site.webp',
     description:
         '1990년대 대중문화와 트렌드의 중심지였던 압구정 로데오거리는 대한민국 유행을 선도하는 패션과 문화의 메카였습니다.\n\n'
         '수입 명품 브랜드와 디자이너 숍들이 밀집하며 부유층 청년 문화를 대변하는 공간이었고, 현재는 힙한 도산공원 상권과 연결되어 K-컬처와 다이닝 문화를 이끄는 핫플레이스로 진화했습니다.',
