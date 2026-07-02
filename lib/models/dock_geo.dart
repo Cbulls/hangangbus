@@ -49,14 +49,14 @@ class DockGeo {
     ),
     DockType.apgujeong: DockGeo(
       type: DockType.apgujeong,
-      lat: 37.5265383,
-      lng: 127.0166979,
-      apiAreaName: null,
+      lat: 37.526686379656766,
+      lng: 127.01647963172924,
+      apiAreaName: '잠원한강공원',
     ),
     DockType.oksu: DockGeo(
       type: DockType.oksu,
-      lat: 37.5389979,
-      lng: 127.021159,
+      lat: 37.53887583066939,
+      lng: 127.01780841215633,
       apiAreaName: null,
     ),
     DockType.ttukseom: DockGeo(
@@ -73,9 +73,9 @@ class DockGeo {
     ),
     DockType.seoulforest: DockGeo(
       type: DockType.seoulforest,
-      lat: 37.5365,
-      lng: 127.0345,
-      apiAreaName: null, // 전용 citydata 장소 없음 (임시 선착장)
+      lat: 37.53776088589692,
+      lng: 127.04111182474081,
+      apiAreaName: '서울숲공원', // 전용 citydata 장소 없음 (임시 선착장)
     ),
   };
 
