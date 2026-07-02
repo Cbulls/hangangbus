@@ -509,7 +509,7 @@ final List<StoryItem> storyDataKo = [
     category: 'HISTORY',
     title: '뽕나무밭과 잠실나루',
     subtitle: '국가 양잠 산업의 중심지에서 초고층 도시로',
-    imageUrl: 'assets/images/jamsil_history.jpeg',
+    imageUrl: 'assets/images/jamsil_history.jpg',
     description:
         '\'잠실(蠶室)\'이라는 이름은 조선 전기 누에를 치고 명주실을 뽑던 국가 기관인 \'동잠실\'이 이곳에 설치된 것에서 유래했습니다. 당시 이 일대는 온통 뽕나무밭이었습니다.\n\n'
         '1970년대 한강 매립과 강남 개발을 통해 거대한 아파트 단지와 올림픽 주경기장이 들어서며 세계적인 스포츠·상업 도시로 대전환을 이루었습니다.',
@@ -521,7 +521,7 @@ final List<StoryItem> storyDataKo = [
     category: 'HISTORY',
     title: '삼전도비와 병자호란의 아픔',
     subtitle: '석촌호수 옆에 새겨진 뼈아픈 역사의 기록',
-    imageUrl: 'assets/images/samjeondobi.jpeg',
+    imageUrl: 'assets/images/samjundobi.webp',
     description:
         '잠실 선착장 인근 석촌호수 변에는 병자호란 당시 인조가 청나라 태종에게 무릎을 꿇고 항복했던 부끄러운 역사의 기록인 \'삼전도비(국가 지정 인문문화재)\'가 세워져 있습니다.\n\n'
         '화려한 롯데월드타워와 석촌호수의 아름다운 야경 뒤편에 숨겨진 역사의 이면을 돌아보며 평화의 소중함을 되새길 수 있는 장소입니다.',
@@ -535,25 +535,25 @@ final List<StoryItem> storyDataKo = [
     subtitle: '송리단길에서 만나는 대만식 우육미엔 전문점',
     imageUrl: 'assets/images/mienai.jpeg',
     description:
-        '잠실 석촌호수 뒤편 송리단길의 터줏대감으로, 진하게 우려낸 한우 사골 육수에 야들야들한 아롱사태 고기를 올린 대만식 우육면을 선보입니다.\n\n'
-        '수제 꿔바로우인 \'미엔아이 꿔바\'와 부드러운 마라 우육면의 조합이 일품이며, 이국적인 인테리어 덕분에 대만 야시장에 온 듯한 기분을 낼 수 있습니다.',
+        '미엔아이는 대만식 우육면과 꿔바로우가 인기인 송파의 맛집으로, 대표 메뉴인 아롱우육미엔과 1mm우육면은 쫄깃한 면발과 부드러운 고기가 조화를 이룹니다.\n\n'
+        '아기자기한 인테리어와 오픈형 주방이 신뢰감을 주는 매장에서 땅콩향과 바삭함이 일품인 꿔바로우를 곁들이며 혼밥부터 데이트까지 편안하게 즐길 수 있습니다.',
     dockName: '잠실',
     accessInfo: '서울특별시 송파구 오금로16길 5',
     openingHours: '11:20 - 21:00 (브레이크타임 14:30 - 17:20)',
-    priceRange: '10,000원 - 15,000원',
+    priceRange: '9,500원 - 15,000원',
   ),
   StoryItem(
     category: 'FOOD',
-    title: '해주냉면',
-    subtitle: '서울 3대 매운 냉면, 중독성 강한 불맛의 정수',
-    imageUrl: 'assets/images/haejoo.jpeg',
+    title: '원조명성곱창',
+    subtitle: '불향 가득한 쫄깃한 곱창과 아삭한 야채의 조화',
+    imageUrl: 'assets/images/wonjo.jpeg',
     description:
-        '1983년 잠실동에서 시작해 전국적인 매운맛 열풍을 이끌어온 명실상부한 노포 냉면집입니다. 알싸하고 강렬한 마늘 향과 고춧가루 베이스의 마법 양념이 특징입니다.\n\n'
-        '뇌를 자극하는 화끈한 매운 비빔냉면을 먹다가 셀프로 제공되는 뜨겁고 짭조름한 육수로 입안을 달래주는 것이 이곳을 즐기는 정석입니다.',
+        '원조명성곱창은 야채곱창과 알곱창이 인기 메뉴인 곱창 전문점으로, 은은한 불향이 나는 쫄깃한 곱창과 아삭한 야채가 비린내 없이 어우러져 곱창을 잘 못 먹는 분들도 부담 없이 즐길 수 있습니다.\n\n'
+        '특히 순대가 기본으로 제공되며 취향에 따라 맵기 조절이 가능해 한강 나들이 전후로 입맛에 맞게 선택하여 즐기기 좋습니다.',
     dockName: '잠실',
-    accessInfo: '서울특별시 송파구 올림픽로12길 5-5',
-    openingHours: '11:30 - 21:00 (일요일 휴무)',
-    priceRange: '8,000원 - 9,000원',
+    accessInfo: '서울특별시 송파구 백제고분로48길 8 1층',
+    openingHours: '16:30 - 23:30 (매월 둘째, 넷째 목요일 휴무)',
+    priceRange: '12,000원 - 20,000원',
   ),
 ];
 
