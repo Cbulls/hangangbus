@@ -39,6 +39,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dockJamsil => 'Jamsil';
 
   @override
+  String get dockSeoulForest => 'Seoul Forest';
+
+  @override
   String get directionToYeouido => 'To Yeouido';
 
   @override

@@ -39,6 +39,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get dockJamsil => '잠실';
 
   @override
+  String get dockSeoulForest => '서울숲';
+
+  @override
   String get directionToYeouido => '여의도행';
 
   @override

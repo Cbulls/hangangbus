@@ -6,6 +6,7 @@ import 'package:hangangbus/data/data_provider.dart';
 import 'package:hangangbus/l10n/app_localizations.dart';
 import 'dart:ui';
 import 'package:hangangbus/models/data.dart';
+import 'package:hangangbus/models/dock_location.dart';
 
 class Tab3Story extends StatefulWidget {
   const Tab3Story({super.key});
@@ -18,6 +19,9 @@ class _Tab3StoryState extends State<Tab3Story> with TickerProviderStateMixin {
   late TabController _dockTabController;
   late TabController _categoryTabController;
 
+  // 현재 언어에서 스토리 데이터가 존재하는 선착장 키 목록(docks 정규 순서).
+  List<String> _dockKeys = [];
+
   // 선택 인덱스는 StoryBloc 에서 읽는다. TabController 는 시각 효과 전용.
   int get _selectedDockIndex =>
       context.read<StoryBloc>().state.selectedDockIndex;
@@ -27,24 +31,93 @@ class _Tab3StoryState extends State<Tab3Story> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _dockTabController = TabController(length: 3, vsync: this);
+    // 실제 길이는 didChangeDependencies 에서 데이터 기준으로 동기화한다.
+    _dockTabController = TabController(length: 1, vsync: this);
     _categoryTabController = TabController(length: 2, vsync: this);
 
     // 컨트롤러 변경 시 Bloc 이벤트 전달
-    _dockTabController.addListener(() {
-      if (!_dockTabController.indexIsChanging) {
-        context.read<StoryBloc>().add(
-          StoryDockSelected(_dockTabController.index),
-        );
-      }
-    });
-    _categoryTabController.addListener(() {
-      if (!_categoryTabController.indexIsChanging) {
-        context.read<StoryBloc>().add(
-          StoryCategorySelected(_categoryTabController.index),
-        );
-      }
-    });
+    _dockTabController.addListener(_onDockControllerChanged);
+    _categoryTabController.addListener(_onCategoryControllerChanged);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // 언어(로케일) 변경 시에도 호출되어 선착장 탭 수를 재동기화한다.
+    _syncDockController();
+  }
+
+  /// 현재 언어의 스토리 데이터에 존재하는 선착장만 docks 정규 순서로 반환.
+  List<String> _computeActiveDockKeys() {
+    final present = DataProvider.getStories(context)
+        .map((s) => s.dockName)
+        .toSet();
+    return docks.map((d) => d.name).where(present.contains).toList();
+  }
+
+  /// 데이터 기준 선착장 수에 맞게 TabController 를 재생성하고 인덱스를 보정한다.
+  void _syncDockController() {
+    final keys = _computeActiveDockKeys();
+    _dockKeys = keys;
+    final length = keys.isEmpty ? 1 : keys.length;
+
+    if (_dockTabController.length != length) {
+      final clampedIndex = _dockTabController.index.clamp(0, length - 1);
+      _dockTabController.removeListener(_onDockControllerChanged);
+      _dockTabController.dispose();
+      _dockTabController = TabController(
+        length: length,
+        vsync: this,
+        initialIndex: clampedIndex,
+      );
+      _dockTabController.addListener(_onDockControllerChanged);
+    }
+
+    // Bloc 의 선택 인덱스가 범위를 벗어나면 보정.
+    final bloc = context.read<StoryBloc>();
+    if (bloc.state.selectedDockIndex >= length) {
+      bloc.add(StoryDockSelected(_dockTabController.index));
+    }
+  }
+
+  void _onDockControllerChanged() {
+    if (!_dockTabController.indexIsChanging) {
+      context.read<StoryBloc>().add(
+        StoryDockSelected(_dockTabController.index),
+      );
+    }
+  }
+
+  void _onCategoryControllerChanged() {
+    if (!_categoryTabController.indexIsChanging) {
+      context.read<StoryBloc>().add(
+        StoryCategorySelected(_categoryTabController.index),
+      );
+    }
+  }
+
+  /// 선착장 한글 키를 현재 언어 라벨로 변환.
+  String _dockLabel(String key, AppLocalizations l10n) {
+    switch (key) {
+      case '마곡':
+        return l10n.dockMagok;
+      case '망원':
+        return l10n.dockMangwon;
+      case '여의도':
+        return l10n.dockYeouido;
+      case '압구정':
+        return l10n.dockApgujeong;
+      case '옥수':
+        return l10n.dockOksu;
+      case '뚝섬':
+        return l10n.dockTtukseom;
+      case '잠실':
+        return l10n.dockJamsil;
+      case '서울숲':
+        return l10n.dockSeoulForest;
+      default:
+        return key;
+    }
   }
 
   @override
@@ -60,7 +133,7 @@ class _Tab3StoryState extends State<Tab3Story> with TickerProviderStateMixin {
     final l10n = AppLocalizations.of(context)!;
     context.watch<StoryBloc>();
 
-    final dockNames = [l10n.dockYeouido, l10n.dockMangwon, l10n.dockMagok];
+    final dockNames = _dockKeys.map((k) => _dockLabel(k, l10n)).toList();
     final categories = [l10n.categoryHistory, l10n.categoryFood];
 
     return Scaffold(
@@ -160,6 +233,8 @@ class _Tab3StoryState extends State<Tab3Story> with TickerProviderStateMixin {
             ),
             child: TabBar(
               controller: _dockTabController,
+              isScrollable: true,
+              tabAlignment: TabAlignment.start,
               indicator: BoxDecoration(
                 gradient: LinearGradient(
                   colors: isDarkMode
@@ -241,12 +316,24 @@ class _Tab3StoryState extends State<Tab3Story> with TickerProviderStateMixin {
   ) {
     final allStories = DataProvider.getStories(context);
 
-    // 데이터 모델에 정의된 정확한 한글 Key 리스트
-    const List<String> dockKeys = ['여의도', '망원', '마곡'];
+    // 현재 언어 데이터에 존재하는 선착장 키(정규 순서).
+    final List<String> dockKeys = _dockKeys;
     const List<String> categoryKeys = ['HISTORY', 'FOOD'];
 
-    final targetDockKey = dockKeys[dockIndex];
-    final targetCategoryKey = categoryKeys[categoryIndex];
+    if (dockKeys.isEmpty) {
+      return Center(
+        child: Text(
+          l10n.comingSoon,
+          style: TextStyle(color: isDarkMode ? Colors.white54 : Colors.black54),
+        ),
+      );
+    }
+
+    // 언어 전환 등으로 인덱스가 범위를 벗어날 수 있어 방어적으로 보정.
+    final safeDockIndex = dockIndex.clamp(0, dockKeys.length - 1);
+    final safeCategoryIndex = categoryIndex.clamp(0, categoryKeys.length - 1);
+    final targetDockKey = dockKeys[safeDockIndex];
+    final targetCategoryKey = categoryKeys[safeCategoryIndex];
 
     final items = allStories.where((item) {
       // 데이터의 dockName과 category가 정확히 일치하는지 비교

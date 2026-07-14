@@ -119,12 +119,16 @@ class _HangangMapScreenState extends State<HangangMapScreen> {
             ),
           ),
 
-          // 3. 하단 범례
-          Positioned(
-            left: 16,
-            right: 16,
-            bottom: 24,
-            child: _legendBox(isDark, lang),
+          // 3. 하단 범례 (시스템 내비게이션 바에 가리지 않도록 SafeArea 적용)
+          SafeArea(
+            top: false,
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+                child: _legendBox(isDark, lang),
+              ),
+            ),
           ),
         ],
       ),
@@ -147,7 +151,7 @@ class _HangangMapScreenState extends State<HangangMapScreen> {
       );
     }
 
-    // 관광지 마커
+    // 관광지 마커 (선착장과 구분되도록 기본 핀 사용)
     for (final a in hangangAttractions) {
       markers.add(
         Marker(
@@ -155,7 +159,7 @@ class _HangangMapScreenState extends State<HangangMapScreen> {
           latLng: a.position,
           width: 33,
           height: 43,
-          markerImageSrc: _dockMarkerImage,
+          markerImageSrc: _attractionMarkerImage,
         ),
       );
     }
@@ -189,6 +193,7 @@ class _HangangMapScreenState extends State<HangangMapScreen> {
 
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (_) => _NearbySheet(
         title: _nearbyTitle(kind, dockKo),
@@ -230,9 +235,13 @@ class _HangangMapScreenState extends State<HangangMapScreen> {
     }
   }
 
-  // 카카오 기본 마커 이미지. 선착장·관광지 공통 사용 (탭 이벤트가 확실히 동작).
+  // 선착장 마커: 별 아이콘.
   static const String _dockMarkerImage =
       'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png';
+
+  // 관광지 마커: 카카오 기본 핀(빨강) 아이콘 → 선착장과 시각적으로 구분.
+  static const String _attractionMarkerImage =
+      'https://t1.daumcdn.net/localimg/localimages/08/mapapidoc/red_b.png';
 
   void _handleMarkerTap(String markerId) {
     if (markerId.startsWith('attr_')) {
@@ -337,8 +346,12 @@ class _HangangMapScreenState extends State<HangangMapScreen> {
           BoxShadow(color: Colors.black.withValues(alpha: 0.12), blurRadius: 8),
         ],
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+      // 좁은 화면/긴 라벨에서도 넘치지 않도록 Wrap 사용.
+      child: Wrap(
+        alignment: WrapAlignment.center,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        spacing: 12,
+        runSpacing: 8,
         children: [
           // 선착장: 안내 표시만 (탭 없음)
           _legendLabel('⚓', _legendDock(lang), isDark),
@@ -635,7 +648,12 @@ class _NearbySheet extends StatelessWidget {
               )
             else
               SizedBox(
-                height: 150,
+                // 글씨 배율에 따라 카드 높이도 커지도록 스케일 반영(최대 1.6배).
+                height:
+                    150 *
+                    MediaQuery.textScalerOf(context).clamp(
+                      maxScaleFactor: 1.6,
+                    ).scale(1.0),
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: attractions.length,

@@ -157,6 +157,12 @@ abstract class AppLocalizations {
   /// **'Jamsil'**
   String get dockJamsil;
 
+  /// No description provided for @dockSeoulForest.
+  ///
+  /// In en, this message translates to:
+  /// **'Seoul Forest'**
+  String get dockSeoulForest;
+
   /// No description provided for @directionToYeouido.
   ///
   /// In en, this message translates to:
