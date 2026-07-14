@@ -46,7 +46,11 @@ class RealtimeBloc extends Bloc<RealtimeEvent, RealtimeState> {
   }
 
   Future<void> _load(Emitter<RealtimeState> emit) async {
-    emit(state.copyWith(status: RealtimeStatus.loading));
+    // 이미 캐시된 데이터가 있으면 loading 으로 깜빡이지 않게 하여
+    // 새로고침당 불필요한 전체 리빌드를 줄인다.
+    if (state.dataByPark.isEmpty) {
+      emit(state.copyWith(status: RealtimeStatus.loading));
+    }
     final map = await _repo.fetchMany(_parks);
     emit(
       state.copyWith(

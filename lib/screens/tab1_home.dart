@@ -309,19 +309,12 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
     final l10n = AppLocalizations.of(context)!;
     // 분 단위 시계 변화에만 반응하여 "다음 배까지 N분" 카운트다운을 갱신한다.
     context.select((ClockBloc bloc) => bloc.state.minuteOfDay);
-    final weatherState = context.watch<WeatherBloc>().state;
+    // 실시간 도시데이터는 선착장 카드 본문에서 표시되므로 상위에서 구독을 유지한다.
+    // (날씨는 헤더에서만 쓰이므로 아래 BlocBuilder 로 범위를 좁혀 리빌드를 줄임)
     context.watch<RealtimeBloc>();
     final docks = _getDocks(l10n);
 
     final currentDock = docks[_currentDockIndex];
-    final headerWeather = weatherState.weatherFor(currentDock.parkAreaName);
-    debugPrint(
-      '🖥️ [tab1_home] weather 읽기: '
-      'status=${weatherState.status}, '
-      'representative=${weatherState.representative != null ? "있음" : "없음"}, '
-      'parkAreaName=${currentDock.parkAreaName}, '
-      'headerWeather=${headerWeather != null ? "있음 ${headerWeather.current.temperature}°" : "null"}',
-    );
 
     return Scaffold(
       backgroundColor: isDarkMode
@@ -417,12 +410,21 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
                               ),
                             ),
                             const SizedBox(width: 16),
-                            // 날씨 위젯 — 탭하면 기상청 주간예보
-                            _buildHeaderWeatherWidget(
-                              headerWeather,
-                              currentDock,
-                              isDarkMode,
-                              weatherState.isLoading,
+                            // 날씨 위젯 — 탭하면 기상청 주간예보.
+                            // 날씨 상태만 여기서 구독 → 날씨 변경 시 헤더 위젯만 리빌드.
+                            BlocBuilder<WeatherBloc, WeatherState>(
+                              buildWhen: (p, c) =>
+                                  p.representative != c.representative ||
+                                  p.status != c.status,
+                              builder: (context, weatherState) =>
+                                  _buildHeaderWeatherWidget(
+                                    weatherState.weatherFor(
+                                      currentDock.parkAreaName,
+                                    ),
+                                    currentDock,
+                                    isDarkMode,
+                                    weatherState.isLoading,
+                                  ),
                             ),
                             const SizedBox(width: 10),
                             // 큰글씨 토글 (고령층 접근성)
@@ -645,7 +647,13 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 28),
-                  child: _buildLiveStatusSection(currentDock, isDarkMode, l10n),
+                  child: RepaintBoundary(
+                    child: _buildLiveStatusSection(
+                      currentDock,
+                      isDarkMode,
+                      l10n,
+                    ),
+                  ),
                 ),
               ),
               const SliverToBoxAdapter(child: SizedBox(height: 60)),
@@ -672,7 +680,7 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
         if (await canLaunchUrl(url)) {
           await launchUrl(url, mode: LaunchMode.externalApplication);
         } else {
-          print('Could not launch $url');
+          debugPrint('Could not launch $url');
         }
       },
       child: Container(
@@ -996,8 +1004,8 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
         margin: const EdgeInsets.symmetric(horizontal: 10),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(32),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+          // PageView 카드 스크롤 성능: 비싼 BackdropFilter(blur) 대신 RepaintBoundary 로 페인트 격리.
+          child: RepaintBoundary(
             child: Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -1085,9 +1093,8 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
                           ),
                         ),
                         const SizedBox(width: 12),
-                        AnimatedBuilder(
-                          animation: _pulseController,
-                          builder: (ctx, _) => Container(
+                        // 상태 배지: 애니메이션 값을 쓰지 않으므로 정적 위젯으로 렌더 (불필요한 매 프레임 리빌드 제거).
+                        Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 10,
                               vertical: 5,
@@ -1149,7 +1156,6 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
                               ],
                             ),
                           ),
-                        ),
                       ],
                     ),
                     const SizedBox(height: 24),
@@ -1223,11 +1229,9 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
                               if (!isServiceClosed)
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 8),
-                                  child: AnimatedBuilder(
-                                    animation: _pulseController,
-                                    builder: (ctx, _) => Opacity(
-                                      opacity:
-                                          0.6 + _pulseController.value * 0.4,
+                                  child: RepaintBoundary(
+                                    child: AnimatedBuilder(
+                                      animation: _pulseController,
                                       child: Text(
                                         l10n.minutesLeft(dock.minutesLeft + 1),
                                         style: TextStyle(
@@ -1237,6 +1241,11 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
                                               ? Colors.white
                                               : gradient[0],
                                         ),
+                                      ),
+                                      builder: (ctx, child) => Opacity(
+                                        opacity:
+                                            0.6 + _pulseController.value * 0.4,
+                                        child: child,
                                       ),
                                     ),
                                   ),
@@ -2530,16 +2539,18 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
       children: [
         Row(
           children: [
-            AnimatedBuilder(
-              animation: _pulseController,
-              builder: (context, _) => Container(
-                width: 8,
-                height: 8,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: const Color(
-                    0xFFE53935,
-                  ).withValues(alpha: 0.4 + _pulseController.value * 0.6),
+            RepaintBoundary(
+              child: AnimatedBuilder(
+                animation: _pulseController,
+                builder: (context, _) => Container(
+                  width: 8,
+                  height: 8,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: const Color(
+                      0xFFE53935,
+                    ).withValues(alpha: 0.4 + _pulseController.value * 0.6),
+                  ),
                 ),
               ),
             ),

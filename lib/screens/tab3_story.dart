@@ -380,9 +380,8 @@ class _Tab3StoryState extends State<Tab3Story> with TickerProviderStateMixin {
         margin: const EdgeInsets.only(bottom: 20),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(16),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-            child: Container(
+          // 리스트 스크롤 성능: 카드별 BackdropFilter(blur) 제거, 반투명 배경만 유지.
+          child: Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
@@ -419,6 +418,11 @@ class _Tab3StoryState extends State<Tab3Story> with TickerProviderStateMixin {
                       child: Image.asset(
                         item.imageUrl,
                         fit: BoxFit.cover,
+                        // 표시 크기에 맞춰 디코딩해 메모리/디코드 비용을 줄인다.
+                        cacheWidth:
+                            (MediaQuery.of(context).size.width *
+                                    MediaQuery.of(context).devicePixelRatio)
+                                .round(),
                         errorBuilder: (context, error, stackTrace) {
                           return Container(
                             height: 180,
@@ -606,7 +610,6 @@ class _Tab3StoryState extends State<Tab3Story> with TickerProviderStateMixin {
                 ],
               ),
             ),
-          ),
         ),
       ),
     );
@@ -662,6 +665,11 @@ class StoryDetailScreen extends StatelessWidget {
                   child: Image.asset(
                     item.imageUrl,
                     fit: BoxFit.cover,
+                    // 표시 크기에 맞춰 디코딩해 메모리/디코드 비용을 줄인다.
+                    cacheWidth:
+                        (MediaQuery.of(context).size.width *
+                                MediaQuery.of(context).devicePixelRatio)
+                            .round(),
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
                         decoration: BoxDecoration(

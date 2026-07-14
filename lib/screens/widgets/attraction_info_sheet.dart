@@ -80,6 +80,11 @@ class AttractionInfoSheet extends StatelessWidget {
                         height: 160,
                         width: double.infinity,
                         fit: BoxFit.cover,
+                        // 표시 크기에 맞춰 디코딩해 메모리/디코드 비용을 줄인다.
+                        cacheWidth:
+                            (MediaQuery.of(context).size.width *
+                                    MediaQuery.of(context).devicePixelRatio)
+                                .round(),
                         errorBuilder: (_, __, ___) => const SizedBox.shrink(),
                       ),
                     ),

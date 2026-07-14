@@ -26,6 +26,9 @@ class HangangMapScreen extends StatefulWidget {
 class _HangangMapScreenState extends State<HangangMapScreen> {
   KakaoMapController? _mapController;
 
+  // 선착장/관광지 마커는 정적 데이터라 한 번만 생성해 재사용한다(매 빌드 재생성 방지).
+  late final List<Marker> _markers = _buildMarkers();
+
   // 기본 한강 중심 (대략 한강대교 부근) — 선택 선착장이 없을 때만 사용
   static final LatLng _hanRiverCenter = LatLng(37.5283, 126.9950);
 
@@ -91,7 +94,7 @@ class _HangangMapScreenState extends State<HangangMapScreen> {
               },
               center: _initialCenter,
               maxLevel: 12,
-              markers: _buildMarkers(),
+              markers: _markers,
               onMarkerTap: (markerId, latLng, index) {
                 _handleMarkerTap(markerId);
               },

@@ -32,9 +32,9 @@ Future<void> main() async {
 
   try {
     AuthRepository.initialize(appKey: kakaoAppKey);
-    print('✅ 카카오맵 초기화 완료!');
+    debugPrint('✅ 카카오맵 초기화 완료!');
   } catch (e) {
-    print('❌ 카카오맵 초기화 실패: $e');
+    debugPrint('❌ 카카오맵 초기화 실패: $e');
   }
   runApp(const MyApp());
 }
