@@ -31,8 +31,8 @@ android {
         applicationId = "com.heeyun.hangangbus"
         minSdk = 24
         targetSdk = 36
-        versionCode = 14
-        versionName = "1.0.1"
+        versionCode = 15
+        versionName = "1.0.2"
         
         // Manifest 에러 해결용
         addManifestPlaceholders(mapOf("applicationName" to "android.app.Application"))
