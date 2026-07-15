@@ -31,7 +31,7 @@ android {
         applicationId = "com.heeyun.hangangbus"
         minSdk = 24
         targetSdk = 36
-        versionCode = 12
+        versionCode = 14
         versionName = "1.0.1"
         
         // Manifest 에러 해결용
