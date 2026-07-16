@@ -1,3 +1,4 @@
+import 'package:hangangbus/data/story_extra_zh.dart';
 import 'package:hangangbus/models/data.dart';
 
 final List<StoryItem> storyDataZh = [
@@ -280,4 +281,5 @@ final List<StoryItem> storyDataZh = [
     openingHours: '07:30 - 20:00（售完即止 / 周日休息）',
     priceRange: '4,000韩元 - 8,000韩元',
   ),
+  ...storyExtraZh,
 ];

@@ -556,15 +556,3 @@ final List<StoryItem> storyDataKo = [
     priceRange: '12,000원 - 20,000원',
   ),
 ];
-
-final List<FaqItem> faqDataKo = [
-  FaqItem(
-    question: '기후동행카드를 사용할 수 있나요?',
-    answer: '네, 가능합니다. 단, 따릉이 결합권이 아닌 일반권/청년권 등을 확인해주세요.',
-  ),
-  FaqItem(question: '반려동물 탑승이 가능한가요?', answer: '케이지(이동장)에 넣은 경우에만 탑승이 가능합니다.'),
-  FaqItem(
-    question: '유모차나 자전거를 실을 수 있나요?',
-    answer: '유모차는 가능하며, 자전거는 선착장 내 거치대에 보관하셔야 합니다 (선내 반입 불가).',
-  ),
-];

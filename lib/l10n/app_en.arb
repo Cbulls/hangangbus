@@ -296,5 +296,7 @@
         "type": "int"
       }
     }
-  }
+  },
+  "privacyPolicyTitle": "Privacy Policy",
+  "privacyPolicySubtitle": "How we handle data and contact info"
 }

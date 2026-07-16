@@ -500,4 +500,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String approxHours(int hours) {
     return '約$hours時間';
   }
+
+  @override
+  String get privacyPolicyTitle => 'プライバシーポリシー';
+
+  @override
+  String get privacyPolicySubtitle => 'データ取扱いとお問い合わせ';
 }

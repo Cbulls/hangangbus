@@ -20,7 +20,7 @@ class RealtimeBloc extends Bloc<RealtimeEvent, RealtimeState> {
   Timer? _timer;
 
   static const List<String> _parks = [
-    '마곡나루역',
+    '서울식물원·마곡나루역',
     '망원한강공원',
     '여의도한강공원',
     '뚝섬한강공원',

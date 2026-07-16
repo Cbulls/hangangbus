@@ -296,5 +296,7 @@
         "type": "int"
       }
     }
-  }
+  },
+  "privacyPolicyTitle": "隐私政策",
+  "privacyPolicySubtitle": "数据使用说明与联系方式"
 }

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hangangbus/blocs/faq/faq_bloc.dart';
-import 'package:hangangbus/data/data_provider.dart';
+import 'package:hangangbus/config/app_config.dart';
 import 'package:hangangbus/l10n/app_localizations.dart';
+import 'package:hangangbus/repositories/content_repository.dart';
 import 'package:hangangbus/theme/app_colors.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Tab4Faq extends StatefulWidget {
   const Tab4Faq({super.key});
@@ -89,11 +91,12 @@ class _FaqTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final faqs = DataProvider.getFaqs(context);
+    final lang = Localizations.localeOf(context).languageCode;
+    final faqs = context.read<ContentRepository>().faqs(lang);
 
     return ListView.separated(
       padding: const EdgeInsets.all(24),
-      itemCount: faqs.length + 1,
+      itemCount: faqs.length + 2,
       separatorBuilder: (_, __) => const SizedBox(height: 12),
       itemBuilder: (context, index) {
         if (index == 0) {
@@ -109,6 +112,9 @@ class _FaqTab extends StatelessWidget {
               ),
             ),
           );
+        }
+        if (index == faqs.length + 1) {
+          return _PrivacyPolicyTile(l10n: l10n);
         }
         final item = faqs[index - 1];
         return Theme(
@@ -151,6 +157,63 @@ class _FaqTab extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _PrivacyPolicyTile extends StatelessWidget {
+  final AppLocalizations l10n;
+  const _PrivacyPolicyTile({required this.l10n});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(16),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: () async {
+          final uri = Uri.parse(AppConfig.privacyPolicyUrl);
+          await launchUrl(uri, mode: LaunchMode.externalApplication);
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: AppColors.hairline),
+          ),
+          child: Row(
+            children: [
+              const Icon(Icons.privacy_tip_outlined, color: AppColors.primary),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.privacyPolicyTitle,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 15,
+                        color: AppColors.ink,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      l10n.privacyPolicySubtitle,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: AppColors.inkSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.open_in_new_rounded, size: 18, color: AppColors.inkTertiary),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

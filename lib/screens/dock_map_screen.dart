@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:ui';
 import 'package:hangangbus/l10n/app_localizations.dart';
-import 'package:hangangbus/screens/tab1_home.dart';
+import 'package:hangangbus/models/dock_info.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 
 class DockMapScreen extends StatefulWidget {

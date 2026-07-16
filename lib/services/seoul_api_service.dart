@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:hangangbus/config/app_config.dart';
 import 'package:hangangbus/models/hangang_realtime_data.dart';
 import 'package:hangangbus/models/weather_data.dart';
+import 'package:hangangbus/services/app_telemetry.dart';
 import 'package:http/http.dart' as http;
 
 /// 대용량 CITYDATA 응답을 백그라운드 아이솔레이트에서 디코딩/파싱한다.
@@ -42,7 +43,7 @@ class _CityDataCacheEntry {
 
 class SeoulApiService {
   static final String _baseUrl = 'http://openapi.seoul.go.kr:8088';
-  static final String _apiKey = dotenv.env['SEOUL_API_KEY'] ?? '';
+  static String get _apiKey => AppConfig.seoulApiKey;
 
   // 지역별 CITYDATA 단기 캐시: 같은 지역을 여러 Bloc(날씨/실시간)이
   // 중복 호출하는 것을 막는다(예: 여의도한강공원).
@@ -68,7 +69,7 @@ class SeoulApiService {
   /// 통합 데이터 로드 (서울시 실시간 도시데이터 API 최적화 버전)
   static Future<Map<String, dynamic>> getCompleteData(String areaName) async {
     if (_apiKey.isEmpty) {
-      debugPrint('❌ API 키가 설정되지 않았습니다. .env 파일을 확인하세요.');
+      debugPrint('SEOUL_API_KEY 미설정 — dart-define 을 확인하세요.');
       return {'realtime': null, 'weather': null};
     }
 
@@ -111,8 +112,13 @@ class SeoulApiService {
         debugPrint('❌ HTTP 오류 발생: ${response.statusCode}');
         return {'realtime': null, 'weather': null};
       }
-    } catch (e) {
-      debugPrint('❌ 네트워크 또는 파싱 에러 ($areaName): $e');
+    } catch (e, st) {
+      debugPrint('네트워크 또는 파싱 에러 ($areaName): $e');
+      await AppTelemetry.captureException(
+        e,
+        stackTrace: st,
+        hint: 'seoul_api:$areaName',
+      );
       return {'realtime': null, 'weather': null};
     }
   }

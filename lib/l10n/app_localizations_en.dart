@@ -500,4 +500,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String approxHours(int hours) {
     return 'About ${hours}h';
   }
+
+  @override
+  String get privacyPolicyTitle => 'Privacy Policy';
+
+  @override
+  String get privacyPolicySubtitle => 'How we handle data and contact info';
 }

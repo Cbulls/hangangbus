@@ -7,7 +7,8 @@ import 'package:hangangbus/blocs/navigation/navigation_bloc.dart';
 import 'package:hangangbus/blocs/realtime/realtime_bloc.dart';
 import 'package:hangangbus/blocs/weather/weather_bloc.dart';
 import 'package:hangangbus/blocs/settings/settings_bloc.dart';
-import 'package:hangangbus/models/dock_type.dart';
+import 'package:hangangbus/data/dock_catalog.dart';
+import 'package:hangangbus/models/dock_info.dart';
 import 'package:hangangbus/models/hangang_realtime_data.dart';
 import 'package:hangangbus/screens/widgets/dock_amenity_card.dart';
 import 'package:hangangbus/screens/dock_map_screen.dart';
@@ -17,6 +18,8 @@ import 'package:hangangbus/models/weather_data.dart';
 import 'package:hangangbus/l10n/app_localizations.dart';
 import 'package:hangangbus/theme/app_colors.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+export 'package:hangangbus/models/dock_info.dart';
 
 /// 홈 화면에서 쓰는 색 별칭. 실제 값은 AppColors 토큰이 단일 소스.
 class SeoulColors {
@@ -31,8 +34,6 @@ class SeoulColors {
   static const statusStopped = AppColors.statusStopped;
   static const statusClosed = AppColors.statusClosed;
 }
-
-enum OperationStatus { normal, partial, stopped, closed }
 
 class Tab1Home extends StatefulWidget {
   const Tab1Home({super.key});
@@ -73,183 +74,7 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
   double _heightForIndex(int index) =>
       _cardHeights[index] ?? _currentPageHeight;
 
-  List<DockInfo> _getDocks(AppLocalizations l10n) {
-    return ScheduleUtils.docks
-        .map((dock) => _buildDockInfo(dock, l10n))
-        .toList();
-  }
-
-  /// 선착장 브랜드 색 (AppColors 단일 소스).
-  Color _dockBrandColor(DockType dock) {
-    switch (dock) {
-      case DockType.magok:
-        return AppColors.dockMagok;
-      case DockType.mangwon:
-        return AppColors.dockMangwon;
-      case DockType.yeouido:
-        return AppColors.dockYeouido;
-      case DockType.apgujeong:
-        return AppColors.dockApgujeong;
-      case DockType.oksu:
-        return AppColors.dockOksu;
-      case DockType.ttukseom:
-        return AppColors.dockTtukseom;
-      case DockType.jamsil:
-        return AppColors.dockJamsil;
-      case DockType.seoulforest:
-        return AppColors.dockSeoulForest;
-    }
-  }
-
-  DockInfo _buildDockInfo(DockType dock, AppLocalizations l10n) {
-    final nextDeparture = ScheduleUtils.getNextDepartureForDock(dock);
-    final minutesLeft = ScheduleUtils.getMinutesUntilNextForDock(dock) ?? 0;
-    final isOperating = nextDeparture != null;
-    final meta = _dockMeta(dock, l10n);
-    // 브랜드 색에서 라이트/다크 그라데이션을 파생 (스톡 그라데이션 제거).
-    final color = _dockBrandColor(dock);
-
-    return DockInfo(
-      name: dock.label(l10n),
-      nameEn: ScheduleUtils.dockNameEn(dock),
-      nextDeparture: nextDeparture ?? '--:--',
-      minutesLeft: minutesLeft,
-      gradientLight: [color, AppColors.tint(color, 0.35)],
-      gradientDark: [AppColors.tint(color, 0.25), color],
-      heroTag: 'dock-${dock.name}',
-      operationStatus: isOperating
-          ? OperationStatus.normal
-          : OperationStatus.closed,
-      statusMessage: isOperating ? l10n.statusNormal : l10n.statusClosed,
-      address: meta.address,
-      parkAreaName: meta.parkAreaName,
-      parkingSpaces: meta.parkingSpaces,
-      parkingName: meta.parkingName,
-      nearestSubway: meta.nearestSubway,
-      subwayWalkTime: meta.subwayWalkTime,
-      hasShuttle: meta.hasShuttle,
-      shuttleInfo: meta.shuttleInfo,
-      facilities: meta.facilities,
-      busRoutes: meta.busRoutes,
-    );
-  }
-
-  _DockMeta _dockMeta(DockType dock, AppLocalizations l10n) {
-    final defaultFacilities = [
-      l10n.facilityConvenienceStore,
-      l10n.facilityCafe,
-    ];
-
-    switch (dock) {
-      case DockType.magok:
-        return _DockMeta(
-          address: '서울특별시 강서구 가양동 441',
-          parkAreaName: '마곡나루역',
-          parkingSpaces: 38,
-          parkingName: '가양라이품 공영주차장',
-          nearestSubway: '양천향교역(9호선)',
-          subwayWalkTime: 12,
-          hasShuttle: true,
-          shuttleInfo: '월~금 28회/일, 15분 간격\n가양나들목–양천향교역–발산역',
-          facilities: [l10n.facilityConvenienceStore],
-          busRoutes: ['6611'],
-        );
-      case DockType.mangwon:
-        return _DockMeta(
-          address: '서울특별시 마포구 망원동 205-8',
-          parkAreaName: '망원한강공원',
-          parkingSpaces: 138,
-          parkingName: '망원 제3주차장',
-          nearestSubway: '망원역(6호선)',
-          subwayWalkTime: 27,
-          hasShuttle: false,
-          facilities: [
-            l10n.facilityConvenienceStore,
-            l10n.facilityCafe,
-            l10n.facilityRamen,
-            l10n.facilityFastFood,
-          ],
-          busRoutes: ['마포16', '7716', '8775'],
-        );
-      case DockType.yeouido:
-        return _DockMeta(
-          address: '서울특별시 영등포구 여의도동 85-1',
-          parkAreaName: '여의도한강공원',
-          parkingSpaces: 171,
-          parkingName: '여의도한강공원 2주차장',
-          nearestSubway: '여의나루역(5호선)',
-          subwayWalkTime: 4,
-          hasShuttle: false,
-          facilities: [
-            l10n.facilityConvenienceStore,
-            l10n.facilityRamen,
-            l10n.facilityFastFood,
-            l10n.facilityCafe,
-          ],
-          busRoutes: ['영등포10', '261', '753', '5615'],
-        );
-      case DockType.apgujeong:
-        return _DockMeta(
-          address: '서울특별시 강남구 압구정동 일대',
-          parkAreaName: null,
-          parkingSpaces: 0,
-          parkingName: '주차 정보 확인 필요',
-          nearestSubway: '압구정로데오역(수인분당선)',
-          subwayWalkTime: 15,
-          hasShuttle: false,
-          facilities: defaultFacilities,
-          busRoutes: ['143', '240', '362'],
-        );
-      case DockType.oksu:
-        return _DockMeta(
-          address: '서울특별시 성동구 옥수동 일대',
-          parkAreaName: null,
-          parkingSpaces: 0,
-          parkingName: '주차 정보 확인 필요',
-          nearestSubway: '옥수역(3호선/경의중앙선)',
-          subwayWalkTime: 10,
-          hasShuttle: false,
-          facilities: defaultFacilities,
-          busRoutes: ['110A', '2016', '241'],
-        );
-      case DockType.ttukseom:
-        return _DockMeta(
-          address: '서울특별시 광진구 자양동 112',
-          parkAreaName: '뚝섬한강공원',
-          parkingSpaces: 0,
-          parkingName: '뚝섬한강공원 주차장',
-          nearestSubway: '자양역(7호선)',
-          subwayWalkTime: 7,
-          hasShuttle: false,
-          facilities: defaultFacilities,
-          busRoutes: ['2014', '2221', '2222'],
-        );
-      case DockType.jamsil:
-        return _DockMeta(
-          address: '서울특별시 송파구 잠실동 1-2',
-          parkAreaName: '잠실한강공원',
-          parkingSpaces: 0,
-          parkingName: '잠실한강공원 주차장',
-          nearestSubway: '잠실새내역(2호선)',
-          subwayWalkTime: 18,
-          hasShuttle: false,
-          facilities: defaultFacilities,
-          busRoutes: ['302', '333', '341'],
-        );
-      case DockType.seoulforest:
-        return _DockMeta(
-          address: '서울특별시 성동구 성수동1가 (서울숲 한강)',
-          parkAreaName: null, // 전용 실시간 API 장소 없음(임시 선착장)
-          parkingSpaces: 0,
-          parkingName: '서울숲 공영주차장',
-          nearestSubway: '서울숲역(수인분당선)',
-          subwayWalkTime: 15,
-          hasShuttle: false,
-          facilities: defaultFacilities,
-          busRoutes: ['2014', '2224', '141'],
-        );
-    }
-  }
+  List<DockInfo> _getDocks(AppLocalizations l10n) => DockCatalog.all(l10n);
 
   @override
   void initState() {
@@ -2631,71 +2456,6 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
     bool isDarkMode,
     List<DockInfo> docks,
   ) => isDarkMode ? docks[index].gradientDark : docks[index].gradientLight;
-}
-
-class DockInfo {
-  final String name,
-      nameEn,
-      nextDeparture,
-      heroTag,
-      statusMessage,
-      address,
-      parkingName,
-      nearestSubway;
-  final String? shuttleInfo, parkAreaName;
-  final int minutesLeft, parkingSpaces, subwayWalkTime;
-  final bool hasShuttle;
-  final List<Color> gradientLight, gradientDark;
-  final OperationStatus operationStatus;
-  final List<String> facilities, busRoutes;
-
-  DockInfo({
-    required this.name,
-    required this.nameEn,
-    required this.nextDeparture,
-    required this.minutesLeft,
-    required this.gradientLight,
-    required this.gradientDark,
-    required this.heroTag,
-    required this.operationStatus,
-    required this.statusMessage,
-    required this.address,
-    required this.parkingSpaces,
-    required this.parkingName,
-    required this.nearestSubway,
-    required this.subwayWalkTime,
-    required this.hasShuttle,
-    this.shuttleInfo,
-    required this.facilities,
-    required this.busRoutes,
-    required this.parkAreaName,
-  });
-}
-
-class _DockMeta {
-  final String address;
-  final String? parkAreaName;
-  final int parkingSpaces;
-  final String parkingName;
-  final String nearestSubway;
-  final int subwayWalkTime;
-  final bool hasShuttle;
-  final String? shuttleInfo;
-  final List<String> facilities;
-  final List<String> busRoutes;
-
-  const _DockMeta({
-    required this.address,
-    required this.parkAreaName,
-    required this.parkingSpaces,
-    required this.parkingName,
-    required this.nearestSubway,
-    required this.subwayWalkTime,
-    required this.hasShuttle,
-    this.shuttleInfo,
-    required this.facilities,
-    required this.busRoutes,
-  });
 }
 
 /// 자식 위젯의 렌더 크기를 측정해 콜백으로 전달하는 위젯.

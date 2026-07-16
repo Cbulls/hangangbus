@@ -1,22 +1,24 @@
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hangangbus/theme/app_colors.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hangangbus/blocs/clock/clock_bloc.dart';
 import 'package:hangangbus/blocs/faq/faq_bloc.dart';
 import 'package:hangangbus/blocs/navigation/navigation_bloc.dart';
 import 'package:hangangbus/blocs/realtime/realtime_bloc.dart';
 import 'package:hangangbus/blocs/schedule/schedule_bloc.dart';
+import 'package:hangangbus/blocs/settings/settings_bloc.dart';
 import 'package:hangangbus/blocs/story/story_bloc.dart';
 import 'package:hangangbus/blocs/weather/weather_bloc.dart';
-import 'package:hangangbus/blocs/settings/settings_bloc.dart';
+import 'package:hangangbus/config/app_config.dart';
+import 'package:hangangbus/l10n/app_localizations.dart';
 import 'package:hangangbus/repositories/content_repository.dart';
 import 'package:hangangbus/repositories/realtime_repository.dart';
 import 'package:hangangbus/repositories/schedule_repository.dart';
 import 'package:hangangbus/repositories/weather_repository.dart';
-import 'package:hangangbus/l10n/app_localizations.dart';
+import 'package:hangangbus/services/app_telemetry.dart';
+import 'package:hangangbus/theme/app_colors.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 import 'screens/tab1_home.dart' as home;
 import 'screens/tab2_schedule.dart' as schedule;
@@ -24,21 +26,40 @@ import 'screens/tab3_story.dart';
 import 'screens/tab4_faq.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: ".env"); // env 파일 로드
-  // 카카오맵 SDK 초기화
-  final kakaoAppKey = dotenv.env['KAKAO_APP_KEY'] ?? '';
-  if (kakaoAppKey.isEmpty) {
-    throw Exception('KAKAO_APP_KEY가 .env 파일에 설정되지 않았습니다.');
-  }
+  await AppTelemetry.run(() async {
+    WidgetsFlutterBinding.ensureInitialized();
 
-  try {
-    AuthRepository.initialize(appKey: kakaoAppKey);
-    debugPrint('✅ 카카오맵 초기화 완료!');
-  } catch (e) {
-    debugPrint('❌ 카카오맵 초기화 실패: $e');
-  }
-  runApp(const MyApp());
+    if (!AppConfig.hasKakaoKey) {
+      throw Exception(
+        'KAKAO_APP_KEY가 없습니다. '
+        'flutter run --dart-define=KAKAO_APP_KEY=... 로 주입하세요.',
+      );
+    }
+
+    try {
+      AuthRepository.initialize(appKey: AppConfig.kakaoAppKey);
+      debugPrint('카카오맵 초기화 완료');
+    } catch (e, st) {
+      debugPrint('카카오맵 초기화 실패: $e');
+      await AppTelemetry.captureException(e, stackTrace: st, hint: 'kakao_init');
+    }
+
+    FlutterError.onError = (details) {
+      FlutterError.presentError(details);
+      AppTelemetry.captureException(
+        details.exception,
+        stackTrace: details.stack,
+        hint: 'flutter_error',
+      );
+    };
+
+    PlatformDispatcher.instance.onError = (error, stack) {
+      AppTelemetry.captureException(error, stackTrace: stack, hint: 'platform');
+      return true;
+    };
+
+    runApp(const MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -82,8 +103,6 @@ class MyApp extends StatelessWidget {
               title: '한강버스 가이드',
               debugShowCheckedModeBanner: false,
               builder: (context, child) {
-                // 앱 전역 글씨 배율 적용 (고령층 큰글씨 기능).
-                // 상한 1.6으로 클램프해 레이아웃 깨짐 방지.
                 final scaler = TextScaler.linear(settings.textScale);
                 return MediaQuery(
                   data: MediaQuery.of(context).copyWith(textScaler: scaler),
@@ -93,7 +112,7 @@ class MyApp extends StatelessWidget {
               theme: ThemeData(
                 useMaterial3: true,
                 colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
-                primaryColor: AppColors.primary, // 한강 블루
+                primaryColor: AppColors.primary,
                 scaffoldBackgroundColor: AppColors.background,
                 splashFactory: InkRipple.splashFactory,
                 appBarTheme: const AppBarTheme(
@@ -114,12 +133,7 @@ class MyApp extends StatelessWidget {
                 GlobalWidgetsLocalizations.delegate,
                 GlobalCupertinoLocalizations.delegate,
               ],
-              supportedLocales: const [
-                Locale('ko'),
-                Locale('en'),
-                Locale('ja'),
-                Locale('zh'),
-              ],
+              supportedLocales: AppLocalizations.supportedLocales,
               localeResolutionCallback: (locale, supportedLocales) {
                 if (locale == null) return const Locale('ko');
                 for (final supported in supportedLocales) {
@@ -127,7 +141,7 @@ class MyApp extends StatelessWidget {
                     return supported;
                   }
                 }
-                return const Locale('ko'); // fallback: 한국어
+                return const Locale('ko');
               },
             );
           },
@@ -139,6 +153,8 @@ class MyApp extends StatelessWidget {
 
 class MainBase extends StatelessWidget {
   const MainBase({super.key});
+
+  static const _tabNames = ['home', 'schedule', 'story', 'faq'];
 
   @override
   Widget build(BuildContext context) {
@@ -157,6 +173,7 @@ class MainBase extends StatelessWidget {
     void selectTab(int index) {
       HapticFeedback.lightImpact();
       context.read<NavigationBloc>().add(NavTabSelected(index));
+      AppTelemetry.screen(_tabNames[index.clamp(0, _tabNames.length - 1)]);
     }
 
     return Scaffold(
@@ -211,7 +228,7 @@ class MainBase extends StatelessWidget {
                 NavigationDestination(
                   icon: const Icon(Icons.home_outlined),
                   selectedIcon: const Icon(Icons.home_rounded),
-                  label: l10n.navHome, // 다국어 적용
+                  label: l10n.navHome,
                 ),
                 NavigationDestination(
                   icon: const Icon(Icons.schedule_outlined),

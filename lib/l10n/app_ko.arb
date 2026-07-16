@@ -296,5 +296,7 @@
         "type": "int"
       }
     }
-  }
+  },
+  "privacyPolicyTitle": "개인정보 처리방침",
+  "privacyPolicySubtitle": "수집·이용 안내 및 문의처 확인"
 }

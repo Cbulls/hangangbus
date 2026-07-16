@@ -296,5 +296,7 @@
         "type": "int"
       }
     }
-  }
+  },
+  "privacyPolicyTitle": "プライバシーポリシー",
+  "privacyPolicySubtitle": "データ取扱いとお問い合わせ"
 }

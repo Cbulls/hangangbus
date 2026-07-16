@@ -1,3 +1,4 @@
+import 'package:hangangbus/data/story_extra_ja.dart';
 import 'package:hangangbus/models/data.dart';
 
 final List<StoryItem> storyDataJa = [
@@ -280,4 +281,5 @@ final List<StoryItem> storyDataJa = [
     openingHours: '07:30 - 20:00(材料がなくなり次第終了 / 日曜休み)',
     priceRange: '4,000ウォン - 8,000ウォン',
   ),
+  ...storyExtraJa,
 ];

@@ -33,7 +33,8 @@ class DockGeo {
       type: DockType.magok,
       lat: 37.5746203,
       lng: 126.844138,
-      apiAreaName: '마곡나루역',
+      // '마곡나루역' 단독은 citydata ERROR-500 → 공식 합성 장소명 사용.
+      apiAreaName: '서울식물원·마곡나루역',
     ),
     DockType.mangwon: DockGeo(
       type: DockType.mangwon,

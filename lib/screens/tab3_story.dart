@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hangangbus/blocs/story/story_bloc.dart';
-import 'package:hangangbus/data/data_provider.dart';
 import 'package:hangangbus/l10n/app_localizations.dart';
 import 'package:hangangbus/models/data.dart';
 import 'package:hangangbus/models/dock_location.dart';
+import 'package:hangangbus/repositories/content_repository.dart';
 import 'package:hangangbus/theme/app_colors.dart';
 
 class Tab3Story extends StatelessWidget {
@@ -13,9 +13,12 @@ class Tab3Story extends StatelessWidget {
 
   /// 현재 언어의 스토리 데이터에 존재하는 선착장만 docks 정규 순서로 반환.
   List<String> _computeActiveDockKeys(BuildContext context) {
-    final present = DataProvider.getStories(
-      context,
-    ).map((s) => s.dockName).toSet();
+    final lang = Localizations.localeOf(context).languageCode;
+    final present = context
+        .read<ContentRepository>()
+        .stories(lang)
+        .map((s) => s.dockName)
+        .toSet();
     return docks.map((d) => d.name).where(present.contains).toList();
   }
 
@@ -361,7 +364,10 @@ class _StoryList extends StatelessWidget {
     }
 
     final targetCategoryKey = categoryKeys[categoryIndex];
-    final items = DataProvider.getStories(context)
+    final lang = Localizations.localeOf(context).languageCode;
+    final items = context
+        .read<ContentRepository>()
+        .stories(lang)
         .where(
           (item) =>
               item.dockName == dockKey && item.category == targetCategoryKey,

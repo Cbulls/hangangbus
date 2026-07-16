@@ -500,4 +500,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String approxHours(int hours) {
     return '약 $hours시간';
   }
+
+  @override
+  String get privacyPolicyTitle => '개인정보 처리방침';
+
+  @override
+  String get privacyPolicySubtitle => '수집·이용 안내 및 문의처 확인';
 }

@@ -1,3 +1,4 @@
+import 'package:hangangbus/data/story_extra_en.dart';
 import 'package:hangangbus/models/data.dart';
 
 final List<StoryItem> storyDataEn = [
@@ -275,22 +276,5 @@ final List<StoryItem> storyDataEn = [
         '07:30 - 20:00 (Closed when ingredients run out / Closed on Sundays)',
     priceRange: '₩4,000 - ₩8,000',
   ),
-];
-
-final List<FaqItem> faqDataEn = [
-  FaqItem(
-    question: 'Can I use the Climate Card (Gihudonghaeng Card)?',
-    answer:
-        'Yes. Please make sure you have the standard or youth pass, not the combined Ttareungyi (bike-share) pass.',
-  ),
-  FaqItem(
-    question: 'Are pets allowed on board?',
-    answer:
-        'Pets are only permitted if placed inside a carrier or travel cage.',
-  ),
-  FaqItem(
-    question: 'Can I bring a stroller or bicycle?',
-    answer:
-        'Strollers are welcome on board. Bicycles must be stored in the designated rack at the dock and cannot be brought onto the vessel.',
-  ),
+  ...storyExtraEn,
 ];
