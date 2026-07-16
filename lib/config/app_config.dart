@@ -1,6 +1,7 @@
 /// 빌드 타임 시크릿/설정.
 ///
-/// 키는 바이너리 asset(.env)이 아니라 `--dart-define` 으로만 주입한다.
+/// 키는 바이너리 asset이 아니라 `--dart-define` 으로만 주입한다.
+/// 로컬: `flutter run --dart-define-from-file=.env` 또는 `./scripts/run.sh`
 ///
 /// ```bash
 /// flutter run \

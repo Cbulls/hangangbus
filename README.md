@@ -18,11 +18,22 @@
 
 ## 실행 방법 (시크릿)
 
-API 키는 **바이너리 asset이 아니라** `--dart-define` 으로만 주입합니다.
+API 키는 **바이너리 asset이 아니라** 빌드 타임 `--dart-define` 으로만 주입합니다.  
+로컬에서는 `.env`를 `--dart-define-from-file`로 넘깁니다 (`flutter_dotenv` / asset 번들 아님).
 
 ```bash
 flutter pub get
+cp .env.example .env   # 최초 1회 — 키 채우기
 
+# 권장
+./scripts/run.sh
+# 또는
+flutter run --dart-define-from-file=.env
+```
+
+개별 플래그도 가능합니다:
+
+```bash
 flutter run \
   --dart-define=KAKAO_APP_KEY=your_kakao_js_key \
   --dart-define=SEOUL_API_KEY=your_seoul_openapi_key \
@@ -30,7 +41,8 @@ flutter run \
 ```
 
 샘플 키 자리표시자는 [`.env.example`](.env.example) 를 참고하세요.  
-`.env` 를 assets 로 넣지 마세요. (키가 앱 패키지에 포함됩니다.)
+`.env` 를 assets 로 넣지 마세요. (키가 앱 패키지에 포함됩니다.)  
+IDE Run은 [`.vscode/launch.json`](.vscode/launch.json)이 같은 플래그를 씁니다.
 
 > **보안:** 과거에 저장소/스크립트에 노출된 Seoul OpenAPI 키가 있다면 [서울 열린데이터광장](https://data.seoul.go.kr/)에서 **즉시 재발급(로테이션)** 하세요.
 

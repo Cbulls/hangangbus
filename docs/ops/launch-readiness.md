@@ -15,12 +15,13 @@
 
 - `.env` asset 번들 제거
 - [`lib/config/app_config.dart`](../../lib/config/app_config.dart): `--dart-define` (`KAKAO_APP_KEY`, `SEOUL_API_KEY`, `SENTRY_DSN`, `PRIVACY_POLICY_URL`)
+- 로컬: `flutter run --dart-define-from-file=.env` 또는 [`scripts/run.sh`](../../scripts/run.sh)
 - 노출 스크립트 `lib/test.py` 삭제 — 키가 히스토리에 있었다면 열린데이터광장에서 **재발급**
 
 ```bash
-flutter run \
-  --dart-define=KAKAO_APP_KEY=... \
-  --dart-define=SEOUL_API_KEY=...
+./scripts/run.sh
+# 또는
+flutter run --dart-define-from-file=.env
 ```
 
 ### 데드코드
