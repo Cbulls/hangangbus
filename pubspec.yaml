@@ -1,8 +1,8 @@
 name: hangangbus
-description: '한강버스 다국어 가이드 앱'
+description: '한강버스 앱'
 publish_to: 'none'
 
-version: 1.0.2+15
+version: 1.0.3+17
 
 environment:
   sdk: ^3.10.1
@@ -21,7 +21,7 @@ dependencies:
   flutter_bloc: ^9.1.1
   equatable: ^2.0.8
   bloc: ^9.2.1
-  sentry_flutter: ^8.14.2
+  sentry_flutter: ^9.24.0
 
 dev_dependencies:
   flutter_test:
