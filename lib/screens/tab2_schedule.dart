@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hangangbus/blocs/clock/clock_bloc.dart';
 import 'package:hangangbus/blocs/schedule/schedule_bloc.dart';
 import 'package:hangangbus/models/dock_type.dart';
 import 'package:hangangbus/l10n/app_localizations.dart';
+import 'package:hangangbus/theme/app_colors.dart';
 
 import 'package:hangangbus/utils/schedule_utils.dart';
-import 'package:hangangbus/screens/tab1_home.dart';
 
 class Tab2Schedule extends StatefulWidget {
   const Tab2Schedule({super.key});
@@ -33,43 +34,49 @@ class _Tab2ScheduleState extends State<Tab2Schedule> {
       type: DockType.magok,
       name: l10n.dockMagok,
       subtitle: "Magok",
-      color: SeoulColors.mountainGreen,
+      color: AppColors.dockMagok,
     ),
     DockSchedule(
       type: DockType.mangwon,
       name: l10n.dockMangwon,
       subtitle: "Mangwon",
-      color: SeoulColors.sunsetOrange,
+      color: AppColors.dockMangwon,
     ),
     DockSchedule(
       type: DockType.yeouido,
       name: l10n.dockYeouido,
       subtitle: "Yeouido",
-      color: SeoulColors.hanRiverBlue,
+      color: AppColors.dockYeouido,
     ),
     DockSchedule(
       type: DockType.apgujeong,
       name: l10n.dockApgujeong,
       subtitle: "Apgujeong",
-      color: const Color(0xFF8E54E9),
+      color: AppColors.dockApgujeong,
     ),
     DockSchedule(
       type: DockType.oksu,
       name: l10n.dockOksu,
       subtitle: "Oksu",
-      color: const Color(0xFF26A69A),
+      color: AppColors.dockOksu,
+    ),
+    DockSchedule(
+      type: DockType.seoulforest,
+      name: l10n.dockSeoulForest,
+      subtitle: "Seoul Forest",
+      color: AppColors.dockSeoulForest,
     ),
     DockSchedule(
       type: DockType.ttukseom,
       name: l10n.dockTtukseom,
       subtitle: "Ttukseom",
-      color: const Color(0xFF42A5F5),
+      color: AppColors.dockTtukseom,
     ),
     DockSchedule(
       type: DockType.jamsil,
       name: l10n.dockJamsil,
       subtitle: "Jamsil",
-      color: const Color(0xFF00ACC1),
+      color: AppColors.dockJamsil,
     ),
   ];
 
@@ -203,25 +210,35 @@ class _Tab2ScheduleState extends State<Tab2Schedule> {
   ) {
     final isSelected = activeDirection == direction;
     return Expanded(
-      child: GestureDetector(
-        onTap: () => context.read<ScheduleBloc>().add(
-          ScheduleDirectionSelected(direction),
-        ),
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(
-            color: isSelected ? Colors.black : Colors.grey[200],
-            borderRadius: BorderRadius.circular(12),
-          ),
-          alignment: Alignment.center,
-          child: FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text(
-              text,
-              maxLines: 1,
-              style: TextStyle(
-                color: isSelected ? Colors.white : Colors.black,
-                fontWeight: FontWeight.w600,
+      child: Material(
+        color: isSelected ? AppColors.ink : Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12),
+          onTap: () {
+            HapticFeedback.selectionClick();
+            context.read<ScheduleBloc>().add(
+              ScheduleDirectionSelected(direction),
+            );
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: isSelected ? AppColors.ink : AppColors.hairline,
+              ),
+            ),
+            alignment: Alignment.center,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                text,
+                maxLines: 1,
+                style: TextStyle(
+                  color: isSelected ? Colors.white : AppColors.inkSecondary,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),
@@ -239,27 +256,44 @@ class _Tab2ScheduleState extends State<Tab2Schedule> {
         itemCount: _docks.length,
         itemBuilder: (context, index) {
           final isSelected = _selectedDockIndex == index;
-          return GestureDetector(
-            onTap: () =>
-                context.read<ScheduleBloc>().add(ScheduleDockSelected(index)),
-            child: Container(
-              margin: const EdgeInsets.only(right: 12),
-              constraints: const BoxConstraints(minWidth: 76),
-              padding: const EdgeInsets.symmetric(horizontal: 18),
-              decoration: BoxDecoration(
-                color: isSelected ? _docks[index].color : Colors.grey[100],
+          return Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: Material(
+              color: isSelected ? _docks[index].color : Colors.white,
+              borderRadius: BorderRadius.circular(24),
+              child: InkWell(
                 borderRadius: BorderRadius.circular(24),
-              ),
-              alignment: Alignment.center,
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  _docks[index].name,
-                  maxLines: 1,
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: isSelected ? Colors.white : Colors.grey[700],
+                onTap: () {
+                  HapticFeedback.selectionClick();
+                  context.read<ScheduleBloc>().add(ScheduleDockSelected(index));
+                },
+                child: Container(
+                  constraints: const BoxConstraints(minWidth: 76),
+                  padding: const EdgeInsets.symmetric(horizontal: 18),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(24),
+                    border: Border.all(
+                      color: isSelected
+                          ? _docks[index].color
+                          : AppColors.hairline,
+                    ),
+                  ),
+                  alignment: Alignment.center,
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      _docks[index].name,
+                      maxLines: 1,
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: isSelected
+                            ? FontWeight.w700
+                            : FontWeight.w500,
+                        color: isSelected
+                            ? Colors.white
+                            : AppColors.inkSecondary,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -354,7 +388,7 @@ class _Tab2ScheduleState extends State<Tab2Schedule> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
               decoration: BoxDecoration(
-                color: SeoulColors.hanRiverBlue.withValues(alpha: 0.08),
+                color: AppColors.primary.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
@@ -362,7 +396,7 @@ class _Tab2ScheduleState extends State<Tab2Schedule> {
                 style: const TextStyle(
                   fontSize: 9,
                   fontWeight: FontWeight.w700,
-                  color: SeoulColors.hanRiverBlue,
+                  color: AppColors.primary,
                 ),
               ),
             ),
@@ -438,7 +472,7 @@ class _Tab2ScheduleState extends State<Tab2Schedule> {
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 40,
-                      fontWeight: FontWeight.w900,
+                      fontWeight: FontWeight.w800,
                       height: 1,
                       letterSpacing: -1.2,
                     ),
@@ -513,11 +547,9 @@ class _Tab2ScheduleState extends State<Tab2Schedule> {
       margin: const EdgeInsets.symmetric(horizontal: 24),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: SeoulColors.hanRiverBlue.withValues(alpha: 0.06),
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(
-          color: SeoulColors.hanRiverBlue.withValues(alpha: 0.16),
-        ),
+        color: AppColors.primary.withValues(alpha: 0.06),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.16)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -526,8 +558,8 @@ class _Tab2ScheduleState extends State<Tab2Schedule> {
             l10n.yeouidoTransferTitle,
             style: const TextStyle(
               fontSize: 15,
-              fontWeight: FontWeight.w800,
-              color: SeoulColors.seoulBlue,
+              fontWeight: FontWeight.w700,
+              color: AppColors.primary,
             ),
           ),
           const SizedBox(height: 12),
@@ -583,7 +615,7 @@ class _Tab2ScheduleState extends State<Tab2Schedule> {
             style: const TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w700,
-              color: SeoulColors.seoulBlue,
+              color: AppColors.primary,
             ),
           ),
           const SizedBox(height: 6),
@@ -591,8 +623,8 @@ class _Tab2ScheduleState extends State<Tab2Schedule> {
             nextTime ?? l10n.tomorrowFirstBoat(firstTime ?? '--:--'),
             style: TextStyle(
               fontSize: nextTime == null ? 12 : 20,
-              fontWeight: FontWeight.w900,
-              color: nextTime == null ? Colors.grey[600] : Colors.black,
+              fontWeight: FontWeight.w700,
+              color: nextTime == null ? Colors.grey[600] : AppColors.ink,
             ),
           ),
         ],

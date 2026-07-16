@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hangangbus/blocs/faq/faq_bloc.dart';
 import 'package:hangangbus/data/data_provider.dart';
-import 'package:hangangbus/l10n/app_localizations.dart'; // l10n 임포트
+import 'package:hangangbus/l10n/app_localizations.dart';
+import 'package:hangangbus/theme/app_colors.dart';
 
 class Tab4Faq extends StatefulWidget {
   const Tab4Faq({super.key});
@@ -53,11 +54,11 @@ class _Tab4FaqState extends State<Tab4Faq> with SingleTickerProviderStateMixin {
           ),
           child: TabBar(
             controller: _tabController,
-            labelColor: Colors.black,
-            unselectedLabelColor: Colors.grey[400],
-            indicatorColor: Colors.black,
+            labelColor: AppColors.primary,
+            unselectedLabelColor: AppColors.inkTertiary,
+            indicatorColor: AppColors.primary,
             indicatorSize: TabBarIndicatorSize.label,
-            indicatorWeight: 2,
+            indicatorWeight: 2.5,
             labelStyle: const TextStyle(
               fontWeight: FontWeight.w700,
               fontSize: 16,
@@ -101,9 +102,10 @@ class _FaqTab extends StatelessWidget {
             child: Text(
               l10n.tabFaq,
               style: const TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.w800,
+                fontSize: 26,
+                fontWeight: FontWeight.w700,
                 letterSpacing: -0.5,
+                color: AppColors.ink,
               ),
             ),
           );
@@ -113,20 +115,23 @@ class _FaqTab extends StatelessWidget {
           data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.grey[50],
+              color: Colors.white,
               borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: AppColors.hairline),
             ),
             child: ExpansionTile(
               tilePadding: const EdgeInsets.symmetric(
                 horizontal: 20,
                 vertical: 4,
               ),
+              iconColor: AppColors.primary,
+              collapsedIconColor: AppColors.inkTertiary,
               title: Text(
                 item.question,
                 style: const TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: 15,
-                  color: Colors.black87,
+                  color: AppColors.ink,
                 ),
               ),
               children: [
@@ -134,8 +139,8 @@ class _FaqTab extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                   child: Text(
                     item.answer,
-                    style: TextStyle(
-                      color: Colors.grey[700],
+                    style: const TextStyle(
+                      color: AppColors.inkSecondary,
                       height: 1.6,
                       fontSize: 14,
                     ),
@@ -166,9 +171,10 @@ class _SafetyTab extends StatelessWidget {
           child: Text(
             l10n.tabSafety,
             style: const TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.w800,
+              fontSize: 26,
+              fontWeight: FontWeight.w700,
               letterSpacing: -0.5,
+              color: AppColors.ink,
             ),
           ),
         ),
@@ -206,7 +212,7 @@ class _SafetyTab extends StatelessWidget {
           style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w700,
-            color: Colors.black,
+            color: AppColors.ink,
           ),
         ),
         const SizedBox(height: 16),
@@ -229,9 +235,9 @@ class _SafetyTab extends StatelessWidget {
                 Expanded(
                   child: Text(
                     item.text,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 15,
-                      color: Colors.grey[800],
+                      color: AppColors.inkSecondary,
                       height: 1.5,
                     ),
                   ),
@@ -240,7 +246,7 @@ class _SafetyTab extends StatelessWidget {
             ),
           ),
         ),
-        const Divider(height: 48, thickness: 1, color: Color(0xFFF5F5F5)),
+        const Divider(height: 48, thickness: 1, color: AppColors.hairline),
       ],
     );
   }

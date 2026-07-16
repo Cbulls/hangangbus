@@ -1,7 +1,9 @@
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hangangbus/theme/app_colors.dart';
 import 'package:hangangbus/blocs/clock/clock_bloc.dart';
 import 'package:hangangbus/blocs/faq/faq_bloc.dart';
 import 'package:hangangbus/blocs/navigation/navigation_bloc.dart';
@@ -90,17 +92,19 @@ class MyApp extends StatelessWidget {
               },
               theme: ThemeData(
                 useMaterial3: true,
-                primaryColor: const Color(0xFF0052A4), // 한강 블루
-                scaffoldBackgroundColor: Colors.grey[50],
+                colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
+                primaryColor: AppColors.primary, // 한강 블루
+                scaffoldBackgroundColor: AppColors.background,
+                splashFactory: InkRipple.splashFactory,
                 appBarTheme: const AppBarTheme(
                   backgroundColor: Colors.white,
                   elevation: 0,
                   titleTextStyle: TextStyle(
-                    color: Colors.black,
+                    color: AppColors.ink,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
-                  iconTheme: IconThemeData(color: Colors.black),
+                  iconTheme: IconThemeData(color: AppColors.ink),
                 ),
               ),
               home: const MainBase(),
@@ -150,77 +154,81 @@ class MainBase extends StatelessWidget {
       (NavigationBloc bloc) => bloc.state.currentIndex,
     );
 
-    void selectTab(int index) =>
-        context.read<NavigationBloc>().add(NavTabSelected(index));
+    void selectTab(int index) {
+      HapticFeedback.lightImpact();
+      context.read<NavigationBloc>().add(NavTabSelected(index));
+    }
 
     return Scaffold(
       body: SafeArea(child: screens[currentIndex]),
       bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.9),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 20,
-              offset: const Offset(0, -5),
-            ),
-          ],
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          border: Border(top: BorderSide(color: AppColors.hairline)),
         ),
         child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-            child: NavigationBarTheme(
-              data: NavigationBarThemeData(
-                indicatorColor: Colors.blue.withOpacity(0.1), // 선택된 아이템 배경색
-                labelTextStyle: WidgetStateProperty.resolveWith((states) {
-                  if (states.contains(WidgetState.selected)) {
-                    return const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.blue, // 선택 시 텍스트 색상
-                    );
-                  }
-                  return TextStyle(fontSize: 12, color: Colors.grey[600]);
-                }),
-                iconTheme: WidgetStateProperty.resolveWith((states) {
-                  if (states.contains(WidgetState.selected)) {
-                    return const IconThemeData(color: Colors.blue, size: 26);
-                  }
-                  return IconThemeData(color: Colors.grey[600], size: 24);
-                }),
+          child: NavigationBarTheme(
+            data: NavigationBarThemeData(
+              indicatorColor: Colors.transparent,
+              overlayColor: WidgetStatePropertyAll(
+                AppColors.primary.withValues(alpha: 0.06),
               ),
-              child: NavigationBar(
-                height: 65,
-                elevation: 0,
-                backgroundColor: Colors.transparent,
-                selectedIndex: currentIndex,
-                onDestinationSelected: selectTab,
-                animationDuration: const Duration(
-                  milliseconds: 500,
-                ), // 애니메이션 속도 조절
-                destinations: [
-                  NavigationDestination(
-                    icon: const Icon(Icons.home_outlined),
-                    selectedIcon: const Icon(Icons.home_rounded),
-                    label: l10n.navHome, // 다국어 적용
-                  ),
-                  NavigationDestination(
-                    icon: const Icon(Icons.schedule_outlined),
-                    selectedIcon: const Icon(Icons.schedule_rounded),
-                    label: l10n.navSchedule,
-                  ),
-                  NavigationDestination(
-                    icon: const Icon(Icons.map_outlined),
-                    selectedIcon: const Icon(Icons.map_rounded),
-                    label: l10n.navGuide,
-                  ),
-                  NavigationDestination(
-                    icon: const Icon(Icons.help_outline_rounded),
-                    selectedIcon: const Icon(Icons.help_rounded),
-                    label: l10n.navFaq,
-                  ),
-                ],
-              ),
+              labelTextStyle: WidgetStateProperty.resolveWith((states) {
+                if (states.contains(WidgetState.selected)) {
+                  return const TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.primary,
+                  );
+                }
+                return const TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.inkTertiary,
+                );
+              }),
+              iconTheme: WidgetStateProperty.resolveWith((states) {
+                if (states.contains(WidgetState.selected)) {
+                  return const IconThemeData(
+                    color: AppColors.primary,
+                    size: 25,
+                  );
+                }
+                return const IconThemeData(
+                  color: AppColors.inkTertiary,
+                  size: 24,
+                );
+              }),
+            ),
+            child: NavigationBar(
+              height: 60,
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              selectedIndex: currentIndex,
+              onDestinationSelected: selectTab,
+              animationDuration: const Duration(milliseconds: 200),
+              destinations: [
+                NavigationDestination(
+                  icon: const Icon(Icons.home_outlined),
+                  selectedIcon: const Icon(Icons.home_rounded),
+                  label: l10n.navHome, // 다국어 적용
+                ),
+                NavigationDestination(
+                  icon: const Icon(Icons.schedule_outlined),
+                  selectedIcon: const Icon(Icons.schedule_rounded),
+                  label: l10n.navSchedule,
+                ),
+                NavigationDestination(
+                  icon: const Icon(Icons.auto_stories_outlined),
+                  selectedIcon: const Icon(Icons.auto_stories_rounded),
+                  label: l10n.navGuide,
+                ),
+                NavigationDestination(
+                  icon: const Icon(Icons.help_outline_rounded),
+                  selectedIcon: const Icon(Icons.help_rounded),
+                  label: l10n.navFaq,
+                ),
+              ],
             ),
           ),
         ),

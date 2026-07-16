@@ -12,6 +12,7 @@ import 'package:hangangbus/models/attraction.dart';
 import 'package:hangangbus/models/dock_location.dart';
 import 'package:hangangbus/data/attraction_data.dart';
 import 'package:hangangbus/screens/widgets/attraction_info_sheet.dart';
+import 'package:hangangbus/theme/app_colors.dart';
 
 class HangangMapScreen extends StatefulWidget {
   /// 진입 시 지도 중심이 될 선착장 영문명(예: 'Yeouido'). null이면 한강 중심.
@@ -292,25 +293,22 @@ class _HangangMapScreenState extends State<HangangMapScreen> {
     required bool isDark,
     required VoidCallback onTap,
   }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 44,
-        height: 44,
-        decoration: BoxDecoration(
-          color: isDark ? Colors.black54 : Colors.white,
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.15),
-              blurRadius: 8,
-            ),
-          ],
-        ),
-        child: Icon(
-          icon,
-          size: 18,
-          color: isDark ? Colors.white : const Color(0xFF0064B0),
+    return Material(
+      color: isDark ? Colors.black54 : Colors.white,
+      shape: const CircleBorder(),
+      elevation: 2,
+      shadowColor: Colors.black.withValues(alpha: 0.2),
+      child: InkWell(
+        customBorder: const CircleBorder(),
+        onTap: onTap,
+        child: SizedBox(
+          width: 44,
+          height: 44,
+          child: Icon(
+            icon,
+            size: 18,
+            color: isDark ? Colors.white : AppColors.primary,
+          ),
         ),
       ),
     );
@@ -330,8 +328,8 @@ class _HangangMapScreenState extends State<HangangMapScreen> {
         _title(lang),
         style: TextStyle(
           fontSize: 16,
-          fontWeight: FontWeight.w900,
-          color: isDark ? Colors.white : const Color(0xFF0064B0),
+          fontWeight: FontWeight.w700,
+          color: isDark ? Colors.white : AppColors.primary,
         ),
       ),
     );
@@ -387,32 +385,35 @@ class _HangangMapScreenState extends State<HangangMapScreen> {
 
   /// 탭 가능한 범례 버튼(공원/명소) → 주변 탐색 시트.
   Widget _legendButton(String emoji, String text, bool isDark, String kind) {
-    return GestureDetector(
-      onTap: () => _showNearbySheet(kind),
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-        decoration: BoxDecoration(
-          color: const Color(0xFF0064B0).withValues(alpha: 0.12),
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: const Color(0xFF0064B0).withValues(alpha: 0.3),
-          ),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(emoji, style: const TextStyle(fontSize: 14)),
-            const SizedBox(width: 5),
-            Text(
-              text,
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w800,
-                color: Color(0xFF0064B0),
-              ),
+    return Material(
+      color: AppColors.primary.withValues(alpha: 0.1),
+      borderRadius: BorderRadius.circular(12),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: () => _showNearbySheet(kind),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: AppColors.primary.withValues(alpha: 0.28),
             ),
-          ],
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(emoji, style: const TextStyle(fontSize: 14)),
+              const SizedBox(width: 5),
+              Text(
+                text,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.primary,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -479,8 +480,6 @@ class _DockMiniSheet extends StatelessWidget {
 
   const _DockMiniSheet({required this.dock, required this.lang});
 
-  static const _seoulBlue = Color(0xFF0064B0);
-
   String _dockLabel() {
     switch (lang) {
       case 'en':
@@ -497,13 +496,18 @@ class _DockMiniSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    // dock.color 는 AppColors.dockColorOf 단일 소스에서 온다.
+    final accent = dock.color;
     return SafeArea(
       child: Container(
         margin: const EdgeInsets.all(12),
         padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
         decoration: BoxDecoration(
-          color: isDark ? const Color(0xFF1A1A2E) : Colors.white,
+          color: isDark ? AppColors.darkSurface : Colors.white,
           borderRadius: BorderRadius.circular(24),
+          border: Border(
+            top: BorderSide(color: accent.withValues(alpha: 0.55), width: 3),
+          ),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -525,12 +529,12 @@ class _DockMiniSheet extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: dock.color.withValues(alpha: 0.15),
+                    color: accent.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
                     Icons.directions_boat_rounded,
-                    color: dock.color,
+                    color: accent,
                     size: 24,
                   ),
                 ),
@@ -543,8 +547,8 @@ class _DockMiniSheet extends StatelessWidget {
                         dock.name,
                         style: TextStyle(
                           fontSize: 20,
-                          fontWeight: FontWeight.w900,
-                          color: isDark ? Colors.white : _seoulBlue,
+                          fontWeight: FontWeight.w700,
+                          color: isDark ? Colors.white : AppColors.ink,
                         ),
                       ),
                       Text(
@@ -552,7 +556,7 @@ class _DockMiniSheet extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color: dock.color,
+                          color: accent,
                         ),
                       ),
                     ],
@@ -566,7 +570,7 @@ class _DockMiniSheet extends StatelessWidget {
                 Icon(
                   Icons.place_rounded,
                   size: 18,
-                  color: isDark ? Colors.white54 : Colors.black45,
+                  color: isDark ? Colors.white54 : AppColors.inkTertiary,
                 ),
                 const SizedBox(width: 8),
                 Expanded(
@@ -574,7 +578,7 @@ class _DockMiniSheet extends StatelessWidget {
                     dock.address,
                     style: TextStyle(
                       fontSize: 13,
-                      color: isDark ? Colors.white70 : Colors.black87,
+                      color: isDark ? Colors.white70 : AppColors.inkSecondary,
                     ),
                   ),
                 ),
@@ -601,8 +605,6 @@ class _NearbySheet extends StatelessWidget {
     required this.onTapCard,
   });
 
-  static const _seoulBlue = Color(0xFF0064B0);
-
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -611,8 +613,13 @@ class _NearbySheet extends StatelessWidget {
         margin: const EdgeInsets.all(12),
         padding: const EdgeInsets.fromLTRB(20, 12, 20, 18),
         decoration: BoxDecoration(
-          color: isDark ? const Color(0xFF1A1A2E) : Colors.white,
+          color: isDark ? AppColors.darkSurface : Colors.white,
           borderRadius: BorderRadius.circular(24),
+          border: Border.all(
+            color: isDark
+                ? Colors.white.withValues(alpha: 0.08)
+                : AppColors.hairline,
+          ),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -633,8 +640,8 @@ class _NearbySheet extends StatelessWidget {
               title,
               style: TextStyle(
                 fontSize: 16,
-                fontWeight: FontWeight.w900,
-                color: isDark ? Colors.white : _seoulBlue,
+                fontWeight: FontWeight.w700,
+                color: isDark ? Colors.white : AppColors.ink,
               ),
             ),
             const SizedBox(height: 14),

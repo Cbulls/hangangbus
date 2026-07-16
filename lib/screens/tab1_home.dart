@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:ui';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hangangbus/blocs/clock/clock_bloc.dart';
@@ -16,24 +15,21 @@ import 'package:hangangbus/screens/hangang_map_screen.dart';
 import 'package:hangangbus/utils/schedule_utils.dart';
 import 'package:hangangbus/models/weather_data.dart';
 import 'package:hangangbus/l10n/app_localizations.dart';
+import 'package:hangangbus/theme/app_colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+/// 홈 화면에서 쓰는 색 별칭. 실제 값은 AppColors 토큰이 단일 소스.
 class SeoulColors {
-  static const seoulBlue = Color(0xFF0064B0);
-  static const hanRiverBlue = Color(0xFF0099CC);
+  static const seoulBlue = AppColors.primary;
+  static const hanRiverBlue = AppColors.primary;
   static const skyBlue = Color(0xFF87CEEB);
-  static const sunsetOrange = Color(0xFFFF6B35);
-  static const mountainGreen = Color(0xFF4A7C59);
-  static const warmWhite = Color(0xFFFFFBF5);
+  static const warmWhite = AppColors.background;
   static const lightGray = Color(0xFFF5F5F5);
-  static const darkNavy = Color(0xFF0A0E27);
-  static const neonGreen = Color(0xFF00FF88);
-  static const neonCyan = Color(0xFF00D9FF);
-  static const statusNormal = Color(0xFF00C853);
-  static const statusPartial = Color(0xFFFFC107);
-  static const statusStopped = Color(0xFFE53935);
-  // 🆕 오늘 운행 종료를 알리는 세련된 잿빛 컬러
-  static const statusClosed = Color(0xFF78909C);
+  static const darkNavy = AppColors.darkBackground;
+  static const statusNormal = AppColors.statusNormal;
+  static const statusPartial = AppColors.statusPartial;
+  static const statusStopped = AppColors.statusStopped;
+  static const statusClosed = AppColors.statusClosed;
 }
 
 enum OperationStatus { normal, partial, stopped, closed }
@@ -83,19 +79,43 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
         .toList();
   }
 
+  /// 선착장 브랜드 색 (AppColors 단일 소스).
+  Color _dockBrandColor(DockType dock) {
+    switch (dock) {
+      case DockType.magok:
+        return AppColors.dockMagok;
+      case DockType.mangwon:
+        return AppColors.dockMangwon;
+      case DockType.yeouido:
+        return AppColors.dockYeouido;
+      case DockType.apgujeong:
+        return AppColors.dockApgujeong;
+      case DockType.oksu:
+        return AppColors.dockOksu;
+      case DockType.ttukseom:
+        return AppColors.dockTtukseom;
+      case DockType.jamsil:
+        return AppColors.dockJamsil;
+      case DockType.seoulforest:
+        return AppColors.dockSeoulForest;
+    }
+  }
+
   DockInfo _buildDockInfo(DockType dock, AppLocalizations l10n) {
     final nextDeparture = ScheduleUtils.getNextDepartureForDock(dock);
     final minutesLeft = ScheduleUtils.getMinutesUntilNextForDock(dock) ?? 0;
     final isOperating = nextDeparture != null;
     final meta = _dockMeta(dock, l10n);
+    // 브랜드 색에서 라이트/다크 그라데이션을 파생 (스톡 그라데이션 제거).
+    final color = _dockBrandColor(dock);
 
     return DockInfo(
       name: dock.label(l10n),
       nameEn: ScheduleUtils.dockNameEn(dock),
       nextDeparture: nextDeparture ?? '--:--',
       minutesLeft: minutesLeft,
-      gradientLight: meta.gradientLight,
-      gradientDark: meta.gradientDark,
+      gradientLight: [color, AppColors.tint(color, 0.35)],
+      gradientDark: [AppColors.tint(color, 0.25), color],
       heroTag: 'dock-${dock.name}',
       operationStatus: isOperating
           ? OperationStatus.normal
@@ -123,8 +143,6 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
     switch (dock) {
       case DockType.magok:
         return _DockMeta(
-          gradientLight: [SeoulColors.mountainGreen, const Color(0xFF6FA287)],
-          gradientDark: const [Color(0xFF4facfe), Color(0xFF00f2fe)],
           address: '서울특별시 강서구 가양동 441',
           parkAreaName: '마곡나루역',
           parkingSpaces: 38,
@@ -138,8 +156,6 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
         );
       case DockType.mangwon:
         return _DockMeta(
-          gradientLight: [SeoulColors.sunsetOrange, const Color(0xFFFFB85C)],
-          gradientDark: const [Color(0xFFf093fb), Color(0xFFF5576c)],
           address: '서울특별시 마포구 망원동 205-8',
           parkAreaName: '망원한강공원',
           parkingSpaces: 138,
@@ -157,8 +173,6 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
         );
       case DockType.yeouido:
         return _DockMeta(
-          gradientLight: [SeoulColors.hanRiverBlue, SeoulColors.skyBlue],
-          gradientDark: const [Color(0xFF667eea), Color(0xFF764ba2)],
           address: '서울특별시 영등포구 여의도동 85-1',
           parkAreaName: '여의도한강공원',
           parkingSpaces: 171,
@@ -176,8 +190,6 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
         );
       case DockType.apgujeong:
         return _DockMeta(
-          gradientLight: const [Color(0xFF8E54E9), Color(0xFF4776E6)],
-          gradientDark: const [Color(0xFF41295A), Color(0xFF2F0743)],
           address: '서울특별시 강남구 압구정동 일대',
           parkAreaName: null,
           parkingSpaces: 0,
@@ -190,8 +202,6 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
         );
       case DockType.oksu:
         return _DockMeta(
-          gradientLight: const [Color(0xFF26A69A), Color(0xFF80CBC4)],
-          gradientDark: const [Color(0xFF136A8A), Color(0xFF267871)],
           address: '서울특별시 성동구 옥수동 일대',
           parkAreaName: null,
           parkingSpaces: 0,
@@ -204,8 +214,6 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
         );
       case DockType.ttukseom:
         return _DockMeta(
-          gradientLight: const [Color(0xFF42A5F5), Color(0xFF90CAF9)],
-          gradientDark: const [Color(0xFF1A2980), Color(0xFF26D0CE)],
           address: '서울특별시 광진구 자양동 112',
           parkAreaName: '뚝섬한강공원',
           parkingSpaces: 0,
@@ -218,8 +226,6 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
         );
       case DockType.jamsil:
         return _DockMeta(
-          gradientLight: const [Color(0xFF00ACC1), Color(0xFF4DD0E1)],
-          gradientDark: const [Color(0xFF000428), Color(0xFF004E92)],
           address: '서울특별시 송파구 잠실동 1-2',
           parkAreaName: '잠실한강공원',
           parkingSpaces: 0,
@@ -232,8 +238,6 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
         );
       case DockType.seoulforest:
         return _DockMeta(
-          gradientLight: const [Color(0xFF66BB6A), Color(0xFFAED581)],
-          gradientDark: const [Color(0xFF134E5E), Color(0xFF71B280)],
           address: '서울특별시 성동구 성수동1가 (서울숲 한강)',
           parkAreaName: null, // 전용 실시간 API 장소 없음(임시 선착장)
           parkingSpaces: 0,
@@ -367,43 +371,28 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  ShaderMask(
-                                    shaderCallback: (b) => LinearGradient(
-                                      colors: isDarkMode
-                                          ? [
-                                              Colors.white,
-                                              Colors.white.withValues(
-                                                alpha: 0.8,
-                                              ),
-                                            ]
-                                          : [
-                                              SeoulColors.seoulBlue,
-                                              SeoulColors.hanRiverBlue,
-                                            ],
-                                    ).createShader(b),
-                                    child: Text(
-                                      l10n.homeTitle,
-                                      style: const TextStyle(
-                                        fontSize: 48,
-                                        fontWeight: FontWeight.w900,
-                                        height: 1.1,
-                                        letterSpacing: -2,
-                                        color: Colors.white,
-                                      ),
+                                  Text(
+                                    l10n.homeTitle,
+                                    style: TextStyle(
+                                      fontSize: 32,
+                                      fontWeight: FontWeight.w700,
+                                      height: 1.15,
+                                      letterSpacing: -1,
+                                      color: isDarkMode
+                                          ? Colors.white
+                                          : AppColors.ink,
                                     ),
                                   ),
                                   const SizedBox(height: 8),
                                   Text(
                                     l10n.homeSubtitle,
                                     style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: 15,
                                       fontWeight: FontWeight.w500,
-                                      letterSpacing: 0.5,
+                                      letterSpacing: 0.2,
                                       color: isDarkMode
                                           ? Colors.white.withValues(alpha: 0.5)
-                                          : SeoulColors.seoulBlue.withValues(
-                                              alpha: 0.7,
-                                            ),
+                                          : AppColors.inkSecondary,
                                     ),
                                   ),
                                 ],
@@ -452,44 +441,50 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
                       final activeColor = isDarkMode
                           ? d.gradientDark[0]
                           : d.gradientLight[0];
-                      return GestureDetector(
-                        onTap: () {
-                          _dockController.animateToPage(
-                            index,
-                            duration: const Duration(milliseconds: 400),
-                            curve: Curves.easeOutCubic,
-                          );
-                        },
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 250),
-                          alignment: Alignment.center,
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          decoration: BoxDecoration(
-                            color: isActive
-                                ? activeColor
-                                : (isDarkMode
-                                      ? Colors.white.withValues(alpha: 0.08)
-                                      : Colors.white.withValues(alpha: 0.7)),
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
+                      return Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(20),
+                          onTap: () {
+                            HapticFeedback.selectionClick();
+                            _dockController.animateToPage(
+                              index,
+                              duration: const Duration(milliseconds: 400),
+                              curve: Curves.easeOutCubic,
+                            );
+                          },
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 250),
+                            alignment: Alignment.center,
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            decoration: BoxDecoration(
                               color: isActive
                                   ? activeColor
-                                  : activeColor.withValues(alpha: 0.3),
-                              width: 1.2,
-                            ),
-                          ),
-                          child: Text(
-                            d.name,
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: isActive
-                                  ? FontWeight.w800
-                                  : FontWeight.w600,
-                              color: isActive
-                                  ? Colors.white
                                   : (isDarkMode
-                                        ? Colors.white.withValues(alpha: 0.8)
-                                        : activeColor),
+                                        ? Colors.white.withValues(alpha: 0.08)
+                                        : Colors.white),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: isActive
+                                    ? activeColor
+                                    : (isDarkMode
+                                          ? Colors.white.withValues(alpha: 0.12)
+                                          : AppColors.hairline),
+                              ),
+                            ),
+                            child: Text(
+                              d.name,
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: isActive
+                                    ? FontWeight.w700
+                                    : FontWeight.w500,
+                                color: isActive
+                                    ? Colors.white
+                                    : (isDarkMode
+                                          ? Colors.white.withValues(alpha: 0.8)
+                                          : AppColors.inkSecondary),
+                              ),
                             ),
                           ),
                         ),
@@ -551,39 +546,17 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
                     children: List.generate(docks.length, (index) {
                       final isActive = _currentDockIndex == index;
                       return AnimatedContainer(
-                        duration: const Duration(milliseconds: 400),
+                        duration: const Duration(milliseconds: 300),
                         margin: const EdgeInsets.symmetric(horizontal: 4),
-                        width: isActive ? 32 : 8,
+                        width: isActive ? 24 : 8,
                         height: 8,
                         decoration: BoxDecoration(
-                          gradient: isActive
-                              ? LinearGradient(
-                                  colors: _getGradientForDock(
-                                    index,
-                                    isDarkMode,
-                                    docks,
-                                  ),
-                                )
-                              : null,
                           color: isActive
-                              ? null
+                              ? _getGradientForDock(index, isDarkMode, docks)[0]
                               : isDarkMode
                               ? Colors.white.withValues(alpha: 0.2)
-                              : SeoulColors.seoulBlue.withValues(alpha: 0.2),
+                              : Colors.black.withValues(alpha: 0.12),
                           borderRadius: BorderRadius.circular(4),
-                          boxShadow: isActive
-                              ? [
-                                  BoxShadow(
-                                    color: _getGradientForDock(
-                                      index,
-                                      isDarkMode,
-                                      docks,
-                                    )[0].withValues(alpha: 0.6),
-                                    blurRadius: 12,
-                                    spreadRadius: 2,
-                                  ),
-                                ]
-                              : null,
                         ),
                       );
                     }),
@@ -608,7 +581,7 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
                   child: Row(
                     children: [
                       Expanded(
-                        child: _buildGlassmorphicButton(
+                        child: _buildTonalButton(
                           icon: Icons.calendar_today_rounded,
                           label: l10n.fullTimetable,
                           isDarkMode: isDarkMode,
@@ -622,7 +595,7 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
                       ),
                       const SizedBox(width: 12),
                       Expanded(
-                        child: _buildGlassmorphicButton(
+                        child: _buildTonalButton(
                           icon: Icons.explore_rounded,
                           label: l10n.nearbyAttractions,
                           isDarkMode: isDarkMode,
@@ -669,65 +642,60 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
     List<Color> gradient,
     AppLocalizations l10n,
   ) {
-    return GestureDetector(
-      onTap: () async {
-        HapticFeedback.mediumImpact();
-        final Uri url = Uri.parse(
-          'https://form.naver.com/response/ou4UyZcFdnB2YLEgeREpEw',
-        );
+    return Material(
+      color: isDarkMode ? Colors.white.withValues(alpha: 0.08) : Colors.white,
+      borderRadius: BorderRadius.circular(16),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: () async {
+          HapticFeedback.mediumImpact();
+          final Uri url = Uri.parse(
+            'https://form.naver.com/response/ou4UyZcFdnB2YLEgeREpEw',
+          );
 
-        // 외부 브라우저에서 네이버 폼 열기
-        if (await canLaunchUrl(url)) {
-          await launchUrl(url, mode: LaunchMode.externalApplication);
-        } else {
-          debugPrint('Could not launch $url');
-        }
-      },
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 24),
-        decoration: BoxDecoration(
-          color: isDarkMode
-              ? Colors.white.withValues(alpha: 0.08)
-              : Colors.white,
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(
-            color: gradient[0].withValues(alpha: 0.4),
-            width: 2, // 승선신고의 중요도를 높이기 위해 선 두께 상향
+          // 외부 브라우저에서 네이버 폼 열기
+          if (await canLaunchUrl(url)) {
+            await launchUrl(url, mode: LaunchMode.externalApplication);
+          } else {
+            debugPrint('Could not launch $url');
+          }
+        },
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 24),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: gradient[0].withValues(alpha: 0.45),
+              width: 1.5, // 승선신고의 중요도를 위해 컬러 보더 유지
+            ),
           ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 20,
-              offset: const Offset(0, 8),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center, // 텍스트 중앙 정렬
-          children: [
-            Icon(
-              Icons.assignment_turned_in_rounded, // 신고/등록에 어울리는 아이콘
-              color: gradient[0],
-              size: 24,
-            ),
-            const SizedBox(width: 12),
-            Text(
-              l10n.boardingDeclaration,
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.w900, // 강조를 위해 굵게
-                color: isDarkMode ? Colors.white : SeoulColors.seoulBlue,
-                letterSpacing: -0.5,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center, // 텍스트 중앙 정렬
+            children: [
+              Icon(
+                Icons.assignment_turned_in_rounded, // 신고/등록에 어울리는 아이콘
+                color: gradient[0],
+                size: 22,
               ),
-            ),
-            const SizedBox(width: 8),
-            Icon(
-              Icons.open_in_new_rounded, // 외부 링크임을 알리는 아이콘
-              size: 16,
-              color: gradient[0].withValues(alpha: 0.6),
-            ),
-          ],
+              const SizedBox(width: 12),
+              Text(
+                l10n.boardingDeclaration,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: isDarkMode ? Colors.white : AppColors.ink,
+                  letterSpacing: -0.3,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Icon(
+                Icons.open_in_new_rounded, // 외부 링크임을 알리는 아이콘
+                size: 16,
+                color: gradient[0].withValues(alpha: 0.6),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -744,53 +712,50 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
           TextScaleLevel.large => '가+',
           TextScaleLevel.extraLarge => '가++',
         };
-        return GestureDetector(
-          onTap: () {
-            HapticFeedback.mediumImpact();
-            context.read<SettingsBloc>().add(
-              TextScaleChanged(settings.level.next),
-            );
-          },
-          behavior: HitTestBehavior.opaque,
-          child: Container(
-            width: 52,
-            height: 52,
-            decoration: BoxDecoration(
-              color: isLarge
-                  ? SeoulColors.seoulBlue
-                  : (isDarkMode
-                        ? Colors.white.withValues(alpha: 0.12)
-                        : SeoulColors.seoulBlue.withValues(alpha: 0.1)),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: SeoulColors.seoulBlue.withValues(alpha: 0.3),
-              ),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  label,
-                  // 이 버튼 라벨은 글씨 배율의 영향을 받지 않게 고정
-                  textScaler: TextScaler.noScaling,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w900,
-                    height: 1.0,
+        return Material(
+          color: isLarge
+              ? AppColors.primary
+              : (isDarkMode
+                    ? Colors.white.withValues(alpha: 0.12)
+                    : AppColors.primary.withValues(alpha: 0.08)),
+          borderRadius: BorderRadius.circular(16),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(16),
+            onTap: () {
+              HapticFeedback.mediumImpact();
+              context.read<SettingsBloc>().add(
+                TextScaleChanged(settings.level.next),
+              );
+            },
+            child: SizedBox(
+              width: 52,
+              height: 52,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    label,
+                    // 이 버튼 라벨은 글씨 배율의 영향을 받지 않게 고정
+                    textScaler: TextScaler.noScaling,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      height: 1.0,
+                      color: isLarge
+                          ? Colors.white
+                          : (isDarkMode ? Colors.white : AppColors.primary),
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Icon(
+                    Icons.text_fields_rounded,
+                    size: 13,
                     color: isLarge
                         ? Colors.white
-                        : (isDarkMode ? Colors.white : SeoulColors.seoulBlue),
+                        : (isDarkMode ? Colors.white70 : AppColors.primary),
                   ),
-                ),
-                const SizedBox(height: 2),
-                Icon(
-                  Icons.text_fields_rounded,
-                  size: 13,
-                  color: isLarge
-                      ? Colors.white
-                      : (isDarkMode ? Colors.white70 : SeoulColors.seoulBlue),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );
@@ -870,18 +835,13 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
                 else
                   Text(weatherIcon, style: const TextStyle(fontSize: 32)),
                 const SizedBox(width: 8),
-                ShaderMask(
-                  shaderCallback: (b) => const LinearGradient(
-                    colors: [SeoulColors.hanRiverBlue, SeoulColors.skyBlue],
-                  ).createShader(b),
-                  child: Text(
-                    weather == null && isLoading ? '...' : temp,
-                    style: const TextStyle(
-                      fontSize: 36,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.white,
-                      height: 1,
-                    ),
+                Text(
+                  weather == null && isLoading ? '...' : temp,
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.w700,
+                    color: isDarkMode ? Colors.white : AppColors.ink,
+                    height: 1,
                   ),
                 ),
               ],
@@ -988,54 +948,62 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
         dock.operationStatus == OperationStatus.stopped ||
         dock.operationStatus == OperationStatus.closed;
 
-    return GestureDetector(
-      onTap: () {
-        HapticFeedback.heavyImpact();
-        _showEnhancedDetailSheet(
-          context,
-          dock,
-          isDarkMode,
-          weatherData,
-          realtimeData,
-          l10n,
-        );
-      },
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 10),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(32),
-          // PageView 카드 스크롤 성능: 비싼 BackdropFilter(blur) 대신 RepaintBoundary 로 페인트 격리.
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: gradient[0].withValues(alpha: isDarkMode ? 0.18 : 0.1),
+            blurRadius: 16,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(24),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(24),
+          onTap: () {
+            HapticFeedback.mediumImpact();
+            _showEnhancedDetailSheet(
+              context,
+              dock,
+              isDarkMode,
+              weatherData,
+              realtimeData,
+              l10n,
+            );
+          },
           child: RepaintBoundary(
-            child: Container(
+            child: Ink(
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: isDarkMode
-                      ? [
-                          gradient[0].withValues(alpha: 0.3),
-                          gradient[1].withValues(alpha: 0.15),
-                        ]
-                      : [
-                          Colors.white.withValues(alpha: 0.8),
-                          gradient[0].withValues(alpha: 0.1),
-                          Colors.white.withValues(alpha: 0.7),
+                color: isDarkMode ? AppColors.darkSurface : Colors.white,
+                gradient: isDarkMode
+                    ? LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          gradient[1].withValues(alpha: 0.25),
+                          AppColors.darkSurface,
                         ],
-                ),
-                borderRadius: BorderRadius.circular(32),
+                      )
+                    : LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          AppColors.tint(gradient[0], 0.92),
+                          Colors.white,
+                        ],
+                      ),
+                borderRadius: BorderRadius.circular(24),
                 border: Border.all(
                   color: isDarkMode
-                      ? Colors.white.withValues(alpha: 0.2)
-                      : Colors.white.withValues(alpha: 0.6),
-                  width: 1.5,
+                      ? Colors.white.withValues(alpha: 0.12)
+                      : AppColors.hairline,
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: gradient[0].withValues(alpha: 0.3),
-                    blurRadius: 30,
-                    offset: const Offset(0, 10),
-                  ),
-                ],
               ),
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(28, 28, 28, 28),
@@ -1051,44 +1019,17 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             alignment: Alignment.centerLeft,
-                            child: Stack(
-                              children: [
-                                Text(
-                                  dock.name,
-                                  maxLines: 1,
-                                  style: TextStyle(
-                                    fontSize: 40,
-                                    fontWeight: FontWeight.w900,
-                                    letterSpacing: -1.5,
-                                    foreground: Paint()
-                                      ..style = PaintingStyle.stroke
-                                      ..strokeWidth = 3
-                                      ..color = isDarkMode
-                                          ? Colors.black.withValues(alpha: 0.5)
-                                          : Colors.white.withValues(alpha: 0.7),
-                                  ),
-                                ),
-                                ShaderMask(
-                                  shaderCallback: (b) => LinearGradient(
-                                    colors: isDarkMode
-                                        ? [
-                                            Colors.white,
-                                            Colors.white.withValues(alpha: 0.7),
-                                          ]
-                                        : gradient,
-                                  ).createShader(b),
-                                  child: Text(
-                                    dock.name,
-                                    maxLines: 1,
-                                    style: const TextStyle(
-                                      fontSize: 40,
-                                      fontWeight: FontWeight.w900,
-                                      color: Colors.white,
-                                      letterSpacing: -1.5,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                            child: Text(
+                              dock.name,
+                              maxLines: 1,
+                              style: TextStyle(
+                                fontSize: 34,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: -1,
+                                color: isDarkMode
+                                    ? Colors.white
+                                    : AppColors.shade(gradient[0], 0.2),
+                              ),
                             ),
                           ),
                         ),
@@ -1194,34 +1135,34 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Flexible(
-                                child: ShaderMask(
-                                  shaderCallback: (b) => LinearGradient(
-                                    colors: isServiceClosed
-                                        ? [Colors.grey, Colors.grey]
-                                        : gradient,
-                                  ).createShader(b),
-                                  child: FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      isServiceClosed
-                                          ? l10n.endOfService
-                                          : dock.nextDeparture,
-                                      style: TextStyle(
-                                        fontSize:
-                                            Localizations.localeOf(
-                                                  context,
-                                                ).languageCode ==
-                                                'en'
-                                            ? 46
-                                            : 54,
-                                        fontWeight: FontWeight.w900,
-                                        color: Colors.white,
-                                        height: 1,
-                                        letterSpacing: -2,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    isServiceClosed
+                                        ? l10n.endOfService
+                                        : dock.nextDeparture,
+                                    style: TextStyle(
+                                      fontSize:
+                                          Localizations.localeOf(
+                                                context,
+                                              ).languageCode ==
+                                              'en'
+                                          ? 42
+                                          : 48,
+                                      fontWeight: FontWeight.w800,
+                                      color: isServiceClosed
+                                          ? Colors.grey
+                                          : (isDarkMode
+                                                ? Colors.white
+                                                : AppColors.shade(
+                                                    gradient[0],
+                                                    0.15,
+                                                  )),
+                                      height: 1,
+                                      letterSpacing: -1.5,
                                     ),
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                               ),
@@ -1358,7 +1299,7 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
                                   l10n.parkingSpacesSuffix(dock.parkingSpaces),
                                   style: TextStyle(
                                     fontSize: 16,
-                                    fontWeight: FontWeight.w900,
+                                    fontWeight: FontWeight.w700,
                                     color: isDarkMode
                                         ? Colors.white
                                         : gradient[0],
@@ -1552,71 +1493,50 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
                       ),
                     const SizedBox(height: 20),
                     // 7. 지도 버튼
-                    GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: () {
-                        HapticFeedback.mediumImpact();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => DockMapScreen(dockInfo: dock),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: gradient,
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                          borderRadius: BorderRadius.circular(18),
-                          boxShadow: [
-                            BoxShadow(
-                              color: gradient[0].withValues(alpha: 0.4),
-                              blurRadius: 16,
-                              offset: const Offset(0, 6),
+                    Material(
+                      color: gradient[0],
+                      borderRadius: BorderRadius.circular(16),
+                      elevation: 2,
+                      shadowColor: gradient[0].withValues(alpha: 0.35),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(16),
+                        onTap: () {
+                          HapticFeedback.mediumImpact();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => DockMapScreen(dockInfo: dock),
                             ),
-                            BoxShadow(
-                              color: gradient[0].withValues(alpha: 0.2),
-                              blurRadius: 8,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(6),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.2),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Icon(
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
                                 Icons.map_rounded,
                                 size: 20,
                                 color: Colors.white,
                               ),
-                            ),
-                            const SizedBox(width: 12),
-                            Text(
-                              l10n.scheduleAndMap,
-                              style: const TextStyle(
-                                fontSize: 17,
-                                fontWeight: FontWeight.w800,
-                                color: Colors.white,
-                                letterSpacing: 0.5,
+                              const SizedBox(width: 10),
+                              Text(
+                                l10n.scheduleAndMap,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white,
+                                  letterSpacing: 0.2,
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 8),
-                            const Icon(
-                              Icons.arrow_forward_rounded,
-                              size: 20,
-                              color: Colors.white,
-                            ),
-                          ],
+                              const SizedBox(width: 6),
+                              const Icon(
+                                Icons.arrow_forward_rounded,
+                                size: 18,
+                                color: Colors.white,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -1644,17 +1564,13 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       builder: (_) => ClipRRect(
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-          child: Container(
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        child: Container(
             height: MediaQuery.of(context).size.height * 0.85,
             decoration: BoxDecoration(
-              color: isDarkMode
-                  ? SeoulColors.darkNavy.withValues(alpha: 0.95)
-                  : Colors.white.withValues(alpha: 0.95),
+              color: isDarkMode ? AppColors.darkBackground : Colors.white,
               borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(32),
+                top: Radius.circular(24),
               ),
             ),
             child: Column(
@@ -1675,17 +1591,13 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
                   padding: const EdgeInsets.symmetric(horizontal: 28),
                   child: Row(
                     children: [
-                      ShaderMask(
-                        shaderCallback: (b) =>
-                            LinearGradient(colors: gradient).createShader(b),
-                        child: Text(
-                          l10n.dockSheetTitle(dock.name),
-                          style: const TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.w900,
-                            color: Colors.white,
-                            letterSpacing: -1,
-                          ),
+                      Text(
+                        l10n.dockSheetTitle(dock.name),
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w700,
+                          color: isDarkMode ? Colors.white : AppColors.ink,
+                          letterSpacing: -0.5,
                         ),
                       ),
                       const Spacer(),
@@ -1829,7 +1741,6 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
                 ),
               ],
             ),
-          ),
         ),
       ),
     );
@@ -1997,7 +1908,7 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
           value,
           style: TextStyle(
             fontSize: 18,
-            fontWeight: FontWeight.w900,
+            fontWeight: FontWeight.w700,
             color: isDarkMode ? Colors.white : gradient[0],
           ),
         ),
@@ -2037,17 +1948,15 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ShaderMask(
-                      shaderCallback: (b) =>
-                          LinearGradient(colors: gradient).createShader(b),
-                      child: Text(
-                        '${current.temperature.toInt()}°',
-                        style: const TextStyle(
-                          fontSize: 48,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.white,
-                          height: 1,
-                        ),
+                    Text(
+                      '${current.temperature.toInt()}°',
+                      style: TextStyle(
+                        fontSize: 44,
+                        fontWeight: FontWeight.w700,
+                        color: isDarkMode
+                            ? Colors.white
+                            : AppColors.shade(gradient[0], 0.15),
+                        height: 1,
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -2413,49 +2322,45 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildGlassmorphicButton({
+  /// 플랫 tonal 버튼 (primary 8% 배경 + primary 텍스트, 리플 포함).
+  Widget _buildTonalButton({
     required IconData icon,
     required String label,
     required bool isDarkMode,
     required VoidCallback onTap,
   }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 18),
-            decoration: BoxDecoration(
-              color: isDarkMode
-                  ? Colors.white.withValues(alpha: 0.08)
-                  : Colors.white.withValues(alpha: 0.8),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  icon,
-                  size: 20,
+    return Material(
+      color: isDarkMode
+          ? Colors.white.withValues(alpha: 0.08)
+          : AppColors.primary.withValues(alpha: 0.08),
+      borderRadius: BorderRadius.circular(16),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                icon,
+                size: 20,
+                color: isDarkMode
+                    ? Colors.white.withValues(alpha: 0.9)
+                    : AppColors.primary,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
                   color: isDarkMode
                       ? Colors.white.withValues(alpha: 0.9)
-                      : SeoulColors.seoulBlue,
+                      : AppColors.primary,
                 ),
-                const SizedBox(width: 8),
-                Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: isDarkMode
-                        ? Colors.white.withValues(alpha: 0.9)
-                        : SeoulColors.seoulBlue,
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -2470,20 +2375,20 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
   ) {
     switch (raw) {
       case '여유':
-        return (label: l10n.congestionRelaxed, color: const Color(0xFF00C853));
+        return (label: l10n.congestionRelaxed, color: AppColors.statusNormal);
       case '보통':
-        return (label: l10n.congestionNormal, color: const Color(0xFF2196F3));
+        return (label: l10n.congestionNormal, color: AppColors.primary);
       case '약간 붐빔':
         return (
           label: l10n.congestionSlightlyBusy,
-          color: const Color(0xFFFF9800),
+          color: AppColors.statusPartial,
         );
       case '붐빔':
-        return (label: l10n.congestionBusy, color: const Color(0xFFE53935));
+        return (label: l10n.congestionBusy, color: AppColors.statusStopped);
       default:
         return (
           label: l10n.congestionUnknown,
-          color: isDarkMode ? Colors.white54 : SeoulColors.seoulBlue,
+          color: isDarkMode ? Colors.white54 : AppColors.primary,
         );
     }
   }
@@ -2555,26 +2460,15 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
               ),
             ),
             const SizedBox(width: 8),
-            ShaderMask(
-              shaderCallback: (b) => LinearGradient(
-                colors: isDarkMode
-                    ? [
-                        Colors.white.withValues(alpha: 0.8),
-                        Colors.white.withValues(alpha: 0.4),
-                      ]
-                    : [
-                        SeoulColors.seoulBlue.withValues(alpha: 0.8),
-                        SeoulColors.hanRiverBlue.withValues(alpha: 0.6),
-                      ],
-              ).createShader(b),
-              child: Text(
-                '${l10n.liveStatusLabel} · ${dock.name}',
-                style: const TextStyle(
-                  fontSize: 11,
-                  letterSpacing: 2,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                ),
+            Text(
+              '${l10n.liveStatusLabel} · ${dock.name}',
+              style: TextStyle(
+                fontSize: 11,
+                letterSpacing: 1.5,
+                fontWeight: FontWeight.w700,
+                color: isDarkMode
+                    ? Colors.white.withValues(alpha: 0.7)
+                    : AppColors.inkSecondary,
               ),
             ),
             const Spacer(),
@@ -2646,60 +2540,57 @@ class _Tab1HomeState extends State<Tab1Home> with TickerProviderStateMixin {
     Color? valueColor,
   }) {
     return Expanded(
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(18),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: isDarkMode
-                  ? Colors.white.withValues(alpha: 0.06)
-                  : Colors.white.withValues(alpha: 0.8),
-              borderRadius: BorderRadius.circular(18),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(
-                  icon,
-                  size: 20,
-                  color:
-                      valueColor ??
-                      (isDarkMode
-                          ? SeoulColors.neonGreen
-                          : SeoulColors.hanRiverBlue),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  value,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: -0.5,
-                    color:
-                        valueColor ??
-                        (isDarkMode ? Colors.white : SeoulColors.seoulBlue),
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  label,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w500,
-                    color: isDarkMode
-                        ? Colors.white.withValues(alpha: 0.5)
-                        : SeoulColors.seoulBlue.withValues(alpha: 0.6),
-                  ),
-                ),
-              ],
-            ),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: isDarkMode
+              ? Colors.white.withValues(alpha: 0.06)
+              : Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isDarkMode
+                ? Colors.white.withValues(alpha: 0.08)
+                : AppColors.hairline,
           ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(
+              icon,
+              size: 20,
+              color:
+                  valueColor ??
+                  (isDarkMode ? AppColors.statusNormal : AppColors.primary),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              value,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+                letterSpacing: -0.5,
+                color:
+                    valueColor ??
+                    (isDarkMode ? Colors.white : AppColors.ink),
+              ),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w500,
+                color: isDarkMode
+                    ? Colors.white.withValues(alpha: 0.5)
+                    : AppColors.inkTertiary,
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -2782,8 +2673,6 @@ class DockInfo {
 }
 
 class _DockMeta {
-  final List<Color> gradientLight;
-  final List<Color> gradientDark;
   final String address;
   final String? parkAreaName;
   final int parkingSpaces;
@@ -2796,8 +2685,6 @@ class _DockMeta {
   final List<String> busRoutes;
 
   const _DockMeta({
-    required this.gradientLight,
-    required this.gradientDark,
     required this.address,
     required this.parkAreaName,
     required this.parkingSpaces,
