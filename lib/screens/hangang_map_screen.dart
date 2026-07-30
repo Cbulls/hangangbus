@@ -6,6 +6,7 @@
 // - onMarkerTap 으로 markerId 접두사('dock_' / 'attr_')를 보고 분기
 
 import 'package:flutter/material.dart';
+import 'package:hangangbus/widgets/dock_marker_widget.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 import 'package:hangangbus/l10n/app_localizations.dart';
 import 'package:hangangbus/models/attraction.dart';
@@ -28,7 +29,8 @@ class _HangangMapScreenState extends State<HangangMapScreen> {
   KakaoMapController? _mapController;
 
   // 선착장/관광지 마커는 정적 데이터라 한 번만 생성해 재사용한다(매 빌드 재생성 방지).
-  late final List<Marker> _markers = _buildMarkers();
+  // 마커 이미지 생성이 비동기라 초기값은 빈 리스트로 두고, initState에서 채운다.
+  List<Marker> _markers = [];
 
   // 기본 한강 중심 (대략 한강대교 부근) — 선택 선착장이 없을 때만 사용
   static final LatLng _hanRiverCenter = LatLng(37.5283, 126.9950);
@@ -44,6 +46,19 @@ class _HangangMapScreenState extends State<HangangMapScreen> {
     'Jamsil': '잠실',
     'SeoulForest': '서울숲',
   };
+
+  @override
+  void initState() {
+    super.initState();
+    _loadMarkers();
+  }
+
+  Future<void> _loadMarkers() async {
+    final markers = await _buildMarkers();
+    if (mounted) {
+      setState(() => _markers = markers);
+    }
+  }
 
   /// 현재 선착장의 한국어 이름(주변 명소 필터용). 없으면 null.
   String? get _currentDockKo {
@@ -139,31 +154,44 @@ class _HangangMapScreenState extends State<HangangMapScreen> {
     );
   }
 
-  List<Marker> _buildMarkers() {
+  Future<List<Marker>> _buildMarkers() async {
     final markers = <Marker>[];
 
-    // 선착장 마커
+    // 선착장 마커: 각 선착장 이름 + 고유 색상으로 알약 모양 배지 생성 (개별 생성)
     for (final dock in docks) {
+      final dataUri = await pillMarkerDataUri(
+        icon: Icons.anchor,
+        label: dock.name,
+        backgroundColor: dock.color,
+        width: 90,
+        height: 36,
+      );
       markers.add(
         Marker(
           markerId: 'dock_${dock.name}',
           latLng: dock.position,
-          width: 33,
-          height: 43,
-          markerImageSrc: _dockMarkerImage,
+          width: 102, // pill width(90) + shadowMargin(6)*2
+          height: 48, // pill height(36) + shadowMargin(6)*2
+          markerImageSrc: dataUri,
         ),
       );
     }
 
-    // 관광지 마커 (선착장과 구분되도록 기본 핀 사용)
+    // 관광지 마커: 하나의 아이콘을 공유(계산 1회) — 선착장과 구분되는 빨간 핀
+    final attractionIcon = await circleIconMarkerDataUri(
+      icon: Icons.location_on,
+      backgroundColor: const Color.fromARGB(255, 44, 74, 240),
+      size: 32,
+    );
+
     for (final a in hangangAttractions) {
       markers.add(
         Marker(
           markerId: a.id,
           latLng: a.position,
-          width: 33,
-          height: 43,
-          markerImageSrc: _attractionMarkerImage,
+          width: 44, // size(32) + shadowMargin(6)*2
+          height: 44,
+          markerImageSrc: attractionIcon,
         ),
       );
     }
@@ -238,14 +266,6 @@ class _HangangMapScreenState extends State<HangangMapScreen> {
             : '$dockPart 선착장 주변 · $kindLabel';
     }
   }
-
-  // 선착장 마커: 별 아이콘.
-  static const String _dockMarkerImage =
-      'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png';
-
-  // 관광지 마커: 카카오 기본 핀(빨강) 아이콘 → 선착장과 시각적으로 구분.
-  static const String _attractionMarkerImage =
-      'https://t1.daumcdn.net/localimg/localimages/08/mapapidoc/markerStar.png';
 
   void _handleMarkerTap(String markerId) {
     if (markerId.startsWith('attr_')) {
