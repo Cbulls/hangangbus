@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 서울시 OpenAPI 만 cleartext(HTTP) 허용. 전역 usesCleartextTraffic 대체. -->
+<!-- 서울시 OpenAPI + 카카오맵 관련 도메인 전체(서브도메인 포함) cleartext(HTTP) 허용 -->
 <network-security-config>
     <base-config cleartextTrafficPermitted="false" />
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">openapi.seoul.go.kr</domain>
+    </domain-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">daumcdn.net</domain>
+        <domain includeSubdomains="true">kakaocdn.net</domain>
+        <domain includeSubdomains="true">kakao.com</domain>
+        <domain includeSubdomains="true">daum.net</domain>
     </domain-config>
 </network-security-config>

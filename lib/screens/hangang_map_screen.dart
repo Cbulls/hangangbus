@@ -245,7 +245,7 @@ class _HangangMapScreenState extends State<HangangMapScreen> {
 
   // 관광지 마커: 카카오 기본 핀(빨강) 아이콘 → 선착장과 시각적으로 구분.
   static const String _attractionMarkerImage =
-      'https://t1.daumcdn.net/localimg/localimages/08/mapapidoc/red_b.png';
+      'https://t1.daumcdn.net/localimg/localimages/08/mapapidoc/markerStar.png';
 
   void _handleMarkerTap(String markerId) {
     if (markerId.startsWith('attr_')) {
@@ -661,9 +661,9 @@ class _NearbySheet extends StatelessWidget {
                 // 글씨 배율에 따라 카드 높이도 커지도록 스케일 반영(최대 1.6배).
                 height:
                     150 *
-                    MediaQuery.textScalerOf(context).clamp(
-                      maxScaleFactor: 1.6,
-                    ).scale(1.0),
+                    MediaQuery.textScalerOf(
+                      context,
+                    ).clamp(maxScaleFactor: 1.6).scale(1.0),
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: attractions.length,

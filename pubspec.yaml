@@ -2,7 +2,7 @@ name: hangangbus
 description: '한강버스 앱'
 publish_to: 'none'
 
-version: 1.0.4+19
+version: 1.0.4+20
 
 environment:
   sdk: ^3.10.1
